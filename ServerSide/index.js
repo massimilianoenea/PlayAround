@@ -14,8 +14,7 @@ http.createServer(function (req,res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
     res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST");
-    res.writeHead(200,{'Content-Type': 'text/plain'});
-    res.end('Hello World');
+    dispatcher.dispatch(req, res);
 }).listen(1337,'127.0.0.1');
 
 console.log('listen on 8000');

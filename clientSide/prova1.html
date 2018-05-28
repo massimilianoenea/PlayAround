@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+</head>
+<body>
+
+<div ng-app="apptest1" ng-controller="Ctrltest">
+        <button ng-click="loadUserProfile()">funzione</button>
+        <span ng-bind="userProfile"></span>
+</div>
+
+<script>
+    var app = angular.module('apptest1', []);
+
+
+    app.controller('Ctrltest', function($scope, $http) {
+
+        $scope.loadUserProfile = function(){
+            $http.get('http://127.0.0.1:1337/page1')
+                .then(function(response) {
+                    $scope.userProfile = response.data;
+                });
+            };
+
+        });
+</script>
+
+</body>
+</html>
