@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PlayAround</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- AngularJs -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<style>
+    #barraLaterale{
+        background-color: darkblue;
+        text-align: center;
+        color: whitesmoke;
+    }
+    #barraCentrale{
+        background-color: dimgray;
+        color: whitesmoke;
+        text-align: center;
+          }
+    .stylish-input-group .input-group-addon{
+        background: white !important;
+    }
+    .stylish-input-group .form-control{
+        border-right:0;
+        box-shadow:0 0 0;
+        border-color:#ccc;
+        border: #cccccc;
+    }
+    .stylish-input-group button{
+        border:0;
+        background:transparent;
+    }
+
+    .profile-container{
+        height: 180px;
+    }
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+    li{
+        color: whitesmoke;
+        text-align: left;
+        padding-left: 10px;
+        line-height: 2.2;
+    }
+    .principal{
+        height: 100%;
+    }
+    .amiciOn{
+        height: 50%;
+    }
+    .utentiOn{
+        height: 50%;
+    }
+    h3{
+        color: gold;
+    }
+    .divider{
+        height: 2px;
+        background-color: gold;
+    }
+     .navbar-default{
+         color: whitesmoke;
+     }
+.playerMusic{
+    height: 100%;
+}
+    .row{
+        height: 750px;
+    }
+    #menuColor{
+        color: whitesmoke;
+    }
+    .navbar{
+        background-image: none;
+    }
+</style>
+
+</head>
+<body ng-app="PlayAround">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2" id="barraLaterale">
+            <div class="row">
+            <div class="container-fluid">
+            <div class="profile-container">
+                <img src="resources/image/Symbol_playaround_complete.png" alt="logo PlayAround" style="height:60px;" class="img-responsive">
+            </div>
+            </div>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid" style="background-color: darkblue">
+                <div class="navbar-header" style="background-color: darkblue">
+
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar" style="background-color: darkblue;">
+                <ul class="nav navbar-nav" style="background-color: darkblue">
+                <li >
+                    <a href="#">Home</a>
+                </li>
+
+                    <li >
+                        <a href="#">La tua Libreria</a>
+                    </li>
+
+                <li >
+                    <a href="#">Preferiti</a>
+                </li>
+
+                <li >
+                    <a href="#" id="menuColor">I tuoi Amici</a>
+                </li>
+
+                    <li >
+                    <a href="#">Generi & Mood</a>
+                </li>
+
+                <li>
+                    <a href="#">Più ascoltati</a>
+                </li>
+                <li>
+                    <a href="#">Scelti per te</a>
+                </li>
+                </ul>
+                </div>
+                </div>
+            </nav>
+    <div class="container-fluid">
+        <div class="playerMusic">
+           <h3 style="color: gold">Riproduzione</h3>
+        </div>
+    </div>
+
+    </div>
+        </div>
+
+
+
+        <div class="col-sm-7" id="barraCentrale" ng-view="">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div id="imaginary_container">
+                            <div class="input-group stylish-input-group">
+                                <input type="text" class="form-control"  placeholder="Search">
+                                <span class="input-group-addon" >
+                        <button type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+         <div class="principal">
+
+         </div>
+
+            </div>
+
+        <div class="col-sm-3" id="barraLaterale">
+            <div class="row">
+            <div class="amiciOn">
+                <h3> AMICI ONLINE</h3>
+                <div class="divider"></div>
+
+
+            </div>
+            <div class="utentiOn">
+                <h3>UTENTI ONLINE</h3>
+                <div class="divider"></div>
+
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
