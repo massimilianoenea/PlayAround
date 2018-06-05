@@ -121,14 +121,13 @@
 
     app.controller('login', function($scope, $http) {
 
-        var pathName = 'http://'+window.location.hostname+':1337';
-
+        delete $http.defaults.headers.common['X-Requested-With'];
         $scope.try_login = function(){
             console.log($scope.email);
             var parameter = {email:$scope.email,password:$scope.password};
             $http({
                 method : "POST",
-                url : pathName+'/playaround/login',
+                url : '/playaround/login',
                 data: parameter,
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }

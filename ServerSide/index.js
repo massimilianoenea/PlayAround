@@ -9,7 +9,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var socketFunction = require('./SocketFunction/Friend.js');
-
 app.use('/public',express.static(__dirname+'/resources'));
 app.use('/image',express.static(__dirname+'/resources/image'));
 
@@ -31,32 +30,35 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-// PER EFFETTUARE IL CROSS DOMAIN
-
-/*
-app.use(function(req, res, next) {
-
-if ( req.method === 'OPTIONS' ) {
-res.writeHead(200, {
-    'Access-Control-Allow-Origin':
-    req.headers.origin,
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Credentials': 'true',
-    'Content-Length': 0
+app.all('*',function(req, res, next) {
+    var origin;
+    if ( req.method === 'OPTIONS' ) {
+        if(req.headers.origin){
+            origin = req.headers.origin;
+        }else{
+            origin = req.headers.host;
+        }
+        res.writeHead(200, {
+            'Access-Control-Allow-Origin':origin,
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Credentials': 'true',
+            'Content-Length': 0
+        });
+        res.end();
+    }else {
+        if(req.headers.origin){
+            origin = req.headers.origin;
+        }else{
+            origin = req.headers.host;
+        }
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.setHeader("Access-Control-Allow-Origin", origin);
+        res.setHeader("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, Accept, X-Requested-With, application/json");
+        res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
+        next();
+    }
 });
-res.end();
-}else {
-res.header('Access-Control-Allow-Credentials', 'true');
-res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-res.setHeader("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, Accept, X-Requested-With");
-res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
-next();
-}
-});
-*/
 
 app.use("/",home);
 app.use("/playaround",user);

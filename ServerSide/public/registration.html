@@ -146,13 +146,11 @@
 
     app.controller('registration', function($scope, $http) {
 
-        var pathName = 'http://'+window.location.hostname+':1337';
-
         $scope.try_signup = function(){
             var parameter = {email:$scope.email,password:$scope.password,username:$scope.username};
             $http({
                 method : "POST",
-                url : pathName+'/playaround/singup',
+                url : '/playaround/singup',
                 data: parameter,
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
