@@ -1,61 +1,93 @@
-var http = require('http');
-var HttpDispatcher = require('httpdispatcher');
-var dispatcher = new HttpDispatcher();
+var bodyParser = require('body-parser');
+var user = require('./routes/user.js');
+var express = require('express');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-dispatcher.setStatic('/resources');
-dispatcher.setStaticDirname('static');
+var socketFunction = require('./SocketFunction/Friend.js');
 
-dispatcher.onPost("/try_singup", function(req, res) {
-    //prendo il json e lo rendo parse
-    var jsonReq = JSON.parse(req.body);
-    var jsonRes;
+app.use(cookieParser());
+app.use(session({
+    key: "nsid",
+    secret: "some secret password",
+    cookie: {
+        "path": "/",
+        "httpOnly": false,
+        "maxAge": null,
+        "secure": false
+    },
+    resave: true,
+    saveUninitialized: true,
+    proxy: null
+}));
 
-    if(jsonReq['email']=="email"){
-        //errore email già esiste
-        res.writeHead(401, {'Content-Type': 'application/json'});
-        jsonRes = {error:"ER01"};
-    }else if(jsonReq['username']=="username"){
-        //errore username già esiste
-        res.writeHead(401, {'Content-Type': 'application/json'});
-        jsonRes={error:"ER02"};
-    }else{
-        //registrazione effettuata
-        jsonRes={error:"OK01"};
-    }
-    //res.writeHead(200, {'Content-Type': 'application/json'});
-    //rimando il parse in json
-    res.end(JSON.stringify(jsonRes));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+
+// PER EFFETTUARE IL CROSS DOMAIN
+
+/*
+app.use(function(req, res, next) {
+
+if ( req.method === 'OPTIONS' ) {
+res.writeHead(200, {
+    'Access-Control-Allow-Origin':
+    req.headers.origin,
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Credentials': 'true',
+    'Content-Length': 0
+});
+res.end();
+}else {
+res.header('Access-Control-Allow-Credentials', 'true');
+res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+res.setHeader("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, Accept, X-Requested-With");
+res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
+next();
+}
+});
+*/
+
+
+app.use("/playaround",user);
+//app.use("/AppItem",);
+io.on('connection', function(client) {
+
+    client.on('disconnect', function() {
+        console.log("disconnected");
+        client.leaveAll();
+    });
+
+    client.on('getFriend',function(data){
+        console.log(data.email,data.username);
+        socketFunction.GetFriend(data.email,function (a){
+            if(a.code === 0){
+                for (var room in a.amici_on){
+                    client.join(a.amici_on[room].USERNAME);
+                    console.log(' Client joined the room '+a.amici_on[room].USERNAME+' and client id is '+ client.id);
+                }
+                client.join(data.username);
+            }
+        });
+    });
+
+    // NON PIU USATA
+    client.on('room', function(data) {
+        client.join(data.roomId);
+        console.log(' Client joined the room and client id is '+ client.id);
+    });
+
+    client.on('event', function(data) {
+       client.in(data.username).emit('message', data.data);
+    });
 });
 
-dispatcher.onPost("/try_login", function(req, res) {
-    //prendo il json e lo rendo parse
-    var jsonReq = JSON.parse(req.body);
-    var jsonRes ;
-    if(jsonReq['email']=="email" && jsonReq['password'] == "password"){
-        jsonRes = {username:"username",codutente:"codutente",immagine:"../node_modules/httpdispatcher/test/static/resources/profile/codutente.jpg"};
-    }else if(jsonReq['email']!="email"){
-        //errore email inserita non esiste
-        res.writeHead(401, {'Content-Type': 'application/json'});
-        jsonRes={error:"ER01"};
-    }else if(jsonReq['password'] != "password"){
-        //errore password inserita non è corretta
-        res.writeHead(401, {'Content-Type': 'application/json'});
-        jsonRes={error:"ER02"};
-    }else{
-        //errore indefinito
-        res.writeHead(401, {'Content-Type': 'application/json'});
-        jsonRes={error:"ER03"};
-    }
-    //res.writeHead(200, {'Content-Type': 'application/json'});
-    //rimando il parse in json
-    res.end(JSON.stringify(jsonRes));
+http.listen(1337,function(){
+    console.log("Listen on 1337");
 });
-
-http.createServer(function (req,res) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, Accept, X-Requested-With");
-    res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
-    dispatcher.dispatch(req, res);
-}).listen(1337,'127.0.0.1');
-
-console.log('listen on 1337');
