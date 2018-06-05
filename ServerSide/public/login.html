@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login PlayAround</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+    <!--Pulling Awesome Font -->
+
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Roboto:400);
+    body {
+    background-color:#fff;
+    -webkit-font-smoothing: antialiased;
+    font: normal 14px Roboto,arial,sans-serif;
+    }
+
+    .container {
+    padding: 25px;
+    position: fixed;
+    }
+
+    .form-login {
+    background-color: #EDEDED;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+        border-style: solid;
+        border-radius: 30px;
+        border-width: 5px;
+    border-color: #357ebd;
+    border-width: 5px;
+    box-shadow:0 1px 0 #cfcfcf;
+        height: 400px;
+
+    }
+
+    h4 {
+    border:0 solid #fff;
+    border-bottom-width:1px;
+    padding-bottom:10px;
+    text-align: center;
+        color: #a00e6d;
+    }
+
+    .form-control {
+    border-radius: 10px;
+        height: 50px;
+    }
+
+    .wrapper {
+    text-align: center;
+    }
+        .btn-primary {
+            color: #fff;
+            background-color: #a00e6d;
+            border-color: #357ebd;
+        }
+        .textLink{
+            color: #357ebd;
+            font-size: medium;
+            text-align: center;
+        }
+</style>
+</head>
+<body ng-app="playAround" ng-controller="login">
+<div class="page-header" style="background-color: midnightblue">
+    <div align="center">
+    <img src="/image/Symbol_playaround_complete.png" alt="logo PlayAround" style="height: 150px" class="img-responsive">
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+
+            <form class="form-login" name="myLogin">
+                <h4>LOGIN</h4>
+                <input type="text" id="userName" name="userName" class="form-control form-control-lg" placeholder="username" ng-model="email"  required/>
+                <p ng-show="myLogin.userName.$touched && myLogin.userName.$invalid" style="color: red"> Campo Richiesto</p>
+                </br>
+                <input type="password" id="userPassword" class="form-control form-control-lg" placeholder="password" ng-model="password" required />
+                <span ng-bind="error.text"></span>
+                </br>
+                <br>
+                <div class="wrapper">
+
+            <span class="group-btn">
+                    <button ng-click="try_login()" class="btn btn-primary btn-md" ng-disabled="myLogin.$invalid" >Accedi <i class="fa fa-sign-in"></i></button>
+            </span>
+
+                </div>
+                <br>
+                <br>
+                <div style="background-color: white;height: 2px"></div>
+                <br>
+                <p class="textLink">Non hai un Account? <span>
+                    <a href="/registration" style="color: #a00e6d">ISCRIVITI</a>
+                </span></p>
+
+                <p class="textLink"><a href="#" class="textLink" >Hai perso la Password?</a></p>
+
+
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var app = angular.module('playAround', []);
+
+    app.config(function($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    });
+
+    app.controller('login', function($scope, $http) {
+
+        var pathName = 'http://'+window.location.hostname+':1337';
+
+        $scope.try_login = function(){
+            console.log($scope.email);
+            var parameter = {email:$scope.email,password:$scope.password};
+            $http({
+                method : "POST",
+                url : pathName+'/playaround/login',
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response) {
+                window.location.href = '/webApp';
+            }, function myError(response) {
+                $scope.error = response.data;
+            });
+        };
+
+    });
+</script>
+</body>
+</html>

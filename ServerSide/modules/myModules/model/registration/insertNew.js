@@ -14,7 +14,6 @@ module.exports = {
            var sql = "SELECT CODUTENTE FROM UTENTI_APPEND WHERE TOKEN ='"+token+"'";
            connection.query(sql,function (err,results){
                if (err) return callback(err,null,2);
-
                if (results.length === 1){
                    var codutente = results[0].CODUTENTE;
                    sql = "UPDATE UTENTI SET CONFIRMED = '1' WHERE CODUTENTE = '"+codutente+"'";
@@ -40,7 +39,7 @@ module.exports = {
     },
 
 
-    InsertUser: function(user, callback)
+    InsertUser: function(user,url, callback)
 
     {
         connection.getConnection(function (err,connection) {
@@ -64,7 +63,7 @@ module.exports = {
 
                     }
 
-                    mailSender.sendMail(mailSender.SetmailOptions(user.email,tok));
+                    mailSender.sendMail(mailSender.SetmailOptions(user.email,url,tok));
                     connection.release();
                     return callback(null,results,0);
 

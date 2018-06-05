@@ -1,5 +1,6 @@
 var bodyParser = require('body-parser');
 var user = require('./routes/user.js');
+var home = require('./routes/home.js');
 var express = require('express');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -8,6 +9,9 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var socketFunction = require('./SocketFunction/Friend.js');
+
+app.use('/public',express.static(__dirname+'/resources'));
+app.use('/image',express.static(__dirname+'/resources/image'));
 
 app.use(cookieParser());
 app.use(session({
@@ -54,8 +58,9 @@ next();
 });
 */
 
-
+app.use("/",home);
 app.use("/playaround",user);
+
 //app.use("/AppItem",);
 io.on('connection', function(client) {
 
@@ -65,7 +70,6 @@ io.on('connection', function(client) {
     });
 
     client.on('getFriend',function(data){
-        console.log(data.email,data.username);
         socketFunction.GetFriend(data.email,function (a){
             if(a.code === 0){
                 for (var room in a.amici_on){

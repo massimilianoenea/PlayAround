@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrazione PlayAround</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+    <!--Pulling Awesome Font -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Roboto:400);
+        body {
+            background-color:#fff;
+            -webkit-font-smoothing: antialiased;
+            font: normal 14px Roboto,arial,sans-serif;
+        }
+
+        .container {
+            padding: 25px;
+            position: fixed;
+        }
+
+        .form-login {
+            background-color: #EDEDED;
+            padding-top: 10px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-style: solid;
+            border-radius: 30px;
+            border-width: 5px;
+            border-color: #357ebd;
+            border-width: 5px;
+            box-shadow:0 1px 0 #cfcfcf;
+            height: auto;
+            /*width: 400px;*/
+        }
+
+        h4 {
+            border:0 solid #fff;
+            border-bottom-width:2px;
+            padding-bottom:10px;
+            text-align: center;
+            color: #a00e6d;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            height: 50px;
+        }
+
+        .wrapper {
+            text-align: center;
+        }
+        .btn-primary {
+            color: #fff;
+            background-color: #a00e6d;
+            border-color: #357ebd;
+        }
+        .textLink{
+            color: #357ebd;
+            font-size: medium;
+            text-align: center;
+        }
+        textarea.ng-invalid{
+            border:1px solid red;
+            border-left: 5px solid red;
+        }
+        textarea.ng-valid.ng-dirty{
+            border:1px solid green;
+            border-left: 5px solid green;
+        }
+        select.ng-invalid{
+            border:1px solid red;
+            border-left: 5px solid red;
+        }
+        select.ng-valid.ng-dirty{
+            border:1px solid green;
+            border-left: 5px solid green;
+        }
+        input.ng-invalid{
+            border:1px solid red;
+            border-left: 5px solid red;
+        }
+        input.ng-valid.ng-dirty{
+            border:1px solid green;
+            border-left: 5px solid green;
+        }
+    </style>
+</head>
+<body ng-app="PlayAround" ng-controller="registration">
+<div class="page-header" style="background-color: midnightblue">
+    <div align="center">
+        <img src="/image/Symbol_playaround_complete.png" alt="logo PlayAround" style="height: 150px" class="img-responsive">
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+
+            <form class="form-login" name="myRegister" novalidate>
+                <h4>REGISTRAZIONE</h4>
+                <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Email" ng-model="email" required/>
+                <p class="help-block" ng-show="myRegister.email.$dirty && myRegister.email.$invalid">Enter a valid email.</p>
+                <p ng-show="invalidEmail" style="color: red; font-size: 10px">Email già registrata</p>
+                </br>
+                <input type="password" id="userPassword" name="password" class="form-control form-control-lg" placeholder="Password"
+                       ng-pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/" ng-model="password" ng-minlength="8" required/>
+                <p ng-show="myRegister.password.$error.minlength">La password deve contenere: <br> min. 8 caratteri, una maiuscola e un numero.</p>
+                </br>
+                <input type="password" id="userPassword2" name="password2" class="form-control form-control-lg" placeholder="Conferma Password" ng-model="password2" required />
+                <p ng-show="myRegister.password2.$modelValue != myRegister.password.$modelValue"> Inserire stessa password </p>
+                </br>
+                <input type="text" id="userName" name="username" class="form-control form-control-lg" placeholder="Username" ng-model="username" ng-minlength="3" ng-maxlength="10" required/>
+                <span ng-show="myRegister.username.$touched && myRegister.username.$invalid">The name is required.</span>
+                <p ng-show="invalidUsername" style="color: red; font-size: 10px">Email già registrata</p>
+                </br>
+                <br>
+                <div class="wrapper">
+            <span class="group-btn">
+                <button ng-click="try_signup()" class="btn btn-primary btn-md" ng-disabled="myRegister.$invalid">Registrati<i class="fa fa-sign-in"></i></button>
+            </span>
+                    <p ng-show="message" style="color: red; font-size: 20px; padding-top: 10px"ng-bind="error.text"></p>
+
+                </div>
+                <br>
+                <div style="background-color: white;height: 2px"></div>
+                <br>
+                <p class="textLink">Hai già un Account ?
+                    <span>
+                    <a href="./login" style="color: #a00e6d">Effettua il Login</a>
+                    </span>
+                </p>
+
+
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    var app = angular.module('PlayAround', []);
+
+    app.controller('registration', function($scope, $http) {
+
+        var pathName = 'http://'+window.location.hostname+':1337';
+
+        $scope.try_signup = function(){
+            var parameter = {email:$scope.email,password:$scope.password,username:$scope.username};
+            $http({
+                method : "POST",
+                url : pathName+'/playaround/singup',
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response) {
+                //var risposta = JSON.parse(response.data);
+                $scope.message=true;
+                $scope.error=response.data;
+            }, function myError(response) {
+                $scope.message=true;
+                $scope.error = response.data;
+            });
+        };
+
+    });
+</script>
+</body>
+</html>

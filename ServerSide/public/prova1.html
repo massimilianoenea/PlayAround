@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="shortcut icon" href="">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+    <script src="./socketio"></script>
+</head>
+<body>
+
+<div ng-app="apptest1" ng-controller="Ctrltest">
+    <form>
+        <input type="text" ng-model="email">
+        <input type="text" ng-model="password">
+        <input type="text" ng-model="username">
+        <input type="text" ng-model="tok">
+        <input type="text" ng-model="usernameAmico">
+
+        <button ng-click="try_login()">login</button>
+        <button ng-click="logout()">logout</button>
+        <button ng-click="Registra()">Singup</button>
+        <button ng-click="Conferma_reg()">conferma Reg</button>
+        <button ng-click="addAmici()">Add amico</button>
+
+        <span ng-bind="userProfile.code"></span>
+        <span ng-bind="userProfile.text"></span>
+        <span ng-bind="userProfile.username"></span>
+        <span ng-bind="userProfile.errorCode"></span>
+    </form>
+    <img ng-src="{{userProfile.immagine}}">
+
+
+    <table>
+        <tr>
+            <th>USERNAME</th>
+            <th>BRANO</th>
+        </tr>
+
+        <tr ng-repeat="utente in utenti">
+            <td>{{utente.USERNAME}}</td>
+            <td>{{utente.CODBRANO}}</td>
+        </tr>
+    </table>
+
+    <input type="text" ng-model="message">
+    <input type="text" ng-model="messageArrived">
+    <button ng-click="add()">send</button>
+    <button ng-click="updateFriend()">updateFriend</button>
+</div>
+
+<script>
+    var app = angular.module('apptest1', []);
+
+    app.config(function($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    });
+
+    function runSocket() {
+        var socket = io.connect('http://' + window.location.hostname + ':1337', {'forceNew': true});
+
+        socket.on('connect', function () {
+            console.log("connected to socket");
+
+        });
+
+        return socket;
+
+    }
+
+    app.controller('Ctrltest', function($scope, $http) {
+
+        var socket = runSocket();
+
+
+          $scope.updateFriend_soc = function (userLogged) {
+              if (socket.connected === true){
+                  socket.emit('getFriend', {username: userLogged.username, email: userLogged.email});
+              }else{
+                  runSocket();
+              }
+          };
+          // NON USATA AL MOMENTO socket.emit('room',{roomId:'temp'});
+
+          $scope.addMex = function (userLogged) {
+              console.log(socket.connected);
+              if (socket.connected === true){
+                  socket.emit('event', {username: userLogged, data: $scope.message, date: new Date()});
+              }else{
+                  runSocket();
+              }
+          };
+
+          socket.on('message', function (data) {
+              $scope.messageArrived = data;
+              $scope.$apply();
+          });
+
+
+        delete $http.defaults.headers.common['X-Requested-With'];
+
+
+        $scope.add = function(){
+            //  var parameter = JSON.stringify({username:$scope.usernameAmico});
+            $http({
+                method : "POST",
+                url : 'http://'+window.location.hostname+':1337/playaround/getUtenteLog',
+                // data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response) {
+                //var risposta = JSON.parse(response.data);
+                $scope.addMex(response.data.username);
+            }, function myError(response) {
+                console.log(response.status);
+            });
+        };
+
+        $scope.updateFriend = function(){
+            //  var parameter = JSON.stringify({username:$scope.usernameAmico});
+            $http({
+                method : "POST",
+                url : 'http://'+window.location.hostname+':1337/playaround/getUtenteLog',
+                // data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response) {
+                //var risposta = JSON.parse(response.data);
+                $scope.updateFriend_soc(response.data);
+            }, function myError(response) {
+                console.log(response.status);
+            });
+        };
+
+        $scope.getAmici = function(){
+          //  var parameter = JSON.stringify({username:$scope.usernameAmico});
+            $http({
+                method : "POST",
+                url : 'http://'+window.location.hostname+':1337/playaround/getAmiciOn',
+               // data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response) {
+                //var risposta = JSON.parse(response.data);
+                $scope.utenti = response.data.amici_on;
+            }, function myError(response) {
+                $scope.utenti = response.data;
+            });
+        };
+
+        $scope.getUtenti = function(){
+           // var parameter = JSON.stringify({username:$scope.usernameAmico});
+            $http({
+                method : "POST",
+                url : 'http://'+window.location.hostname+':1337/playaround/getUtentiOn',
+              //  data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response) {
+                //var risposta = JSON.parse(response.data);
+                $scope.utenti = response.data.utenti_on;
+            }, function myError(response) {
+                $scope.utenti = response.data;
+            });
+        };
+
+        $scope.addAmici = function(){
+            
+            var urlPath = 'http://'+window.location.hostname+':1337/playaround/addAmico';
+            var parameter = JSON.stringify({username:$scope.usernameAmico});
+            $http({
+                method : "POST",
+                url : urlPath,
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response) {
+                //var risposta = JSON.parse(response.data);
+                $scope.userProfile = response.data;
+                $scope.updateFriend();
+            }, function myError(response) {
+                $scope.userProfile = response.data;
+            });
+        };
+
+        $scope.Conferma_reg = function(){
+            var parameter = JSON.stringify({codice:$scope.tok});
+            $http({
+                method : "POST",
+                url : 'http://'+window.location.hostname+':1337/playaround/conferma_reg',
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response) {
+                //var risposta = JSON.parse(response.data);
+                $scope.userProfile = response.data;
+            }, function myError(response) {
+                $scope.userProfile = response.data;
+            });
+        };
+
+        $scope.Registra = function(){
+            var parameter = JSON.stringify({email:$scope.email,password:$scope.password,username:$scope.username});
+            $http({
+                method : "POST",
+                url : 'http://'+window.location.hostname+':1337/playaround/singup',
+                data: parameter,
+                withCredentials: true,
+                headers: {'Content-Type': 'application/json'}
+            }).then(function mySuccess(response) {
+                //var risposta = JSON.parse(response.data);
+                $scope.userProfile = response.data;
+            }, function myError(response) {
+                $scope.userProfile = response.data;
+            });
+        };
+
+        $scope.try_login = function(){
+            var parameter = JSON.stringify({email:$scope.email,password:$scope.password});
+            $http({
+                method : "POST",
+                url : 'http://'+window.location.hostname+':1337/playaround/login',
+                data: parameter,
+                withCredentials: true,
+                headers: {'Content-Type': 'application/json'}
+            }).then(function mySuccess(response) {
+                $scope.userProfile = response.data;
+                if (response.data.code === 0) {
+                    runSocket();
+                    $scope.updateFriend();
+                }else if(response.data.code === 6){
+                    $scope.updateFriend();
+                }
+            }, function myError(response) {
+                $scope.userProfile = response.data;
+            });
+        };
+
+        $scope.logout = function(){
+            var parameter = JSON.stringify({email:$scope.email,password:$scope.password});
+            $http({
+                method : "POST",
+                url : 'http://'+window.location.hostname+':1337/playaround/logout',
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json'}
+            }).then(function mySuccess(response) {
+                $scope.userProfile = response.data;
+            }, function myError(response) {
+                $scope.userProfile = response.data;
+            });
+        };
+    });
+
+</script>
+
+</body>
+</html>
