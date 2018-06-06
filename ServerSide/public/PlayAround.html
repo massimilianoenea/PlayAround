@@ -1,246 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>PlayAround</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    <!-- AngularJs -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Page Title</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-    #barraLaterale{
-        background-color: midnightblue;
-        text-align: center;
-        color: whitesmoke;
-    }
-    #barraCentrale{
-        background-color: dimgray;
-        color: whitesmoke;
-        text-align: center;
-          }
-    .stylish-input-group .input-group-addon{
-        background: white !important;
-    }
-    .stylish-input-group .form-control{
-        border-right:0;
-        box-shadow:0 0 0;
-        border-color:#ccc;
-        border: #cccccc;
-    }
-    .stylish-input-group button{
-        border:0;
-        background:transparent;
-    }
-
-    .profile-container{
-        height: 180px;
-    }
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
-    li{
-        color: whitesmoke;
-        text-align: left;
-        padding-left: 10px;
-        line-height: 1.5;
-        width: 150px;
-        height: 50px;
-    }
-
-
-
-    .principal{
-        height: 100%;
-    }
-    .amiciOn{
-        height: 50%;
-    }
-    .utentiOn{
-        height: 50%;
-    }
-
-    .navbar-default .navbar-nav>li>a{
-        color:whitesmoke;
-    }
-
-    .navbar-default .navbar-nav>li>a:hover{
-        color:red;
-    }
-    .navbar-default .navbar-nav>li>a:active{
-        color: gold;
-    }
-
-    .navbar-default .navbar-nav>.active>a,
-    .navbar-default .navbar-nav>.active>a:hover,
-    .navbar-default .navbar-nav>.active>a:focus {
-        color: gold;
-    }
-
-    h4{
-        color: gold;
-    }
-    .divider{
-        height: 2px;
-        background-color: gold;
-    }
-    .nav > li > a {
-
-        position: relative;
-        display: block;
-        padding: 10px 15px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        left: -10px;
-
-    }
-.playerMusic{
-    height: 100%;
+* {
+    box-sizing: border-box;
 }
-    .row{
-        height: 750px;
-    }
 
+/* Style the body */
+body {
+    font-family: Arial;
+    margin: 0;
+}
+
+/* Header/logo Title */
+/*
+.header {
+    padding: 20px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+}
+*/
+/* Increase the font size of the heading */
+.header h1 {
+    font-size: 40px;
+}
+
+
+/* Column container */
+.row {  
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    justify-content: space-between;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+}
+/*side navigation for response*/
+.sidenav {
+    display: none;
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* Create two unequal columns that sits next to each other */
+/* Sidebar/left column */
+.side {
+    -ms-flex: 10%; /* IE10 */
+    flex: 10%;
+    background-color: #f1f1f1;
+    padding: 20px;
+}
+
+/* Amici online*/
+.sidedx {
+    -ms-flex: 10%; /* IE10 */
+    flex: 10%;
+    background-color: #eee;
+    padding: 20px;
+}
+.container {
+  border: 1px solid #ccc;
+  background-color: #eee;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px 0
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  margin-right: 5px;
+  border-radius: 30%;
+}
+
+.container span {
+  font-size: 10px;
+  margin-right: 5px;
+}
+
+.button {
+    -ms-flex: 10%; /* IE10 */
+    flex: 10%;
+    padding: 20px;
+}
+
+/*Amici online responsive*/
+
+.navbar {
+  display: none;
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.navbar a:hover {
+  background: #f1f1f1;
+  color: black;
+}
+
+.navbar a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.main {
+  padding: 16px;
+  margin-bottom: 30px;
+  background-color:red;
+}
+
+/* Main column */
+.main {   
+    -ms-flex: 50%; /* IE10 */
+    flex: 50%;
+    background-color: white;
+    padding: 20px;
+}
+
+/* Fake image, just for this example */
+.fakeimg {
+    background-color: #aaa;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Footer */
+/*
+.footer {
+    padding: 20px;
+    text-align: center;
+    background: #ddd;
+}
+*/
+@media screen and (max-width: 1900px) {
+    .side{
+        display: inline; 
+    }
+    .sidedx{
+        display: inline; 
+    }
+    .button{
+        display: none;
+    }
     .navbar{
-        background-image: none;
+        display: none;
     }
-    footer{
-        background-color: black;
-        color: gold;
+    .sidenav{
+        display: none;
     }
+}
+
+/* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 700px) {
+    .side{
+        display: none; 
+    }
+    .sidedx{
+        display:none; 
+    }
+    .button{
+        display: block;
+    }
+    .navbar{
+        display: inline;
+    }
+    .sidenav{
+        display: block;
+    }
+    .row {   
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 500px) {
+  .container {
+      text-align: center;
+  }
+  .container img {
+      margin: auto;
+      float: none;
+      display: block;
+  }
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
+@media screen and (max-width: 400px) {
+    
+}
 </style>
+</head>
+<body>
 
+        
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+    
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+<!--
+<div class="header">
+  <h1>My Website</h1>
+  <p>A website created by me.</p>
+</div>
+-->
+<div class="row">
+    <!-- Quando sei in mobile view -->
+   <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+    </div>
+    <span class="button" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
 
-
-    </head>
-    <body ng-app="PlayAround">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-2" id="barraLaterale">
-                <div class="row">
-                    <img src="/image/Symbol_playaround_complete.png" alt="logo PlayAround" style="height:60px;" class="img-responsive">
-
-                    <nav class="navbar navbar-default" style="border: 0px;background-color: midnightblue">
-                        <div class="container-fluid" style="background-color: midnightblue">
-                            <div class="navbar-header">
-
-                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                            </div>
-                            <div class="collapse navbar-collapse" id="myNavbar" style="background-color: midnightblue;">
-                                <ul class="nav navbar-nav" style="background-color: midnightblue">
-
-               <li>
-                <div class="container-fluid">
-                <div class="profile-container">
-                </div>
-                </div>
-               </li>
-                    <li>
-                        <a href="#">Home</a>
-                    </li>
-
-                        <li>
-                            <a href="#">La tua Libreria</a>
-                        </li>
-
-                    <li >
-                        <a href="#">Preferiti</a>
-                    </li>
-
-                    <li >
-                        <a href="#">I tuoi Amici</a>
-                    </li>
-
-                        <li >
-                        <a href="#">Generi & Mood</a>
-                    </li>
-
-                    <li>
-                        <a href="#">Più ascoltati</a>
-                    </li>
-                    <li>
-                        <a href="#">Scelti per te</a>
-                    </li>
-                    </ul>
-                    </div>
-                    </div>
-                </nav>
-
-        <div class="container-fluid">
-            <div class="playerMusic">
-               <h3 style="color: gold">Riproduzione</h3>
-            </div>
-        </div>
-
-        </div>
-            </div>
-
-
-
-
-            <div class="col-sm-7" id="barraCentrale" ng-view="">
-
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div id="imaginary_container">
-                                <div class="input-group stylish-input-group">
-                                    <input type="text" class="form-control"  placeholder="Search">
-                                    <span class="input-group-addon" >
-                            <button type="submit">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-             <div class="principal">
-
-             </div>
-
-                </div>
-
-            <div class="col-sm-3" id="barraLaterale">
-                <div class="row">
-                <div class="amiciOn">
-                    <h4> AMICI ONLINE</h4>
-                    <div class="divider"></div>
-
-
-                </div>
-                <div class="utentiOn">
-                    <h4>UTENTI ONLINE</h4>
-                    <div class="divider"></div>
-
-
-                </div>
-
-            </div>
-            </div>
+    <!-- Quando sei in desktop view -->
+    <div class="side">
+      <h2>About Me</h2>
+      <h5>Photo of me:</h5>
+      <div class="fakeimg" style="height:200px;">Image</div>
+      <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+      <h3>More Text</h3>
+      <p>Lorem ipsum dolor sit ame.</p>
+      <div class="fakeimg" style="height:60px;">Image</div><br>
+      <div class="fakeimg" style="height:60px;">Image</div><br>
+      <div class="fakeimg" style="height:60px;">Image</div>
+  </div>
+  <!-- sempre attiva, parte centrale-->
+  <div class="main">
+      <h2>TITLE HEADING</h2>
+      <h5>Title description, Dec 7, 2017</h5>
+      <div class="fakeimg" style="height:200px;">Image</div>
+      <p>Some text..</p>
+      <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+      <br>
+      <h2>TITLE HEADING</h2>
+      <h5>Title description, Sep 2, 2017</h5>
+      <div class="fakeimg" style="height:200px;">Image</div>
+      <p>Some text..</p>
+      <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+  </div>
+    <!-- barra laterale destra in desktop-->
+  <div class="sidedx">
+        <div class="container">
+            <img src="https://www.w3schools.com/w3images/bandmember.jpg" alt="Avatar" style="width:90px">
+            <p>Massimiliano</p>
+            <p>Canzone che ascolto</p>
+        </div>     
+        <div class="container">
+            <img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar" style="width:90px">
+            <p>Giuseppe</p>
+            <p>Canzone che ascolto</p>
         </div>
     </div>
-    <footer>
-        PlayAround tutti i diritti sono riservati ecceccecc
-    </footer>
-    </body>
-    </html>
+</div>
+<!-- barra menu in basso in mobile-->
+<div class="navbar">
+    <a href="#home" class="active">Home</a>
+    <a href="#news">Amici Online</a>
+    <a href="#contact">Utenti Online</a>
+</div>
+<!--
+<div class="footer">
+  <h2>Footer</h2>
+</div>
+-->
+</body>
+</html>
