@@ -2,11 +2,30 @@ var express = require('express');
 var app = express();
 var router = express.Router();
 app.use(router);
+const pathMod = require('path');
+const path = pathMod.join(__dirname,'../resources/image');
+const fs = require('fs');
 var log = require('../modules/myModules/Controller/Utente/Utente_log');
 var action = require('../modules/myModules/Controller/Utente/Utente_action');
+var multiparty = require('connect-multiparty');
+multipartyMiddleware = multiparty();
+
+router.post('/upload_profile',multipartyMiddleware,function(req,res){
+
+    fs.readFile(req.files.file.path, function (err, data) {
+        fs.writeFile(path+"/profile/"+req.session.username+pathMod.extname(req.files.file.name), data, function (err) {
+            if (err) {
+                return console.warn(err);
+            }
+            res.end("Immagine profilo caricata con successo");
+        });
+    });
+    res.end("Immagine non caricata correttamente, riprova");
+});
 
 router.post('/getUtenteLog',function(req,res){
-  res.end(JSON.stringify({email:req.session.email,username:req.session.username}))
+    if(req.session.islog === 1) res.status(200).end(JSON.stringify({email:req.session.email,username:req.session.username}));
+    res.status(400).end();
 });
 
 router.post('/addAmico',function(req,res){
@@ -26,7 +45,13 @@ router.post('/login', function(req, res){
                 req.session.email = a.email;
                 req.session.save();
             }
-                res.status(a.status).end(JSON.stringify(a));
+            if(a.completed === 0){
+                res.writeHead(301, { "Location": "http://" + req.get('host')+ '/multiForm' });
+                res.end();
+            }else{
+                res.writeHead(301, { "Location": "http://" + req.get('host')+ '/webApp' });
+                res.end();
+            }
         });
     }
 });
@@ -38,10 +63,9 @@ router.post('/logout',function(req,res){
 });
 
 router.post('/singup',function(req,res){
-    log.Get_singup(req.body,req.get('origin'),function(a){
+    log.Get_singup(req.body,req.get('host'),function(a){
         res.end(JSON.stringify(a));
     });
 });
 
-//export this router to use in our index.js
 module.exports = router;

@@ -18,7 +18,7 @@ module.exports={
                       return callback({code:5,text:"Errore indefinito",errorCode:err.code,status:400});
               }
           }else{
-              return callback({code:0,username:succ.USERNAME,email:succ.EMAIL,status:200});
+              return callback({code:0,username:succ.USERNAME,email:succ.EMAIL,completed:succ.COMPLETED,status:200});
           }
       });
   },
@@ -29,10 +29,8 @@ module.exports={
           if (err !== null){
               switch (code){
                   case 1:
-                      //return {code:1,text:"Errore connessione al database",errorCode:err.code};
                       return callback ({code:1,text:"Errore connessione al database",errorCode:err.code,status:400});
                   case 2:
-                      //return {code:2,text:"Email già utilizzata",errorCode:err.code};
                       return callback ({code:2,text:"Email già utilizzata",errorCode:err.code,status:400});
 
                   case 3:

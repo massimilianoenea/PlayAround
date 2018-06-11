@@ -16,10 +16,6 @@ module.exports ={
                 } else {
                     if (results[0].CONFIRMED === 0) return callback("err", null, 3);
                     if (results[0].PASSWORD !== GetHash.GetPassword(user.password)) return callback("err", null, 4);
-                    var sql = "INSERT INTO UTENTI_LOGGATI (CODUTENTE) VALUES(?) ON DUPLICATE KEY UPDATE CODUTENTE = ?";
-                    connection.query(sql,[GetHash.GetCodUtente(user.email),GetHash.GetCodUtente(user.email)],function (err,results){
-                       if(err) return callback(err,null,1);
-                    });
                     return callback(null, results[0], 0);
                 }
             });

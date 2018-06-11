@@ -7,6 +7,9 @@ var cookieParser = require('cookie-parser');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var ss = require('socket.io-stream');
+var fs = require('fs');
+
 
 var socketFunction = require('./SocketFunction/Friend.js');
 app.use('/public',express.static(__dirname+'/resources'));
@@ -76,9 +79,9 @@ io.on('connection', function(client) {
             if(a.code === 0){
                 for (var room in a.amici_on){
                     client.join(a.amici_on[room].USERNAME);
-                    console.log(' Client joined the room '+a.amici_on[room].USERNAME+' and client id is '+ client.id);
+                   // console.log(' Client joined the room '+a.amici_on[room].USERNAME+' and client id is '+ client.id);
                 }
-                client.join(data.username);
+                client.join(data.username+"_player");
             }
         });
     });
@@ -87,6 +90,25 @@ io.on('connection', function(client) {
     client.on('room', function(data) {
         client.join(data.roomId);
         console.log(' Client joined the room and client id is '+ client.id);
+    });
+
+    client.on('play', function(data) {
+        console.log("qui entro");
+        client.in("massi1_player").emit('played', data.data);
+    });
+
+    client.on('stream', function(data) {
+        var clients = io.sockets.adapter.rooms['massi1_player'].sockets;
+        for (var clientId in clients ) {
+            //this is the socket of each client in the room.
+            var SocketofClient = io.sockets.connected[clientId];
+            if (SocketofClient.id !== client.id) {
+                var stream = ss.createStream();
+                var filename = __dirname + '/penningen.mp3';
+                ss(SocketofClient).emit('audio-stream', stream, {name: filename});
+                fs.createReadStream(filename).pipe(stream);
+            }
+        }
     });
 
     client.on('event', function(data) {
