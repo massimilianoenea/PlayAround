@@ -124,7 +124,6 @@
         delete $http.defaults.headers.common['X-Requested-With'];
 
         $scope.try_login = function(){
-            console.log($scope.email);
             var parameter = {email:$scope.email,password:$scope.password};
             $http({
                 method : "POST",
@@ -133,7 +132,7 @@
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
             }).then(function mySuccess(response) {
-                window.location.href = '/webApp';
+                //window.location.href = '/webApp';
             }, function myError(response) {
                 $scope.error = response.data;
             });
