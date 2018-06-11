@@ -4,24 +4,16 @@
     <meta charset="UTF-8">
     <title>PlayAround</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <!-- JQuery -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    <!-- AngularJs -->
+    <!-- JQuery -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Angular -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
 <style>
     #barraLaterale{
         background-color: midnightblue;
@@ -81,7 +73,7 @@
     }
 
     .navbar-default .navbar-nav>li>a:hover{
-        color:red;
+        color:gold;
     }
     .navbar-default .navbar-nav>li>a:active{
         color: gold;
@@ -116,6 +108,9 @@
     .row{
         height: 750px;
     }
+    .nav .navbar-nav>li>a:active{
+        color red;
+    }
 
     .navbar{
         background-image: none;
@@ -133,64 +128,67 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-2" id="barraLaterale">
-                <div class="row">
-                <div class="container-fluid">
-                <div class="profile-container">
-                    <img src="resources/image/Symbol_playaround_complete.png" alt="logo PlayAround" style="height:60px;" class="img-responsive">
-                </div>
-                </div>
 
-                <nav class="navbar navbar-default" style="border: 0px;background-color: midnightblue">
+
+
+                <nav class="navbar navbar-default navbar-fixed-left" style="border: 0px;background-color: midnightblue">
                     <div class="container-fluid" style="background-color: midnightblue">
-                    <div class="navbar-header">
+                        <div class="navbar-header">
 
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <div class="navbar-brand" style="height: 200px">
+                                <img src="resources/image/Symbol_playaround_complete.png" alt="logo PlayAround" style="height:60px;" class="img-responsive">
+                            </div>
+                        </div>
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
-                        </button>
-                    </div>
+                            </button>
+                        </div>
+
                     <div class="collapse navbar-collapse" id="myNavbar" style="background-color: midnightblue;">
-                    <ul class="nav navbar-nav" style="background-color: midnightblue">
-                    <li>
-                        <a href="#">Home</a>
-                    </li>
+                        <ul class="nav navbar-nav" style="background-color: midnightblue">
+                            <li class="nav-item">
+                                <a href="#">Home</a>
+                            </li>
 
-                        <li>
-                            <a href="#">La tua Libreria</a>
-                        </li>
+                            <li>
+                                <a href="#">La tua Libreria</a>
+                            </li>
 
-                    <li >
-                        <a href="#">Preferiti</a>
-                    </li>
+                            <li >
+                                <a href="#">Preferiti</a>
+                            </li>
 
-                    <li >
-                        <a href="#">I tuoi Amici</a>
-                    </li>
+                            <li >
+                                <a href="#">I tuoi Amici</a>
+                            </li>
 
-                        <li >
-                        <a href="#">Generi & Mood</a>
-                    </li>
+                            <li>
+                                <a href="#">Generi & Mood</a>
+                            </li>
 
-                    <li>
-                        <a href="#">Più ascoltati</a>
-                    </li>
-                    <li>
-                        <a href="#">Scelti per te</a>
-                    </li>
-                    </ul>
+                            <li>
+                                <a href="#">Più ascoltati</a>
+                            </li>
+
+                            <li>
+                                <a href="#">Scelti per te</a>
+                            </li>
+                        </ul>
                     </div>
-                    </div>
+                </div>
+
                 </nav>
+        </div>
+                <div class="container-fluid">
+                    <div class="playerMusic">
+                       <h3 style="color: gold">Riproduzione</h3>
+                    </div>
+                </div>
 
-        <div class="container-fluid">
-            <div class="playerMusic">
-               <h3 style="color: gold">Riproduzione</h3>
             </div>
         </div>
-
-        </div>
-            </div>
 
 
 
