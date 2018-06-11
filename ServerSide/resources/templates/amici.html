@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PlayAround</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular-route.min.js"></script>
+    <script src="/public/angularFile/app.js"></script>
+    <script src="/public/angularFile/controller.js"></script>
+    <script src="/public/angularFile/service.js"></script>
+    <style>
+        .containe{
+            float: left;
+            margin: auto;
+            width: 20%;
+        }
+        @media screen and (max-width: 700px){
+            .containe{
+                width: 50%;
+            }
+        }
+    </style>
+
+</head>
+<body ng-app="PlayAround">
+<div class="row">
+
+    <h2 align="center">I tuoi Amici</h2>
+    <div ng-controller="amiciCtrl">
+        <div ng-repeat="user in users" class="containe">
+
+            <a href="#!utente/{{user.username}}">
+
+                <img src="https://www.w3schools.com/w3images/bandmember.jpg" alt="Avatar" style="width:90px">
+                <p>{{user.name}}</p>
+                <p>{{user.username}}</p>
+            </a>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

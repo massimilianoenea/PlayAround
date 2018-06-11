@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PlayAround</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular-route.min.js"></script>
+    <script src="/public/angularFile/app.js"></script>
+    <script src="/public/angularFile/controller.js"></script>
+    <script src="/public/angularFile/service.js"></script>
+    <style>
+        .tab {
+            margin-top: 3%;
+            margin-top: 3%;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            width: 100%;
+        }
+
+        /* Style the buttons that are used to open the tab content */
+        .tab a {
+            background-color: grey;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            width: 33.333333%;
+            text-align: center;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab a:hover {
+            background-color: #2a4463;
+        }
+        .active{
+            background-color: #2a4463;
+            color: gold;
+        }
+        .tablinks{
+            height: 100%;
+        }
+
+
+    </style>
+</head>
+<body ng-app="PlayAround" ng-controller="libreriaCtrl">
+<div class="tab">
+    <a href="#!libreria/playlist" class="tablinks active">Playlist</a>
+    <a href="#!libreria/leTueCanzoni" class="tablinks">Le tue Canzoni</a>
+    <a href="#!libreria/ascoltatiRecente" class="tablinks">Ascoltati di Recente</a>
+</div>
+
+
+
+</body>
+</html>
