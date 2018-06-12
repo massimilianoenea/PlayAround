@@ -20,12 +20,12 @@ angular.module('PlayAround')
 
 
 })
-    .controller('utenteCtrl', function($scope,$http,User){
-        $scope.User=User;
-        })
+.controller('utenteCtrl', function($scope,$http,User){
+    $scope.User=User;
+})
 
 
-    .controller('playlistCtrl', function($scope){
+.controller('playlistCtrl', function($scope){
 
 })
 
@@ -34,3 +34,27 @@ angular.module('PlayAround')
     $scope.users = listaAmici.users;
     listaAmici.load();
 })
+
+.controller('PlayAround', function($scope, $http) {
+    delete $http.defaults.headers.common['X-Requested-With'];
+    $scope.checkOn = function(){
+        $http({
+            method : "POST",
+            url : '/playaround/getUtenteLog',
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' }
+        }).then(function mySuccess(response) {
+            $scope.Utente = response.data;
+            if(isConnected()===true){
+                update_friend(response.data);
+                set_dispositivo(response.data);
+                //send_message({username:response.data.username,text:response.data.username+" ha effettuato l'accesso"});
+            }else{
+                console.log("not connected");
+            }
+        }, function myError(response) {
+            window.location.href = '/login';
+        });
+    };
+});
+
