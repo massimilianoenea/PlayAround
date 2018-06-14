@@ -10,7 +10,7 @@ module.exports = {
           connection.query(sql,[username],function (err,results) {
               var res = results;
              if(err || results.length === 0) return callback('err',null,2);
-             sql = "SELECT * FROM UTENTI_AMICI WHERE CODUTENTE_AMICO = ? AND CODUTENTE IS IN (SELECT CODUTENTE_AMICO FROM UTENTI_AMICI WHERE CODUTENTE LIKE ?)";
+             sql = "SELECT * FROM UTENTI_AMICI WHERE CODUTENTE_AMICO LIKE ? AND CODUTENTE LIKE ?";
              connection.query(sql,[res[0].CODUTENTE,GetHash.GetCodUtente(email)],function(err,results){
                 if(err) return callback(err,null,3);
                 if(results.length === 0)return callback(null,res,0);

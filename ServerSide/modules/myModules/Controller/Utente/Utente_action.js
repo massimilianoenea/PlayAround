@@ -13,8 +13,8 @@ module.exports ={
                       return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
               }
           }else{
-              if(code === 0) return callback({code:0,text:succ,status:200,amici:true});
-              if(code === 1) return callback({code:0,text:succ,status:200,amici:false});
+              if(code === 0) return callback({code:0,data:succ,status:200,amici:false});
+              if(code === 1) return callback({code:0,data:succ,status:200,amici:true});
           }
       });
     },
@@ -30,7 +30,7 @@ module.exports ={
                         return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
                 }
             }else{
-                return callback({code:0,text:succ,status:200});
+                return callback({code:0,data:succ,status:200});
             }
         });
     },
@@ -47,7 +47,7 @@ module.exports ={
                       return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
               }
           }else{
-              return callback({code:0,text:"tu e "+username_amico+" adesso siete amici",status:200});
+              return callback({code:0,data:"tu e "+username_amico+" adesso siete amici",status:200});
           }
       });
   },
@@ -63,7 +63,7 @@ module.exports ={
                         return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
                 }
             }else{
-                return callback({code:0,text:"tu e "+username_amico+" adesso non siete amici",status:200});
+                return callback({code:0,data:"tu e "+username_amico+" adesso non siete amici",status:200});
             }
         });
     }

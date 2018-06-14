@@ -72,7 +72,7 @@ module.exports = {
     },
 
     get_piu_ascoltate : function(codartista,callback){
-        brani_model.get_canzoni_salvate(email,function(err,succ,code){
+        brani_model.get_piu_ascoltate(codartista,function(err,succ,code){
             if (err !== null){
                 switch (code){
                     case 1:

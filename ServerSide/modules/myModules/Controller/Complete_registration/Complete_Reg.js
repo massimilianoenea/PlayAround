@@ -23,6 +23,7 @@ module.exports={
     complete_reg:function (EndArray,email,callback) {
       var Artist_array=[];
       var Genere_array=[];
+
       var codutente = GetHash.GetCodUtente(email);
       for(var typename in EndArray){
           if(EndArray[typename].type === "artist"){

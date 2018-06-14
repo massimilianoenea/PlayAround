@@ -13,14 +13,14 @@ module.exports = {
                         return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
                 }
             }else{
-                if(code === 0) return callback({code:0,text:succ,status:200,follow:true});
-                if(code === 1) return callback({code:0,text:succ,status:200,follow:false});
+                if(code === 0) return callback({code:0,data:succ,status:200,follow:false});
+                if(code === 1) return callback({code:0,data:succ,status:200,follow:true});
             }
         });
     },
 
-    get_artisti_seguiti : function(email,callback){
-        artisti_model.get_artisti_seguiti(email,function(err,succ,code){
+    get_artisti_seguiti : function(username,callback){
+        artisti_model.get_artisti_seguiti(username,function(err,succ,code){
             if (err !== null){
                 switch (code){
                     case 1:
@@ -31,7 +31,7 @@ module.exports = {
                         return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
                 }
             }else{
-                return callback({code:0,text:succ,status:200});
+                return callback({code:0,data:succ,status:200});
             }
         });
     },
@@ -48,7 +48,7 @@ module.exports = {
                         return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
                 }
             }else{
-                return callback({code:0,text:succ,status:200});
+                return callback({code:0,data:succ,status:200});
             }
         });
     }

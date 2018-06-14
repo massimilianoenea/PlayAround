@@ -8,7 +8,7 @@ module.exports = {
           var sql = "SELECT CODUTENTE FROM UTENTI WHERE USERNAME = ? LIMIT 1";
           connection.query(sql,[username], function(err, results) {
               if(results.length === 0 || err) return callback('err',null,2);
-              sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IS IN (SELECT CODBRANO,DATA FROM BRANI_ASCOLTATI WHERE CODUTENTE = ? ORDER BY DATA)";
+              sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI WHERE CODUTENTE = ? ORDER BY DATA)";
               connection.query(sql,[results[0].CODUTENTE], function(err, results) {
                   if (err) return callback(err, null, 3);
                   return callback(null,results,0);
@@ -20,7 +20,7 @@ module.exports = {
    ascoltano_amici: function(email,callback){
        connection.getConnection(function (err,connection){
            if(err)  return callback(err,null,1);
-           var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IS IN (SELECT CODBRANO,DATA FROM BRANI_ASCOLTATI WHERE CODUTENTE IS IN (SELECT CODUTENTE_AMICO FROM UTENTI_AMICI WHERE CODUTENTE = ?) ORDER BY DATA";
+           var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI WHERE CODUTENTE IN (SELECT CODUTENTE_AMICO FROM UTENTI_AMICI WHERE CODUTENTE = ?) ORDER BY DATA)";
            connection.query(sql,[GetHash.GetCodUtente(email)], function(err, results) {
                if (err) return callback(err, null, 2);
                return callback(null,results,0);
@@ -42,7 +42,7 @@ module.exports = {
     get_canzoni_salvate: function(email,callback){
       connection.getConnection(function (err,connection) {
           if(err) return callback(err,null,1);
-          var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IS IN(SELECT CODBRANO FROM BRANI_SALVATI WHERE CODUTENTE = ?)";
+          var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN(SELECT CODBRANO FROM BRANI_SALVATI WHERE CODUTENTE = ?)";
           connection.query(sql,[GetHash.GetCodUtente(email)], function(err, results) {
               if (err) return callback(err, null, 2);
               return callback(null,results,0);
@@ -56,9 +56,9 @@ module.exports = {
          var sql = "";
 
          if(codartista === ""){
-             sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IS IN (SELECT CODBRANO,COUNTER FROM BRANI_ASCOLTATI GROUP BY CODBRANO ORDER BY COUNTER LIMIT 10)";
+             sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI GROUP BY CODBRANO ORDER BY COUNTER)";
          }else{
-             sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODARTISTA ='"+codartista+"' AND CODBRANO IS IN (SELECT CODBRANO,COUNTER FROM BRANI_ASCOLTATI GROUP BY CODBRANO ORDER BY COUNTER LIMIT 10)";
+             sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODARTISTA ='"+codartista+"' AND CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI GROUP BY CODBRANO ORDER BY COUNTER)";
          }
 
           connection.query(sql, function(err, results) {

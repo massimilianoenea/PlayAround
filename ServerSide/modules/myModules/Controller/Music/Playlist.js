@@ -2,7 +2,8 @@ var playlist_model = require('../../model/Playlist/Playlist');
 
 module.exports = {
   playlist_giornaliera : function (data,callback) {
-      playlist_model.playlist_giornaliera(data.getDay(), data.getHours(), function (err, succ, code) {
+      var mydata = new Date(data);
+      playlist_model.playlist_giornaliera(mydata.getDay(), mydata.getHours(), function (err, succ, code) {
           if (err !== null){
               switch (code){
                   case 1:
@@ -17,6 +18,7 @@ module.exports = {
           }
       });
   },
+
     get_brani_playlist : function (codPlaylist,callback) {
         playlist_model.get_brani_playlist(codPlaylist, function (err, succ, code) {
             if (err !== null) {
@@ -39,10 +41,11 @@ module.exports = {
                         return callback({code: 3, text: "Errore indefinito", errorCode: err.code, status: 400});
                 }
             } else {
-                return callback({code: 0, data: succ, status: 200});
+                return callback({code: 0, data:succ, status: 200});
             }
         });
     },
+
     get_playlist_utente: function(username,callback){
         playlist_model.get_playlist_utente(username, function (err, succ, code) {
             if (err !== null) {
@@ -72,7 +75,7 @@ module.exports = {
                         return callback({code: 3, text: "Errore indefinito", errorCode: err.code, status: 400});
                 }
             } else {
-                return callback({code: 0, data: succ, status: 200});
+                return callback({code: 0, data:succ, status: 200});
             }
         });
     },
@@ -92,7 +95,7 @@ module.exports = {
                         return callback({code: 2, text: "Impossibile creare la playlist", errorCode: err.code, status: 400});
                 }
             } else {
-                return callback({code: 0, data: succ, status: 200});
+                return callback({code: 0, data:succ, status: 200});
             }
         });
     },
@@ -112,7 +115,7 @@ module.exports = {
                         return callback({code: 2, text: "Impossibile eliminare la playlist "+nomePlaylist, errorCode: err.code, status: 400});
                 }
             } else {
-                return callback({code: 0, data: succ, status: 200});
+                return callback({code: 0, data:succ, status: 200});
             }
         });
     },
@@ -132,7 +135,7 @@ module.exports = {
                         return callback({code: 2, text: "Impossibile aggiungere la canzone alla playlist "+nomePlaylist, errorCode: err.code, status: 400});
                 }
             } else {
-                return callback({code: 0, data: succ, status: 200});
+                return callback({code: 0, data:succ, status: 200});
             }
         });
     },
@@ -152,7 +155,7 @@ module.exports = {
                         return callback({code: 2, text: "Impossibile rimuovere la canzone dalla playlist "+nomePlaylist, errorCode: err.code, status: 400});
                 }
             } else {
-                return callback({code: 0, data: succ, status: 200});
+                return callback({code: 0, data:succ, status: 200});
             }
         });
     }

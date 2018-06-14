@@ -13,7 +13,7 @@ module.exports = {
                       return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
               }
           }else{
-              return callback({code:0,text:succ,status:200});
+              return callback({code:0,data:succ,status:200});
           }
       });
   },
@@ -30,7 +30,7 @@ module.exports = {
                         return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
                 }
             }else{
-                return callback({code:0,text:succ,status:200});
+                return callback({code:0,data:succ,status:200});
             }
         });
     }
