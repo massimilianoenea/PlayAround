@@ -44,29 +44,19 @@ module.exports = {
     {
         connection.getConnection(function (err,connection) {
             if (err) return callback(err,null,1);
+
             var tok = GetHash.GetToken(user.email);
+            var sql = "INSERT INTO UTENTI(EMAIL,CODUTENTE,CODUTENTE_SPAN,USERNAME,PASSWORD,CONFIRMED,COMPLETED) VALUES (?,?,?,?,?,?,?)";
+            var paramater = [user.email,GetHash.GetCodUtente(user.email), GetHash.GetCodUtente_span(user.email),user.username,GetHash.GetPassword(user.password),0,0];
+            connection.query(sql, paramater, function(err, results){
+                if (err) return callback(err, null,3);
 
-            var sql = "INSERT INTO UTENTI_APPEND(CODUTENTE,TOKEN,DATA_INVIO) VALUES (?,?,null)";
-            connection.query(sql, [GetHash.GetCodUtente(user.email), tok], function(err, results) {
-
-                if (err) return callback(err, null,2);
-
-                sql = "INSERT INTO UTENTI(EMAIL,CODUTENTE,CODUTENTE_SPAN,USERNAME,PASSWORD,CONFIRMED) VALUES (?,?,?,?,?,?)";
-                var paramater = [user.email,GetHash.GetCodUtente(user.email), GetHash.GetCodUtente_span(user.email),user.username,GetHash.GetPassword(user.password),0];
-                connection.query(sql, paramater, function(err, results) {
-
-                    if (err) {
-
-                        sql = "DELETE FROM UTENTI_APPEND WHERE CODUTENTE = '"+GetHash.GetCodUtente(user.email)+"'";
-                        connection.query(sql);
-                        return callback(err, null,3);
-
-                    }
-
+                 sql = "INSERT INTO UTENTI_APPEND(CODUTENTE,TOKEN,DATA_INVIO) VALUES (?,?,null)";
+                connection.query(sql, [GetHash.GetCodUtente(user.email), tok], function(err, results) {
+                    if (err) return callback(err,null,2);
                     mailSender.sendMail(mailSender.SetmailOptions(user.email,url,tok));
                     connection.release();
                     return callback(null,results,0);
-
                 });
             });
 
