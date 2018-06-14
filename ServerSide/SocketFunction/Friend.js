@@ -1,8 +1,8 @@
-var friendModel = require('../modules/myModules/SocketModel/Friend');
+var friendModel = require('../modules/myModules/model/Utente_action/Utente_action');
 
 module.exports = {
   GetFriend: function(email,callback){
-    friendModel.GetAmici(email,function(err,succ,code){
+    friendModel.get_amici(email,function(err,succ,code){
         if (err !== null){
             switch (code){
                 case 1:

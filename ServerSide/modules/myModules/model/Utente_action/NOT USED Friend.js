@@ -1,5 +1,5 @@
-var connection = require("../dbconnection/setup.js");
-var GetHash = require('../HashGenerator/HashGeneretor');
+var connection = require("../../dbconnection/setup.js");
+var GetHash = require('../../HashGenerator/HashGeneretor');
 
 module.exports = {
     GetAmici: function (email, callback) {

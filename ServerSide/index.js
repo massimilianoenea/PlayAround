@@ -1,6 +1,7 @@
 var bodyParser = require('body-parser');
 var user = require('./routes/user.js');
 var home = require('./routes/home.js');
+var item = require('./routes/AppItem');
 var express = require('express');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -65,8 +66,9 @@ app.all('*',function(req, res, next) {
 
 app.use("/",home);
 app.use("/playaround",user);
+app.use("/require",item);
 
-//app.use("/AppItem",);
+
 io.on('connection', function(client) {
 
     client.on('disconnect', function() {
@@ -143,7 +145,7 @@ io.on('connection', function(client) {
     });
 
     client.on('PercentageBar',function(data){
-        io.sockets.in(data.username+"_player").emit('updateProgressBar',data.progress);
+        client.in(data.username+"_player").emit('updateProgressBar',data.progress);
     });
 
     client.on('stream', function(data) {

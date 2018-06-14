@@ -31,7 +31,6 @@ module.exports={
               Genere_array.push(codutente,EndArray[typename].cod);
           }
       }
-      console.log(Artist_array);
       complete_reg.complete_reg(Artist_array,Genere_array,function (err,succ,code){
          if(err!==null) return callback({code:code,status:400,text:"Non è stato possibile confermare le preferenze",errorCode:err.code});
           complete_reg.flag_complete_reg(codutente,function (err,succ,code){
