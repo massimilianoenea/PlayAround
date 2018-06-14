@@ -1,11 +1,12 @@
-angular.module('PlayAround', ['ngRoute'])
+angular.module('PlayAround', ['ngRoute','ngStorage'])
 
 /* Routing */
 
 .config(function($routeProvider) {
     $routeProvider
         .when("/", {
-            templateUrl: "/public/templates/home.html"
+            templateUrl: "/public/templates/home.html",
+            controller:"homeCtrl"
         })
         .when("/amiciOn",{
             templateUrl:"/public/templates/amiciOn.html",
@@ -31,52 +32,45 @@ angular.module('PlayAround', ['ngRoute'])
         })
         .when("/libreria/leTueCanzoni", {
             templateUrl: "/public/templates/leTueCanzoni.html",
-            controller: ""
+            controller: "tueCanzoniCtrl"
         })
         .when("/libreria/ascoltatiRecente", {
             templateUrl: "/public/templates/ascoltatiRecente.html",
-            controller: ""
+            controller: "recentiCtrl"
         })
 
 
         .when("/artista/:id",{
             templateUrl: "/public/templates/artista.html",
-            controller: ""
+            controller: "artistaCtrl",
+            resolve:  {
+                User: function($http, $routeParams){
+                    return $http.get('/webApp/artista/username')
+                        .then(function(response){
+                            return response.data;
+                        })
+                }
+            }
+        })
+
+        .when("/player",{
+                templateUrl:"/public/templates/player.html",
+                controller: "playerCtrl"
 
         })
-        /*
-        .when("/home",{
-                templateUrl:"/public/templates/home.html",
-                controller: "homeCtrl"
 
-        })
-
-        .when("/libreria/salvate",{
-            templateUrl: "/public/templates/",
-            controller: ""
-
-        })
-        .when("/",{
-            templateUrl: "/public/templates/",
-            controller: ""
-
-        })
-        .when("/",{
-            templateUrl: "/public/templates/",
-            controller: ""
-
-        })
 
         .when("/preferiti",{
-            templateUrl: "/templates/preferiti.html",
-            controller: "preferitiCtrl"
+            templateUrl: "/public/templates/amici.html",
+            controller: "artistiPrefCtrl"
 
         })
         .when("/amici",{
-                templateUrl:"/templates/amici.html",
-                controller: "amiciCtrl"
+            templateUrl: "/public/templates/amici.html",
+            controller: "amiciCtrl"
 
         })
+
         .when("/sceltiPerTe",{
                 templateUrl:"/templates/sceltiPerTe.html",
                 controller: "sceltiCtrl"
@@ -92,19 +86,17 @@ angular.module('PlayAround', ['ngRoute'])
                 controller:"moodCtrl"
 
         })
-        .when("/artista",{
-                templateUrl:"/templates/artista.html",
-                controller:"artistaCtrl"
+
+
+
+        .when("/album",{
+                templateUrl: "/templates/album.html",
+                controller: "albumCtrl"
 
         })
-        .when("/album",{
-                templateUrl: "/templates/album",
-                controller: ""
-
-            })
-        .when("/",{
-                templateUrl: "/templates/",
-                controller: ""
-
-        })*/
+        .otherwise({
+            template: "/templates/home.html",
+            controller:"homeCtrl"
+        })
 });
+

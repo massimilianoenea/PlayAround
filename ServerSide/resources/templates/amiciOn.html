@@ -20,6 +20,9 @@
                 width: 50%;
             }
         }
+        p{
+            color: #FEC35E;
+        }
     </style>
 
 </head>
@@ -28,7 +31,7 @@
 
     <h2 align="center">Amici Online</h2>
     <div ng-controller="amiciOnCtrl">
-    <div ng-repeat="user in users" class="containe">
+    <div ng-repeat="user in getUsers()" class="containe">
 
         <a href="#!utente/{{user.username}}">
 

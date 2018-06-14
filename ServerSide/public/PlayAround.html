@@ -7,9 +7,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular-route.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
+    <script src="/public/socket.io-client-master/dist/socket.io.js"></script>
+    <script src="/public/socket.io-stream.js"></script>
     <script src="/public/angularFile/app.js"></script>
     <script src="/public/angularFile/controller.js"></script>
     <script src="/public/angularFile/service.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
     * {
         box-sizing: border-box;
@@ -40,6 +44,7 @@
         color: gold;
         padding-bottom: 2px;
         text-align: center;
+        font-size: larger;
     }
 
     /* Column container */
@@ -213,7 +218,7 @@
     .main {
       padding: 16px;
       margin-bottom: 30px;
-        background-color: #f4f4f4;
+        background-color: #4a4a4a;
         color: #2a4463;
         height: 100%;
     }
@@ -333,6 +338,64 @@
     .active{
         color: gold;
     }
+    .playerino{
+background-image: url("/image/sfondo_playerino2.jpg");
+        height: 360px;
+        width:90%;
+        margin: auto;
+        border-radius: 20px;
+        position: relative;
+        text-align: center;
+
+    }
+    .playerino a{
+        color: #FEC35E;
+        font-size: medium;
+    }
+    .playerino img{
+        height: 46%;
+        margin-top: 20%;
+        filter:drop-shadow(8px 8px 10px midnightblue);
+    }
+    .playerino img:hover{
+        cursor: pointer;
+    }
+    .controllerMusic {
+        background: #260F39;
+        height: 25%;
+        width: 100%;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        text-align: center;
+        color: whitesmoke;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+
+    }
+    i {
+        position: relative;
+        bottom: -0.7rem;
+        padding: 0 5% 0 5%;
+        cursor: pointer;
+    }
+    i:hover{
+        color:#FEC35E;
+    }
+    .time_slider {
+        background: #301643;
+        margin-top: 7px;
+        margin-right: 3px;
+        margin-left: 3px;
+    }
+    .fa-expand{
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 13px 0px 1px;
+        color: whitesmoke;
+    }
+
 
 
     @media screen and (max-width: 700px){
@@ -345,7 +408,7 @@
     }
     </style>
     </head>
-    <body ng-app="PlayAround">
+    <body ng-app="PlayAround" ng-controller="PlayAround">
 
 
     <script>
@@ -396,28 +459,50 @@
     border-top-style: solid;border-top-color: whitesmoke;border-top-width: 1px; padding-top: 15px; margin-top: 12px">
               <ul>
                   <li>
-                      <a href="#" onclick="activeItem()" class="list active">Home</a>
+                      <a href="#" ng-click="enablePlayerino()" class="list active">Home</a>
                   </li>
                   <li>
-                      <a href="#!libreria/playlist" onclick="activeItem()" class="list">La tua libreria</a>
+                      <a href="#!libreria/playlist" ng-click="enablePlayerino()" class="list">La tua libreria</a>
                   </li>
                   <li >
-                      <a href="#!preferiti" onclick="activeItem()" class="list">Preferiti</a>
+                      <a href="#!preferiti" ng-click="enablePlayerino()" class="list">Preferiti</a>
                   </li>
                   <li>
-                      <a href="#!amici" onclick="activeItem()" class="list ">I tuoi Amici</a>
+                      <a href="#!amici" ng-click="enablePlayerino()" class="list ">I tuoi Amici</a>
                   </li>
                   <li>
-                      <a href="#!mood" onclick="activeItem()" class="list">Genere & Mood</a>
+                      <a href="#!mood" ng-click="enablePlayerino()" class="list">Genere & Mood</a>
                   </li>
                   <li>
-                      <a href="#!piuAscoltati" onclick="activeItem()" class="list ">I più ascoltati</a>
+                      <a href="#!piuAscoltati" ng-click="enablePlayerino()" class="list ">I più ascoltati</a>
                   </li>
                   <li>
-                      <a href="#!sceltiPerTe" onclick="activeItem()" class="list ">Scelti per te</a>
+                      <a href="#!sceltiPerTe" ng-click="enablePlayerino()" class="list ">Scelti per te</a>
                   </li>
               </ul>
           </div>
+            <br>
+            <button ng-click="checkOn()">logged</button>
+            <button ng-click="sendMess()">send</button>
+            <br>
+            <div class="playerino" ng-show="getDisable()">
+
+                <a href="#!player" ng-click="disablePlayerino()">
+                    <i class="fa fa-expand"></i>
+                    <img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar"/>
+                    <p>titolo canzone</p>
+                </a>
+                <div class="controllerMusic">
+                    <div class="time_slider">
+                        <span class="runing_time">0:00</span>
+                        <input type="range" value="0">
+                    </div>
+                    <i class="fa fa-fast-backward" aria-hidden="true"></i>
+                    <i class="fa fa-play" aria-hidden="true"></i>
+                    <i class="fa fa-fast-forward" aria-hidden="true"></i>
+                    <i class="fa fa-retweet" aria-hidden="true"></i>
+                </div>
+            </div>
       </div>
       <!-- sempre attiva, parte centrale-->
         <div class="main">
@@ -442,19 +527,19 @@
 
         <!-- barra laterale destra in desktop-->
       <div class="sidedx">
-          <div class="controller" ng-controller="amiciOnCtrl">
-          <a class="h3" href="#!amiciOn">Amici Online</a>
+          <div class="controller" ng-controller="amiciOnCtrl" align="center">
+          <a class="h3" href="#!amiciOn" ng-click="enablePlayerino()">Amici Online</a>
 
-              <div ng-repeat="user in users | limitTo: 3" class="container">
+              <div ng-repeat="user in getUsers() | limitTo: 5" class="container">
                   <a href="#!utente/{{user.username}}">
 
                     <img src="https://www.w3schools.com/w3images/bandmember.jpg" alt="Avatar" style="width:90px">
-                      <p>{{user.name}}</p>
                       <p>{{user.username}}</p>
+                      <p>{{user.canzone.titolo}}</p>
+                   
                   </a>
 
             </div>
-
           </div>
 
           <div class="controller">
@@ -490,9 +575,6 @@
       <h2>Footer</h2>
     </div>
     -->
-
-
-
-
+    <script src="/public/angularFile/mySocket.js"></script>
     </body>
     </html>
