@@ -17,7 +17,7 @@ module.exports ={
     get_brani_playlist: function (codPlaylist,callback){
         connection.getConnection(function (err,connection){
             if(err)  return callback(err,null,1);
-            var sql = "SELECT CODBRANO,TITOLO FROM BRANI WHERE CODBRANO IS IN (SELECT CODBRANO FROM PLAYLIST_BRANI WHERE CODPLAYLIST = ?)";
+            var sql = "SELECT CODBRANO,TITOLO FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM PLAYLIST_BRANI WHERE CODPLAYLIST = ?)";
             connection.query(sql,[codPlaylist], function(err, results) {
                 if (err) return callback(err, null, 2);
                 return callback(null,results,0);
@@ -28,7 +28,7 @@ module.exports ={
     get_playlist_utente: function (username,callback){
         connection.getConnection(function (err,connection){
             if(err)  return callback(err,null,1);
-            var sql = "SELECT CODUTENTE FROM UTENTI WHERE USERNAME = ? LIMIT 1";
+            var sql = "SELECT CODUTENTE FROM UTENTI WHERE USERNAME = ?";
             connection.query(sql,[username], function(err, results) {
                 if(results.length === 0 || err) return callback('err',null,2);
                 sql = "SELECT CODPLAYLIST,NOME_PLAYLIST FROM PLAYLIST_UT WHERE CODUTENTE = ?";
@@ -43,7 +43,7 @@ module.exports ={
     new_playlist: function (email,nomePlaylist,callback){
         connection.getConnection(function (err,connection) {
             if (err) return callback(err, null, 1);
-            var sql = "INSERT INTO PLAYLIST";
+            var sql = "INSERT INTO PLAYLIST VALUES ('0')";
             connection.query(sql,function (err,results) {
                 if(err) return callback(err,null,2);
                 var id = results.insertId;
@@ -59,7 +59,7 @@ module.exports ={
     delete_playlist: function (email,nomePlaylist,callback){
         connection.getConnection(function (err,connection) {
             if (err) return callback(err, null, 1);
-            var sql = "SELECT CODPLAYLIST FROM PLAYLIST_UT WHERE CODUTENTE = ? AND NOME_PLAYLIST = ? LIMIT 1";
+            var sql = "SELECT CODPLAYLIST FROM PLAYLIST_UT WHERE CODUTENTE = ? AND NOME_PLAYLIST = ?";
             connection.query(sql,[GetHash.GetCodUtente(email),nomePlaylist], function(err, results) {
                 if(results.length === 0 || err) return callback('err',null,2);
                 sql = "DELETE FROM PLAYLIST WHERE CODPLAYLIST = ?";
@@ -74,7 +74,7 @@ module.exports ={
     add_song_playlist: function (email,nomePlaylist,codbrano,callback){
         connection.getConnection(function (err,connection) {
             if (err) return callback(err, null, 1);
-            var sql = "SELECT CODPLAYLIST FROM PLAYLIST_UT WHERE CODUTENTE = ? AND NOME_PLAYLIST = ? LIMIT 1";
+            var sql = "SELECT CODPLAYLIST FROM PLAYLIST_UT WHERE CODUTENTE = ? AND NOME_PLAYLIST = ?";
             connection.query(sql,[GetHash.GetCodUtente(email),nomePlaylist], function(err, results) {
                 if(results.length === 0 || err) return callback('err',null,2);
                 sql = "INSERT INTO PLAYLIST_BRANI(CODPLAYLIST,CODBRANO) VALUES (?,?)";
@@ -89,7 +89,7 @@ module.exports ={
     delete_song_playlist: function (email,nomePlaylist,codbrano,callback){
         connection.getConnection(function (err,connection) {
             if (err) return callback(err, null, 1);
-            var sql = "SELECT CODPLAYLIST FROM PLAYLIST_UT WHERE CODUTENTE = ? AND NOME_PLAYLIST = ? LIMIT 1";
+            var sql = "SELECT CODPLAYLIST FROM PLAYLIST_UT WHERE CODUTENTE = ? AND NOME_PLAYLIST = ?";
             connection.query(sql,[GetHash.GetCodUtente(email),nomePlaylist], function(err, results) {
                 if(results.length === 0 || err) return callback('err',null,2);
                 sql = "DELETE FROM PLAYLIST_BRANI WHERE CODPLAYLIST = ? AND CODBRANO = ?";

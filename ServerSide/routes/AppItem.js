@@ -251,4 +251,179 @@ router.get("/get_altro_artista/:codartista",function(req,res){
 
 // LE TUE PLAYLIST //
 
+router.get("/le_tue_playlist",function(req,res){
+   if(req.session.islog === 1){
+       playlist.get_playlist_utente(req.session.username,function(a){
+           var json = [];
+           if(a.status === 200) {
+               for (var playlist in a.data) {
+                   json.push({
+                       nome: a.data[playlist].NOME,
+                       codice: a.data[playlist].CODPLAYLIST,
+                       immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST
+                   });
+               }
+           }
+           res.status(a.status).end(JSON.stringify(json));
+       });
+   }else{
+       res.status(500).end();
+   }
+});
+
+router.post("/nuova_playlist",function (req,res){
+    if(req.session.islog === 1){
+        playlist.new_playlist(req.session.email,get.body.nome_playlist,function(a){
+            res.status(a.status).end(JSON.stringify(a.data));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
+
+router.post("/delete_playlist",function (req,res){
+    if(req.session.islog === 1){
+        playlist.delete_playlist()(req.session.email,get.body.nome_playlist,function(a){
+            res.status(a.status).end(JSON.stringify(a.data));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
+
+router.post("/add_song",function(req,res){
+    if(req.session.islog === 1){
+     playlist.add_song_playlist(req.session.email,get.body.nome_playlist,req.body.codbrano,function(a){
+         res.status(a.status).end(JSON.stringify(a.data));
+     });
+    }else{
+        res.status(500).end();
+    }
+});
+
+router.post("/delete_song",function(req,res){
+    if(req.session.islog === 1){
+        playlist.delete_song_playlist(req.session.email,get.body.nome_playlist,req.body.codbrano,function(a){
+            res.status(a.status).end(JSON.stringify(a.data));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
+
+// LE TUE CANZONI //
+
+router.get("/canzoni_salvate",function(req,res){
+    if(req.session.islog === 1){
+        brani.get_canzoni_salvate(req.session.email,function(a){
+            var json = [];
+            if(a.status === 200) {
+                for (var brano in a.data) {
+                    json.push({
+                        nome: a.data[brano].TITOLO,
+                        codice: a.data[brano].CODBRANO,
+                        immagine: a.data[brano].IMMAGINE
+                    });
+                }
+            }
+            res.status(a.status).end(JSON.stringify(json));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
+
+router.get("/ascoltate_recente",function(req,res){
+   if(req.session.islog === 1){
+       brani.ascoltati_di_recente(req.session.username,function(a){
+           var json = [];
+           if(a.status === 200) {
+               for (var brano in a.data) {
+                   json.push({
+                       nome: a.data[brano].TITOLO,
+                       codice: a.data[brano].CODBRANO,
+                       immagine: a.data[brano].IMMAGINE
+                   });
+               }
+           }
+           res.status(a.status).end(JSON.stringify(json));
+       });
+   }else{
+       res.status(500).end();
+   }
+});
+
+// PREFERITI //
+
+router.get("/artisti_seguiti",function (req,res){
+    if(req.session.islog === 1) {
+        artisti.get_artisti_seguiti(req.session.username,function(a){
+            var json = [];
+            if(a.status === 200) {
+                for (var artista in a.data) {
+                    json.push({
+                        tipo: a.data[artista].TIPO,
+                        nome: a.data[artista].NOME,
+                        nome_arte: a.data[artista].NOME_ARTE,
+                        codice: a.data[artista].CODARTISTA,
+                        nazionalita: a.data[artista].NAZIONALITA,
+                        immagine: "image/artisti/"+a.data[artista].CODARTISTA
+                    });
+                }
+            }
+            res.status(a.status).end(JSON.stringify(json));
+        });
+    }else{
+        // POTREBBE REINDIRIZZARE AL LOGIN
+        res.status(500).end();
+    }
+});
+
+// LISTA DEGLI AMICI //
+
+router.get("/get_amici",function(req,res){
+   if(req.session.islog === 1){
+       utente.get_amici(req.session.email,function(a){
+           var json = [];
+           if(a.status === 200) {
+               for (var utente in a.data) {
+                   json.push({
+                       nome: a.data[utente].USERNAME,
+                       codice: a.data[utente].CODUTENTE,
+                       immagine: "image/profile/"+a.data[utente].USERNAME
+                   });
+               }
+           }
+           res.status(a.status).end(JSON.stringify(json));
+       });
+   }
+});
+
+// GENERE E MOOD DA FARE //
+
+// I PIU ASCOLTATI "DAL MONDO"//
+
+router.get("/piu_ascoltate",function(req,res){
+   if(req.session.islog){
+       brani.get_piu_ascoltate("",function(a){
+           var json = [];
+           if(a.status === 200) {
+               for (var brano in a.data) {
+                   json.push({
+                       nome: a.data[brano].TITOLO,
+                       codice: a.data[brano].CODBRANO,
+                       immagine: a.data[brano].IMMAGINE
+                   });
+               }
+           }
+           res.status(a.status).end(JSON.stringify(json));
+       });
+   }else{
+       // POTREBBE REINDIRIZZARE AL LOGIN
+       res.status(500).end();
+   }
+});
+
+// SCELTI PER TE DA FARE //
+
 module.exports = router;
