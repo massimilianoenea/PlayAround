@@ -3,7 +3,7 @@ module.exports = {
   find_artist: function(searched,callback){
       connection.getConnection(function(err,connection){
          if (err) return callback(err,null,1);
-         var sql = "SELECT NOME,NOME_ARTE,CODARTISTA AS COD,IMMAGINE FROM ARTISTA WHERE NOME LIKE ? ORDER BY LEVENSHTEIN(NOME,?) LIMIT 10";
+         var sql = "SELECT NOME,NOME_ARTE,CODARTISTA AS COD FROM ARTISTA WHERE NOME LIKE ? ORDER BY LEVENSHTEIN(NOME,?) LIMIT 10";
           connection.query(sql,[searched,searched],function (err,results) {
               if (err) return callback(err, null, 2);
               return callback(null,results,0);

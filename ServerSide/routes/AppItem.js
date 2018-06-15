@@ -205,6 +205,27 @@ router.get("/canzoni_ascoltate/:codartista",function(req,res){
 
 // PAGINA DEGLI ALBUM//
 
+router.get("/get_album/:codalbum",function(req,res){
+    if(req.session.islog === 1) {
+        album.get_album(req.params.codalbum, function (a) {
+            var json = [];
+            if (a.status === 200) {
+                for (var album in a.data) {
+                    json.push({
+                        nome: a.data[album].TITOLO,
+                        codice: a.data[album].CODALBUM,
+                        anno: a.data[album].ANNO,
+                        immagine: "/image/album/"+a.data[album].CODALBUM
+                    });
+                }
+            }
+            res.status(a.status).end(JSON.stringify(json));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
+
 router.get("/get_brani_album/:codalbum",function(req,res){
     if(req.session.islog === 1) {
         album.get_brani_album(req.params.codalbum, function (a) {
@@ -273,7 +294,7 @@ router.get("/le_tue_playlist",function(req,res){
 
 router.post("/nuova_playlist",function (req,res){
     if(req.session.islog === 1){
-        playlist.new_playlist(req.session.email,get.body.nome_playlist,function(a){
+        playlist.new_playlist(req.session.email,req.body.nome_playlist,function(a){
             res.status(a.status).end(JSON.stringify(a.data));
         });
     }else{
@@ -283,7 +304,7 @@ router.post("/nuova_playlist",function (req,res){
 
 router.post("/delete_playlist",function (req,res){
     if(req.session.islog === 1){
-        playlist.delete_playlist()(req.session.email,get.body.nome_playlist,function(a){
+        playlist.delete_playlist()(req.session.email,req.body.nome_playlist,function(a){
             res.status(a.status).end(JSON.stringify(a.data));
         });
     }else{
@@ -293,7 +314,7 @@ router.post("/delete_playlist",function (req,res){
 
 router.post("/add_song",function(req,res){
     if(req.session.islog === 1){
-     playlist.add_song_playlist(req.session.email,get.body.nome_playlist,req.body.codbrano,function(a){
+     playlist.add_song_playlist(req.session.email,req.body.nome_playlist,req.body.codbrano,function(a){
          res.status(a.status).end(JSON.stringify(a.data));
      });
     }else{
@@ -303,7 +324,7 @@ router.post("/add_song",function(req,res){
 
 router.post("/delete_song",function(req,res){
     if(req.session.islog === 1){
-        playlist.delete_song_playlist(req.session.email,get.body.nome_playlist,req.body.codbrano,function(a){
+        playlist.delete_song_playlist(req.session.email,req.body.nome_playlist,req.body.codbrano,function(a){
             res.status(a.status).end(JSON.stringify(a.data));
         });
     }else{
