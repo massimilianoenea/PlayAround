@@ -18,7 +18,7 @@ router.get("/playlist_giornaliera/:data",function(req,res){
                json.push({
                    nome: a.data[playlist].NOME,
                    codice: a.data[playlist].CODPLAYLIST,
-                   immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST+".jpeg"
+                   immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST + ".jpeg"
                });
            }
        }

@@ -44,7 +44,7 @@
     <div class="container" style="border-radius: 10px" align="center">
         <div class="repetition" style="float: left" ng-repeat="playlist in playlistG">
            <a href="#!">
-            <img ng-src={{playlist.immagine}}>
+            <img ng-src={{playlist.immagine}} style="width: 120px; height: 120px;">
             <p style="color: whitesmoke ">{{playlist.nome}}</p>
            </a>
         </div>
@@ -54,7 +54,7 @@
         <div style="width: 100%">
 
             <div class="repetition" style="float: left" ng-repeat="brani in recently">
-                <img ng-src={{brani.immagine}}>
+                <img ng-src={{brani.immagine}} style="width: 120px; height: 120px;">
                 <p style="color: whitesmoke">{{brani.nome}}</p>
             </div>
 
@@ -64,7 +64,7 @@
         <h2 align="center">Cosa ascoltano i tuoi Amici</h2>
         <div style="width: 100%">
             <div class="repetition" style="float: left" ng-repeat="braniAmici in musicFriends">
-                <img ng-src={{braniAmici.immagine}}>
+                <img ng-src={{braniAmici.immagine}} style="width: 120px; height: 120px;">
                  <p style="color: #2a4463">{{braniAmici.nome}}</p>s
             </div>
 

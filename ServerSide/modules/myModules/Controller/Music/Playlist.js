@@ -1,7 +1,7 @@
 var playlist_model = require('../../model/Playlist/Playlist');
 
 module.exports = {
-  playlist_giornaliera : function (data,callback) {
+  playlist_giornaliera : function(data,callback){
       var mydata = new Date(data);
       playlist_model.playlist_giornaliera(mydata.getDay(), mydata.getHours(), function (err, succ, code) {
           if (err !== null){
@@ -18,6 +18,7 @@ module.exports = {
           }
       });
   },
+
 
     get_brani_playlist : function (codPlaylist,callback) {
         playlist_model.get_brani_playlist(codPlaylist, function (err, succ, code) {
