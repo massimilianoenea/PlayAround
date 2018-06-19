@@ -27,13 +27,14 @@
 <div class="row">
 
     <h2 align="center" style="color: #FEC35E">I tuoi Amici</h2>
-    <div ng-controller="amiciCtrl">
-        <div ng-repeat="user in amici" class="containe">
+    <div ng-controller="artistiPrefCtrl">
+        <div ng-repeat="user in preferiti" class="containe">
 
-            <a href="#!utente/{{user.nome}}">
+            <a href="#!artista
+            /{{user.nome}}">
 
                 <img src={{user.immagine}} alt="Avatar" style="width:90px">
-                <p>{{user.nome}}</p>
+                <p style="color: #f4f4f4">{{user.nome}}</p>
 
             </a>
 

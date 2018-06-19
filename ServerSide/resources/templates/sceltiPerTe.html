@@ -9,24 +9,7 @@
     <script src="/public/angularFile/controller.js"></script>
     <script src="/public/angularFile/service.js"></script>
 </head>
-<style>
-    listAlbum> li{
-        list-style: none;
-    }
-</style>
 <body>
-<div class="row">
-
-    <h2 style="margin: auto;padding-bottom: 3%;">{{album.nome}}</h2>
-    <div style="width: 100%;" align="center">
-        <img style="border-radius: 40px; margin: auto;" ng-src={{album.immagine}}>
-    </div>
-    <div class="listAlbum" align="center" ng-repeat="song in brani">
-         <li>
-             <a ngf-src={{brani.codalbum}}>{{brani.nome}}</a>
-         </li>
-    </div>
-</div>
 
 </body>
 </html>

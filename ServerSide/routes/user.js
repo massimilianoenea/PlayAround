@@ -13,7 +13,7 @@ multipartyMiddleware = multiparty();
 router.post('/upload_profile',multipartyMiddleware,function(req,res){
 
     fs.readFile(req.files.file.path, function (err, data) {
-        fs.writeFile(path+"/profile/"+req.session.username+pathMod.extname(req.files.file.name), data, function (err) {
+        fs.writeFile(path+"/profile/"+req.session.username+".png", data, function (err) {
             if (err) {
                 return console.warn(err);
             }
@@ -35,25 +35,22 @@ router.post('/addAmico',function(req,res){
 });
 
 router.post('/login', function(req, res){
-    if(req.session && req.session.islog === 1) {
-        res.end(JSON.stringify({code:6,username:req.session.username,email:req.session.email,text:"Welcome Back "+req.session.email}));
-    }else {
-        log.Get_login(req.body, function (a) {
-            if(a.code === 0) {
-                req.session.islog = 1;
-                req.session.username = a.username;
-                req.session.email = a.email;
-                req.session.save();
+    log.Get_login(req.body, function (a) {
+        if(a.code === 0) {
+            req.session.islog = 1;
+            req.session.username = a.username;
+            req.session.email = a.email;
+            req.session.completed = a.completed;
+            req.session.save();
+            if (a.completed === 0) {
+                res.status(200).end(JSON.stringify({location: '/multiForm'}));
+            } else {
+                res.status(200).end(JSON.stringify({location: '/webapp'}));
             }
-            if(a.completed === 0){
-                res.writeHead(301, { "Location": "http://" + req.get('host')+ '/multiForm' });
-                res.end();
-            }else{
-                res.writeHead(301, { "Location": "http://" + req.get('host')+ '/webApp' });
-                res.end();
-            }
-        });
-    }
+        }else{
+            res.status(400).end(JSON.stringify({message: a.text}));
+        }
+    });
 });
 
 router.post('/logout',function(req,res){

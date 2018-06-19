@@ -3,7 +3,7 @@ module.exports = {
   find_artist: function(searched,callback){
       connection.getConnection(function(err,connection){
          if (err) return callback(err,null,1);
-         var sql = "SELECT NOME,NOME_ARTE,CODARTISTA AS COD FROM ARTISTA WHERE NOME LIKE ? ORDER BY LEVENSHTEIN(NOME,?) LIMIT 10";
+         var sql = "SELECT NOME,NOME_ARTE,CODARTISTA AS COD FROM ARTISTA WHERE NOME LIKE ? ORDER BY LEVENSHTEIN(NOME,?)";
           connection.query(sql,[searched,searched],function (err,results) {
               if (err) return callback(err, null, 2);
               return callback(null,results,0);
@@ -14,7 +14,7 @@ module.exports = {
     find_genere: function(searched,callback){
         connection.getConnection(function(err,connection){
             if (err) return callback(err,null,1);
-            var sql = "SELECT NOME,CODGENERE AS COD FROM GENERE WHERE NOME LIKE ? ORDER BY LEVENSHTEIN(NOME,?) LIMIT 5";
+            var sql = "SELECT NOME,CODGENERE AS COD FROM GENERE WHERE NOME LIKE ? ORDER BY LEVENSHTEIN(NOME,?)";
             connection.query(sql,[searched,searched],function (err,results) {
                 if (err) return callback(err, null, 2);
                 return callback(null,results,0);
@@ -24,18 +24,18 @@ module.exports = {
 
     complete_reg: function (Artist_Array,Genere_Array,callback){
         connection.getConnection(function(err,connection){
+            console.log(Artist_Array);
             if (err) return callback(err,null,1);
             var genErr;
-            var sql = "INSERT INTO FOLLOW_ARTISTI (CODUTENTE,CODARTISTA) VALUES(?,?) ON DUPLICATE KEY IGNORE";
-            var sql2 = "INSERT INTO FOLLOW_GENERE (CODUTENTE,CODGENERE) VALUES(?,?) ON DUPLICATE KEY IGNORE";
-            connection.query(sql,Artist_Array,function (err,results) {
+            var sql = "INSERT IGNORE INTO FOLLOW_ARTISTI (CODUTENTE,CODARTISTA) VALUES ?";
+            var sql2 = "INSERT IGNORE INTO FOLLOW_GENERE (CODUTENTE,CODGENERE) VALUES ?";
+            connection.query(sql,[Artist_Array],function (err,results) {
                 if (err) genErr = err;
             });
-            connection.query(sql2,Genere_Array,function (err,results) {
+            connection.query(sql2,[Genere_Array],function (err,results) {
                 if (err) genErr = err;
             });
-            if(genErr) return callback(err,null,1);
-            connection.release();
+            if(genErr) return callback(genErr,null,1);
             return callback(null,'',0);
         });
     },

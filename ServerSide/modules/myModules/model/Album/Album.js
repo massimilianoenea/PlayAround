@@ -4,7 +4,7 @@ module.exports = {
     get_album : function (codalbum,callback){
         connection.getConnection(function (err, connection) {
             if (err) return callback(err, null, 1);
-            var sql = "SELECT CODALBUM,TITOLO,ANNO FROM ALBUM WHERE CODALBUM = ?";
+            var sql = "SELECT CODALBUM,TITOLO,ANNO,IMMAGINE FROM ALBUM WHERE CODALBUM = ?";
             connection.query(sql, [codalbum], function (err, results) {
                 if (err) return callback(err, null, 2);
                 return callback(null, results, 0);
@@ -25,7 +25,7 @@ module.exports = {
     get_altro_artista: function(codartista,callback) {
         connection.getConnection(function (err, connection) {
             if (err) return callback(err, null, 1);
-            var sql = "SELECT CODALBUM,TITOLO,ANNO FROM ALBUM WHERE CODALBUM IN(SELECT CODALBUM FROM BRANI WHERE CODARTISTA LIKE ?)";
+            var sql = "SELECT CODALBUM,TITOLO,ANNO,IMMAGINE FROM ALBUM WHERE CODALBUM IN(SELECT CODALBUM FROM BRANI WHERE CODARTISTA LIKE ?)";
             connection.query(sql, [codartista], function (err, results) {
                 if (err) return callback(err, null, 2);
                 return callback(null, results, 0);

@@ -27,16 +27,16 @@ module.exports={
       var codutente = GetHash.GetCodUtente(email);
       for(var typename in EndArray){
           if(EndArray[typename].type === "artist"){
-              Artist_array.push(codutente,EndArray[typename].cod);
+              Artist_array.push([codutente,EndArray[typename].cod]);
           }else if(EndArray[typename].type === "genere"){
-              Genere_array.push(codutente,EndArray[typename].cod);
+              Genere_array.push([codutente,EndArray[typename].cod]);
           }
       }
       complete_reg.complete_reg(Artist_array,Genere_array,function (err,succ,code){
-         if(err!==null) return callback({code:code,status:400,text:"Non è stato possibile confermare le preferenze",errorCode:err.code});
+         if(err!==null) return callback({code:code,status:400,text:"Non è stato possibile confermare le preferenze",errorCode:err.code,location:"/webapp"});
           complete_reg.flag_complete_reg(codutente,function (err,succ,code){
-              if(err!==null) return callback({code:code,status:400,text:"Qualcosa è andato storto, per favore riprova più tardi",errorCode:err.code});
-              return callback({code:code,status:200,text:"Profilo Completato, Benvenuto su PlayAround"});
+              if(err!==null) return callback({code:code,status:400,text:"Qualcosa è andato storto, per favore riprova più tardi",errorCode:err.code,location:"/webapp"});
+              return callback({code:code,status:200,text:"Profilo Completato, Benvenuto su PlayAround",location:"/webapp"});
           });
       });
     }

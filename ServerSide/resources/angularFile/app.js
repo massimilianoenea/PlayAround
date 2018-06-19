@@ -6,7 +6,28 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
     $routeProvider
         .when("/", {
             templateUrl: "/public/templates/home.html",
-            controller:"homeCtrl"
+            controller:"homeCtrl",
+            resolve:{
+                Giornaliera: function ($http) {
+                    var data =new Date();
+                    return $http.get('/require/playlist_giornaliera/'+ data)
+                        .then(function (response){
+                            return response.data;
+                        });
+                    },
+                    Recently: function ($http) {
+                        return $http.get('/require/ascoltati_recente')
+                            .then(function (response){
+                                return response.data;
+                            });
+                    },
+                    AmiciSong: function ($http) {
+                        return $http.get('/require/ascoltano_amici')
+                            .then(function (response){
+                                return response.data;
+                            });
+                    }
+            }
         })
         .when("/amiciOn",{
             templateUrl:"/public/templates/amiciOn.html",
@@ -17,7 +38,7 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
             controller:"utenteCtrl",
             resolve:  {
                 User: function($http, $routeParams){
-                    return $http.get('/webApp/amicoOn/username')
+                    return $http.get('require/utente/' + $routeParams.username)
                         .then(function(response){
                             return response.data;
                         })
@@ -27,16 +48,39 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
         })
         .when("/libreria/playlist",{
             templateUrl:"/public/templates/playlist.html",
-            controller:"playlistCtrl"
-
+            controller:"playlistCtrl",
+            resolve: {
+                PersonalPlaylist: function ($http) {
+                    return $http.get('/require/le_tue_playlist')
+                        .then(function (response) {
+                            return response.data;
+                        });
+                }
+            }
         })
         .when("/libreria/leTueCanzoni", {
             templateUrl: "/public/templates/leTueCanzoni.html",
-            controller: "tueCanzoniCtrl"
+            controller: "tueCanzoniCtrl",
+            resolve: {
+                Saved: function ($http) {
+                    return $http.get('/require/canzoni_salvate')
+                        .then(function (response) {
+                            return response.data;
+                        });
+                }
+            }
         })
         .when("/libreria/ascoltatiRecente", {
             templateUrl: "/public/templates/ascoltatiRecente.html",
-            controller: "recentiCtrl"
+            controller: "recentiCtrl",
+            resolve: {
+                Recenti: function ($http) {
+                    return $http.get('/require/ascoltate_recenti')
+                        .then(function (response) {
+                            return response.data;
+                        });
+                }
+            }
         })
 
 
@@ -44,8 +88,14 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
             templateUrl: "/public/templates/artista.html",
             controller: "artistaCtrl",
             resolve:  {
-                User: function($http, $routeParams){
-                    return $http.get('/webApp/artista/username')
+                Artista: function($http, $routeParams){
+                    return $http.get('/require/artista/'+ $routeParams.id)
+                        .then(function(response){
+                            return response.data;
+                        })
+                },
+                SongArtista:function($http, $routeParams){
+                    return $http.get('/require/canzoni_ascoltate/'+ $routeParams.id)
                         .then(function(response){
                             return response.data;
                         })
@@ -61,41 +111,100 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
 
 
         .when("/preferiti",{
-            templateUrl: "/public/templates/amici.html",
-            controller: "artistiPrefCtrl"
+            templateUrl: "/public/templates/artisti.html",
+            controller: "artistiPrefCtrl",
+            resolve: {
+                ArtistiPreferiti: function ($http) {
+                    return $http.get('/require/artisti_seguiti')
+                        .then(function (response) {
+                            return response.data;
+                        });
+                }
+            }
 
         })
         .when("/amici",{
             templateUrl: "/public/templates/amici.html",
-            controller: "amiciCtrl"
+            controller: "amiciCtrl",
+            resolve: {
+                Amici: function ($http) {
+                    return $http.get('/require/get_amici')
+                        .then(function (response) {
+                            return response.data;
+                        });
+                }
+            }
 
         })
 
         .when("/sceltiPerTe",{
-                templateUrl:"/templates/sceltiPerTe.html",
-                controller: "sceltiCtrl"
+                templateUrl:"/public/templates/sceltiPerTe.html",
+                controller: "sceltiCtrl",
+                resolve: {
+                    Scelti: function ($http) {
+                        return $http.get('/require/')
+                            .then(function (response) {
+                                return response.data;
+                            });
+                    }
+                }
 
         })
         .when("/piuAscoltati",{
-                templateUrl:"/templates/piuAscoltati.html",
-                controller:"piuAscoltatiCtrl"
+                templateUrl:"/public/templates/piuAscoltati.html",
+                controller:"piuAscoltatiCtrl",
+                resolve: {
+                    PiuAscoltate: function ($http) {
+                        return $http.get('/require/piu_ascoltate')
+                            .then(function (response) {
+                                return response.data;
+                            });
+                    }
+                }
 
         })
         .when("/mood",{
-                templateUrl:"/templates/mood.html",
-                controller:"moodCtrl"
+                templateUrl:"/public/templates/mood.html",
+                controller:"moodCtrl",
+                resolve: {
+                    Mood: function ($http) {
+                        return $http.get('/require/')
+                            .then(function (response) {
+                                return response.data;
+                            });
+                    }
+                }
 
         })
 
+        .when("/album/:codAlbum",{
+                templateUrl: "/public/templates/album.html",
+                controller: "albumCtrl",
+                resolve:  {
+                    Album: function($http, $routeParams){
+                        return $http.get('/require/get_album/'+ $routeParams.codalbum)
+                            .then(function(response){
+                                return response.data;
+                            })
+                    },
+                    BraniAlbum: function($http){
+                        return $http.get('/require/get_brani_album/' + $routeParams.codalbum)
+                            .then(function(response){
+                                return response.data;
+                            })
+                    },
 
-
-        .when("/album",{
-                templateUrl: "/templates/album.html",
-                controller: "albumCtrl"
+                    altriAlbum: function($http){
+                        return $http.get('/get_altro_artista/' + codartista)
+                            .then(function(response){
+                                return response.data;
+                            })
+                    }
+                }
 
         })
         .otherwise({
-            template: "/templates/home.html",
+            template: "/public/templates/home.html",
             controller:"homeCtrl"
         })
 });

@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
 <title>Page Title</title>
 <meta charset="UTF-8">
@@ -410,7 +410,6 @@ background-image: url("/image/sfondo_playerino2.jpg");
     </head>
     <body ng-app="PlayAround" ng-controller="PlayAround">
 
-
     <script>
         function openNav() {
             document.getElementById("mySidenav").style.width = "250px";
@@ -451,8 +450,8 @@ background-image: url("/image/sfondo_playerino2.jpg");
             <img src="/image/Symbol_playaround_complete.png" alt="logo" style="height: 70px">
             </div>
                 <div class="chip">
-          <img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar"/>
-            {{Username}}
+          <img ng-src="image/profile/{{Utente.username}}.png" alt="Avatar"/>
+            {{Utente.username}}
           </div>
 
           <div style="border-bottom-style: solid;border-bottom-color: whitesmoke;border-bottom-width: 1px;
@@ -482,11 +481,15 @@ background-image: url("/image/sfondo_playerino2.jpg");
               </ul>
           </div>
             <br>
-            <button ng-click="checkOn()">logged</button>
-            <button ng-click="sendMess()">send</button>
-            <br>
-            <div class="playerino" ng-show="getDisable()">
+            <div class="playerino">
 
+                <audio id="audio" autoplay>
+                    <source src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <button ng-click="checkIsOn()">check</button>
+                <button onclick="load_Music({username:'massi1'})">Select Song</button>
+                <button onclick="play_new({username:'massi1'})" id="Play_button">pause</button>
                 <a href="#!player" ng-click="disablePlayerino()">
                     <i class="fa fa-expand"></i>
                     <img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar"/>
@@ -494,6 +497,7 @@ background-image: url("/image/sfondo_playerino2.jpg");
                 </a>
                 <div class="controllerMusic">
                     <div class="time_slider">
+                        <progress id="progress-bar" min='0' max='100' value='0'></progress>
                         <span class="runing_time">0:00</span>
                         <input type="range" value="0">
                     </div>
@@ -575,6 +579,5 @@ background-image: url("/image/sfondo_playerino2.jpg");
       <h2>Footer</h2>
     </div>
     -->
-    <script src="/public/angularFile/mySocket.js"></script>
     </body>
     </html>

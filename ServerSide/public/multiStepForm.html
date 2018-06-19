@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login PlayAround</title>
-
-    <!-- AngularJs -->
+    <!-- Style -->
     <link rel="stylesheet" type="text/css" href="public/css/multiStepForm.css">
+    <!-- AngularJs -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="public/ng-file-upload-bower-10.1.8/ng-file-upload.js"></script>
     <script src="public/ng-file-upload-bower-10.1.8/ng-file-upload-shim.js"></script>
@@ -16,176 +17,172 @@
 <body id="PlayAround_CompleteReg" ng-app="PlayAround" ng-controller="multiFormCtrl">
 
 <div data-ng-init="checkOn()">
-    <div class="page-header" style="background-color: midnightblue;">
+    <div class="page-header">
         <div align="center">
-            <img src="/image/Symbol_playaround_complete.png" alt="logo PlayAround" style="height: 150px" class="img-responsive">
+            <img src="/image/Symbol_playaround_complete.png" alt="logo PlayAround" class="image-responsive">
         </div>
     </div>
 
-    <form id="regForm" name="form" autocomplete="off">
-        <h1>Completamento Registrazione</h1>
-        <!-- One "tab" for each step in the form: -->
-        <div class="tab">Scegli immagine di Profilo
+    <div class="container" style="margin-top: 2%" align="center">
+        <form id="regForm" name="form" autocomplete="off">
+            <h1>Completamento Registrazione</h1>
+            <!-- One "tab" for each step in the form: -->
+            <div class="tab">Scegli immagine di Profilo
 
-        <!-- CARICAMENTO IMMAGINE -->
-        <button type="file" ngf-resize-if="$width > 300 || $height > 300" ngf-select="uploadFiles($file, $invalidFiles)" accept="image/*" ngf-min-height="300" ngf-min-width="300" ngf-resize ="{width: 300, height: 300, centerCrop: true}" ngf-max-size="1MB">Select File</button>
-        <br><br>
-            File:<div style="font:smaller">{{f.name}}<br>{{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}
+            <!-- CARICAMENTO IMMAGINE -->
+            <button type="file"  ngf-resize-if="$width > 300 || $height > 300" ngf-select="uploadFiles($file, $invalidFiles)" accept="image/jpeg,image/jpg,image/png" ngf-min-height="300" ngf-min-width="300" ngf-resize ="{width: 300, height: 300, centerCrop: true, type:'image/png'}">Seleziona File</button>
+                <div style="font:smaller" >
+                    <div ng-if="errFile.name"> Impossibile caricare l'immagine: {{errFile.$error}}{{errFile.$errorParam}}</div>
+                    {{errorMsg}}
+                </div>
                 <br>
-                <span class="progress" ng-show="f.progress >= 0">
-                    <div style="width:{{f.progress}}%" ng-bind="f.progress + '%'"></div>
-                </span>
                 <br>
-            </div>{{errorMsg}}
-        </div>
-
-        <!-- CANTANTI PREFERITI -->
-        <div class="tab">
-            <div class="autocomplete" style="width:auto">
-            <input id="myInput" type="text" name="Artisti" ng-model ="autoInput" ng-change="autocomplete('artist')" placeholder="Artisti e Band" oninput="this.className = ''">
+                <div ng-if="f">Anteprima: <img ngf-thumbnail="f" ngf-size="{width: 100, height: 100}"></div>
             </div>
-            <ul id="myUL">
-            </ul>
-        </div>
 
-        <!-- GENERE PREFERITO -->
-        <div class="tab">
-            <div class="autocomplete" style="width:auto">
-                <input id="myInput_Old" type="text" name="Genere" ng-model ="autoInput" ng-change="autocomplete('genere')" placeholder="Generi musicali" oninput="this.className = ''">
+
+            <!-- CANTANTI PREFERITI -->
+
+            <div class="tab">
+                <div id="cantanti">
+                </div>
             </div>
-            <ul id="myUL_Old">
-            </ul>
-        </div>
 
-        <!-- BOTTONI DI SELEZIONE -->
-        <div style="overflow:auto;">
-            <div style="float:right;">
-                <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-                <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+            <!-- GENERE PREFERITO -->
+
+            <div class="tab">
+                <div id="genere"></div>
             </div>
-        </div>
 
-            <!-- Circles which indicates the steps of the form: -->
-        <div style="text-align:center;margin-top:40px;">
-            <span class="step"></span>
-            <span class="step"></span>
-            <span class="step"></span>
-        </div>
+            <!-- BOTTONI DI SELEZIONE -->
+            <div style="overflow:auto;">
+                <div style="float:right;">
+                    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                    <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                </div>
+            </div>
 
-    </form>
+                <!-- Circles which indicates the steps of the form: -->
+            <div style="text-align:center;margin-top:40px;">
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+            </div>
+
+        </form>
+    </div>
 </div>
+        <script src="public/js/jquery-1.10.1.js"></script>
+        <script src="public/js/jquery-ui.js"></script>
+        <script src="public/js/rainbow-custom.min.js"></script>
+        <script src="public/js/taggle.min.js"></script>
     <script>
-        var parameter=[];
-        /*the autocomplete function takes two arguments,
-            the text field element and an array of possible autocompleted values:*/
-        function  autocomplete(inp,arr,type) {
-            var currentFocus;
-            /*execute a function when someone writes in the text field:*/
-            inp.addEventListener("input", function (e) {
-                var a, b, i, val = this.value;
-                /*close any already open lists of autocompleted values*/
-                closeAllLists();
-                if (!val) {
-                    return false;
-                }
-                currentFocus = -1;
-                /*create a DIV element that will contain the items (values):*/
-                a = document.createElement("DIV");
-                a.setAttribute("id", this.id + "autocomplete-list");
-                a.setAttribute("class", "autocomplete-items");
-                /*append the DIV element as a child of the autocomplete container:*/
-                this.parentNode.appendChild(a);
-                /*for each item in the array...*/
-                for (i = 0; i < arr.length; i++) {
-                    /*check if the item starts with the same letters as the text field value:*/
-                    if (arr[i].NOME.substr(0, val.length).toUpperCase() === val.toUpperCase()) {
-                        /*create a DIV element for each matching element:*/
-                        b = document.createElement("DIV");
-                        /*make the matching letters bold:*/
-                        b.innerHTML = "<strong>" + arr[i].NOME.substr(0, val.length) + "</strong>";
-                        b.innerHTML += arr[i].NOME.substr(val.length);
-                        /*insert a input field that will hold the current array item's value:*/
-                        b.innerHTML += "<input type='hidden' value='" + arr[i].NOME + "'>";
-                        b.innerHTML += "<input type='hidden' value='" + arr[i].COD + "'>";
-                        /*execute a function when someone clicks on the item value (DIV element):*/
-                        b.addEventListener("click", function (e) {
-                            /*insert the value for the autocomplete text field:*/
-                            inp.value = this.getElementsByTagName("input")[0].value;
-                            parameter.push({type:type,cod:this.getElementsByTagName("input")[1].value});
-                            newElement();
-                            /*close the list of autocompleted values,
-                        (or any other open lists of autocompleted values:*/
-                            closeAllLists();
-                        });
-                        a.appendChild(b);
-                    }
-                }
-            });
 
-            /*execute a function presses a key on the keyboard:*/
+        var cantanti = new Taggle('cantanti',{
+            onTagRemove: function(event, tag) {
+                parameter.splice(parameter.indexOf(arrCod[arrName.indexOf(tag)]), 1);
+            }
+        });
 
-            function closeAllLists(elmnt) {
-                /*close all autocomplete lists in the document,
-            except the one passed as an argument:*/
-                var x = document.getElementsByClassName("autocomplete-items");
-                for (var i = 0; i < x.length; i++) {
-                    if (elmnt !== x[i] && elmnt !== inp) {
-                        x[i].parentNode.removeChild(x[i]);
+        var container = cantanti.getContainer();
+        var input = cantanti.getInput();
+
+        var genere = new Taggle('genere',{
+            onTagRemove: function(event, tag) {
+                parameter.splice(parameter.indexOf(arrCod[arrName.indexOf(tag)]), 1);
+            }
+        });
+        var container_gen = genere.getContainer();
+        var input_gen = genere.getInput();
+
+        var arrName = [];
+        var arrCod = [];
+        var parameter = [];
+
+        $(input).autocomplete({
+            delay:400,
+            minlength:3,
+            source: function(request, response){
+                // New request 300ms after key stroke
+                if(request.term === '') response("");
+                    var $this = $(this);
+                    var $element = $(this.element);
+                    var previous_request = $element.data("jqXHR");
+                    if(previous_request) {
+                        // a previous request has been made.
+                        // though we don't know if it's concluded
+                        // we can try and kill it in case it hasn't
+                        previous_request.abort();
                     }
+                    $element.data( "jqXHR", $.ajax({
+                        url: "/autocomplete/artist/"+request.term,
+                        type:"get",
+                        dataType: "json",
+                        success: function( data ) {
+                            arrName.length = 0;
+                            arrCod.length = 0;
+                            for (name in data.text) {
+                                arrName.push(data.text[name].NOME);
+                                arrCod.push({type:"artist",cod:data.text[name].COD});
+                            }
+                            response(arrName);
+                        }
+                    }));
+            },
+            appendTo: container,
+            position: { at: "left bottom", of: container },
+            select: function(event, data) {
+                event.preventDefault();
+                //Add the tag if user clicks
+                if (event.which === 1) {
+                    cantanti.add(data.item.value);
+                    parameter.push(arrCod[arrName.indexOf(data.item.value)]);
                 }
             }
+        });
 
-            /*execute a function when someone clicks in the document:*/
-            document.addEventListener("click", function (e) {
-                closeAllLists(e.target);
-            });
-
-            function newElement() {
-                var li = document.createElement("li");
-                var inputValue = document.getElementById('myInput').value;
-                var t = document.createTextNode(inputValue);
-                li.appendChild(t);
-                if (inputValue === '') {
-                    alert("You must write something!");
-                } else {
-                    document.getElementById("myUL").appendChild(li);
+        $(input_gen).autocomplete({
+            delay:400,
+            minlength:3,
+            source: function(request, response){
+                // New request 300ms after key stroke
+                if(request.term === '') response("");
+                var $this = $(this);
+                var $element = $(this.element);
+                var previous_request = $element.data("jqXHR");
+                if(previous_request) {
+                    // a previous request has been made.
+                    // though we don't know if it's concluded
+                    // we can try and kill it in case it hasn't
+                    previous_request.abort();
                 }
-                document.getElementById('myInput').value = "";
-
-                var span = document.createElement("SPAN");
-                var txt = document.createTextNode("\u00D7");
-                span.className = "close";
-                span.appendChild(txt);
-                li.appendChild(span);
-
-                for (i = 0; i < close.length; i++) {
-                    close[i].onclick = function () {
-                        var div = this.parentElement;
-                        div.style.display = "none";
-                        parameter.splice(parameter[i], 1);
+                $element.data( "jqXHR", $.ajax({
+                    url: "/autocomplete/genere/"+request.term,
+                    type:"get",
+                    dataType: "json",
+                    success: function( data ) {
+                        arrName.length = 0;
+                        arrCod.length = 0;
+                        for (name in data.text) {
+                            arrName.push(data.text[name].NOME);
+                            arrCod.push({type:"genere",cod:data.text[name].COD});
+                        }
+                        response(arrName);
                     }
+                }));
+            },
+            appendTo: container_gen,
+            position: { at: "left bottom", of: container_gen },
+            select: function(event, data) {
+                event.preventDefault();
+                //Add the tag if user clicks
+                if (event.which === 1) {
+                    genere.add(data.item.value);
+                    parameter.push(arrCod[arrName.indexOf(data.item.value)]);
                 }
             }
-        }
+        });
 
-        var myNodelist = document.getElementsByTagName("LI");
-        var i;
-        for (i = 0; i < myNodelist.length; i++) {
-            var span = document.createElement("SPAN");
-            var txt = document.createTextNode("\u00D7");
-            span.className = "close";
-            span.appendChild(txt);
-            myNodelist[i].appendChild(span);
-        }
-
-        var close = document.getElementsByClassName("close");
-        var i;
-        for (i = 0; i < close.length; i++) {
-            close[i].onclick = function() {
-                var div = this.parentElement;
-                div.style.display = "none";
-            }
-        }
 
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the crurrent tab
@@ -213,18 +210,6 @@
             var x = document.getElementsByClassName("tab");
             // Hide the current tab:
             x[currentTab].style.display = "none";
-            if((currentTab === 1 || currentTab === 2) || (currentTab === 2 && n === -1)){
-                var doc = document.getElementById("myInput");
-                var doc2 = document.getElementById("myInput_Old");
-                doc.value="";
-                doc2.value="";
-                doc.id = "myInput_Old";
-                doc2.id = "myInput";
-                doc = document.getElementById("myUL");
-                doc2 = document.getElementById("myUL_Old");
-                doc.id = "myUL_Old";
-                doc2.id = "myUL";
-            }
             // Increase or decrease the current tab by 1:
             currentTab = currentTab + n;
             // if you have reached the end of the form...
@@ -247,13 +232,10 @@
             //... and adds the "active" class on the current step:
             x[n].className += " active";
         }
-        var arr = [];
-        autocomplete(document.getElementById('myInput'),arr,'artist');
-        autocomplete(document.getElementById('myInput_Old'),arr,'genere');
-
     </script>
 
     <script>
+
         var app = angular.module('PlayAround',['ngFileUpload']);
         app.controller('multiFormCtrl', function($scope, $http,Upload, $timeout) {
             $scope.checkOn = function(){
@@ -291,23 +273,8 @@
                 }
             };
 
-            $scope.autocomplete =function(type) {
-                if($scope.autoInput.length !== 0 && $scope.autoInput.length%2 === 0) {
-                    $http({
-                        method: "GET",
-                        url: "/autocomplete/"+type+'/'+ $scope.autoInput
-                    }).then(function mySuccess(response) {
-                        arr.length = 0;
-                        for (name in response.data.text) {
-                            arr.push(response.data.text[name]);
-                        }
-                    }, function myError(response) {
-                        arr = "";
-                    });
-                }
-            };
-
             $scope.sendComplete = function(){
+                console.log(parameter);
                 $http({
                     method : "POST",
                     url : '/Complete_Reg',
@@ -315,9 +282,10 @@
                     withCredentials: true,
                     headers: { 'Content-Type': 'application/json' }
                 }).then(function mySuccess(response) {
-                    //window.location.href = '/webApp';
+                    window.location.replace(response.data.location);
                 }, function myError(response) {
                     $scope.error = response.data;
+                    window.location.replace(response.data.location);
                 });
             }
         });

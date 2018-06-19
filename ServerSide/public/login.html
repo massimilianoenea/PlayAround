@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login PlayAround</title>
    <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -12,7 +13,7 @@
     <style>
         @import url(http://fonts.googleapis.com/css?family=Roboto:400);
     body {
-    background-color:#fff;
+    background-color:whitesmoke;
     -webkit-font-smoothing: antialiased;
     font: normal 14px Roboto,arial,sans-serif;
     }
@@ -20,13 +21,14 @@
     * {
         box-sizing: border-box;
     }
+
     .container {
-    padding: 25px;
+    padding: 20px;
 
     }
 
     .page-header{
-        background-color: midnightblue;
+        background-color: #12436d;
         width: 100%;
         max-height: 150px;
     }
@@ -38,20 +40,20 @@
     }
 
     .form-login {
-    background-color: #EDEDED;
-    padding-top: 10px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
+        /*
+        background-color: white;
         border-style: solid;
-        border-radius: 30px;
         border-width: 5px;
-    border-color: #357ebd;
-    border-width: 5px;
-    box-shadow:0 1px 0 #cfcfcf;
-        height: 400px;
+        border-color: #357ebd;
+        */
+        padding-top: 10px;
+        padding-bottom: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 30px;
+        box-shadow:4px 5px 15px 5px #bfbfbf;
         width: 50%;
-
+        height: auto;
     }
 
     h3 {
@@ -103,7 +105,7 @@
     }
 
     @media screen and (max-width: 700px) {
-        .form-login, .image-responsive, input[type=submit] {
+        .form-login, input[type=submit] {
         width: 100%;
 
         }
@@ -123,7 +125,7 @@
                 <h3>LOGIN</h3>
             </div>
             <div class="row">
-                <input type="text" id="userName" name="userName" placeholder="username" ng-model="email"  required/>
+                <input type="text" id="userName" name="userName" placeholder="email" ng-model="email"  required/>
                     <p ng-show="myLogin.userName.$touched && myLogin.userName.$invalid" style="color: darkred"> Campo Richiesto</p>
             </div>
                 </br>
@@ -137,6 +139,7 @@
                 <span class="group-btn">
                     <button ng-click="try_login()" class="btn" ng-disabled="myLogin.$invalid" >Accedi <i class="fa fa-sign-in"></i></button>
                 </span>
+                <p ng-show="message" style="color: red; font-size: 20px; padding-top: 10px"ng-bind="error"></p>
             </div>
                 <br>
 
@@ -174,12 +177,12 @@
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
             }).then(function mySuccess(response) {
-                //window.location.href = '/webApp';
+                window.location.replace(response.data.location);
             }, function myError(response) {
-                $scope.error = response.data;
+                $scope.message = true;
+                $scope.error = response.data.message;
             });
         };
-
     });
 </script>
 </body>

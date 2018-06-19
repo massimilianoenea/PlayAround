@@ -19,41 +19,72 @@ router.get('/confirm_registration/:token',function(req,res){
 });
 
 router.get('/autocomplete/artist/:searched',function(req,res){
-    complete_reg.search_artista(req.params.searched,function (a) {
-       res.status(a.status).end(JSON.stringify(a));
-    });
+    if(req.session && req.session.islog === 1){
+        if(req.params.searched !== "") {
+            complete_reg.search_artista(req.params.searched, function (a) {
+                res.status(a.status).end(JSON.stringify(a));
+            });
+        }else{
+            var json = {code:"",status:"",text:""};
+            res.status(200).end(JSON.stringify(json));
+        }
+    }else {
+        res.sendFile(path + '/login.html');
+    }
 });
 
 router.get('/autocomplete/genere/:searched',function(req,res){
-    complete_reg.search_genere(req.params.searched,function (a) {
-        res.status(a.status).end(JSON.stringify(a));
-    });
+    if(req.session && req.session.islog === 1){
+        if(req.params.searched !== "") {
+            complete_reg.search_genere(req.params.searched,function (a) {
+                res.status(a.status).end(JSON.stringify(a));
+            });
+        }else{
+            var json = {code:"",status:"",text:""};
+            res.status(200).end(JSON.stringify(json));
+        }
+    }else {
+        res.sendFile(path + '/login.html');
+    }
 });
 
 router.post('/Complete_Reg',function(req,res){
     complete_reg.complete_reg(req.body,req.session.email,function(a){
+        if(a.status === 200) req.session.completed = 1;
         res.status(a.status).end(JSON.stringify(a));
     });
 });
 
 router.get('/',function(req,res){
-    res.sendFile(path +'/login.html');
-});
-
-router.get('/prova1',function(req,res){
-    res.sendFile(path +'/prova1.html');
+    res.sendFile(path +'/homepage.html');
 });
 
 router.get('/multiForm',function(req,res){
-    res.sendFile(path +'/multiStepForm.html');
+    if(req.session && req.session.islog === 1){
+        res.sendFile(path +'/multiStepForm.html');
+    }else {
+        res.sendFile(path + '/login.html');
+    }
 });
 
 router.get('/login',function(req,res){
-    res.sendFile(path +'/login.html');
+    if(req.session && req.session.islog === 1){
+        if(req.session.completed === 0) {
+            res.sendFile(path + '/multiStepForm.html');
+        }else {
+            res.sendFile(path + '/PlayAround.html');
+        }
+    }else {
+        res.sendFile(path + '/login.html');
+    }
 });
 
 router.get('/webApp',function(req,res){
-    res.sendFile(path +'/PlayAround.html');
+    if(req.session && req.session.islog === 1){
+        res.sendFile(path +'/PlayAround.html');
+    }else {
+        res.sendFile(path + '/login.html');
+    }
 });
 
 router.get('/registration',function(req,res){

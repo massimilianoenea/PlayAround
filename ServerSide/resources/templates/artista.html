@@ -47,36 +47,22 @@
 <body>
 <div class="row">
 
-    <h2 style="margin: auto;padding-bottom: 3%;">Username</h2>
+    <h2 style="margin: auto;padding-bottom: 3%;">{{artista.nome}}</h2>
     <div style="width: 100%;" align="center">
-        <img style="border-radius: 40px" src="https://www.w3schools.com/w3images/bandmember.jpg">
+        <img style="border-radius: 40px" ng-src={{artista.immagine}}>
 
     </div>
-    <button ng-click="addAmico()">Aggiungi ai Preferiti</button>
+    <button></button>
     <div class="container" style="border-radius: 10px;margin-top: 4%">
-        <h2 align="center">Brani più Ascoltati</h2>
+        <h2 align="center" style="color: #FEC35E">Brani più Ascoltati</h2>
 
         <div style="width: 100%">
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
+
+            <div class="repetition" style="float: left" ng-repeat="song in brani">
+                <img ng-src={{brani.immagine}}>
+                <p style="color: whitesmoke">{{song.nome}}</p>s
             </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
+
         </div>
     </div>
     <div class="container" style="border-radius: 10px">

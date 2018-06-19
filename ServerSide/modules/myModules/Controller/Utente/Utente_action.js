@@ -35,6 +35,40 @@ module.exports ={
         });
     },
 
+    follow_artista:function(email,codartista,callback){
+        utente_action.Follow_artista(email,codartista,function(err,succ,code){
+            if (err !== null){
+                switch (code){
+                    case 1:
+                        return callback({code:1,text:"Errore connessione al database",errorCode:err.code,status:400});
+                    case 2:
+                        return callback({code:2,text:"Al momento non è possibile seguire quest'artista",errorCode:err.code,status:400});
+                    default:
+                        return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
+                }
+            }else{
+                return callback({code:0,data:"Adesso segui quest'artista",status:200});
+            }
+        });
+    },
+
+    unfollow_artista:function(email,codartista,callback){
+        utente_action.Unfollow_artista(email,codartista,function(err,succ,code){
+            if (err !== null){
+                switch (code){
+                    case 1:
+                        return callback({code:1,text:"Errore connessione al database",errorCode:err.code,status:400});
+                    case 2:
+                        return callback({code:2,text:"Al momento non è possibile completare l'operazione",errorCode:err.code,status:400});
+                    default:
+                        return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
+                }
+            }else{
+                return callback({code:0,data:"Adesso non segui più quest'artista",status:200});
+            }
+        });
+    },
+
   add_amico:function(email,username_amico,callback){
       utente_action.Add_amico(email,username_amico,function(err,succ,code){
           if (err !== null){

@@ -31,6 +31,28 @@ module.exports = {
         });
     },
 
+    Follow_artista: function(email,codartista,callback){
+        connection.getConnection(function(err,connection){
+            if(err) return callback(err,null,1);
+            var sql = "INSERT IGNORE INTO FOLLOW_ARTISTI (CODUTENTE,CODARTISTA) VALUES (?,?)";
+            connection.query(sql,[GetHash.GetCodUtente(email),codartista],function (err,results) {
+                if(err) return callback(err,null,2);
+                return callback(null,results,0);
+            })
+        });
+    },
+
+    Unfollow_artista: function(email,codartista,callback){
+        connection.getConnection(function(err,connection){
+            if(err) return callback(err,null,1);
+            var sql = "DELETE FROM FOLLOW_ARTISTI WHERE CODUTENTE = ? AND CODARTISTA = ?";
+            connection.query(sql,[GetHash.GetCodUtente(email),codartista],function (err,results) {
+                if(err) return callback(err,null,2);
+                return callback(null,results,0);
+            })
+        });
+    },
+
     Add_amico : function(email,username_amico,callback){
       connection.getConnection(function (err,connection) {
           if (err) return callback(err,null,1);

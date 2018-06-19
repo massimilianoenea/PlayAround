@@ -17,7 +17,7 @@ module.exports ={
     get_brani_playlist: function (codPlaylist,callback){
         connection.getConnection(function (err,connection){
             if(err)  return callback(err,null,1);
-            var sql = "SELECT CODBRANO,TITOLO FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM PLAYLIST_BRANI WHERE CODPLAYLIST = ?)";
+            var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM PLAYLIST_BRANI WHERE CODPLAYLIST = ?)";
             connection.query(sql,[codPlaylist], function(err, results) {
                 if (err) return callback(err, null, 2);
                 return callback(null,results,0);

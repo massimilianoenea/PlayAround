@@ -5,7 +5,8 @@
     <title>Title</title>
     <link rel="shortcut icon" href="">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
-    <script src="./socketio"></script>
+    <script src="/public/socket.io-client-master/dist/socket.io.js"></script>
+    <script src="/public/socket.io-stream.js"></script>
 </head>
 <body>
 
@@ -22,6 +23,9 @@
         <button ng-click="Registra()">Singup</button>
         <button ng-click="Conferma_reg()">conferma Reg</button>
         <button ng-click="addAmici()">Add amico</button>
+        <button ng-click="StartMusic()">StartMusic</button>
+        <button ng-click="PauseMusic()">PauseMusic</button>
+
 
         <span ng-bind="userProfile.code"></span>
         <span ng-bind="userProfile.text"></span>
@@ -30,6 +34,12 @@
     </form>
     <img ng-src="{{userProfile.immagine}}">
 
+    <h1>Audio Testing 1 2 3</h1>
+    <audio id="audio" controls>
+        <source src="" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <br>
 
     <table>
         <tr>
@@ -59,20 +69,14 @@
 
     function runSocket() {
         var socket = io.connect('http://' + window.location.hostname + ':1337', {'forceNew': true});
-
         socket.on('connect', function () {
             console.log("connected to socket");
-
         });
-
         return socket;
-
     }
 
     app.controller('Ctrltest', function($scope, $http) {
-
         var socket = runSocket();
-
 
           $scope.updateFriend_soc = function (userLogged) {
               if (socket.connected === true){
@@ -84,13 +88,49 @@
           // NON USATA AL MOMENTO socket.emit('room',{roomId:'temp'});
 
           $scope.addMex = function (userLogged) {
-              console.log(socket.connected);
               if (socket.connected === true){
                   socket.emit('event', {username: userLogged, data: $scope.message, date: new Date()});
               }else{
                   runSocket();
               }
           };
+
+          $scope.StartMusic = function() {
+              if (socket.connected === true) {
+                  socket.emit('stream', {my: 'data'});
+                  console.log("");
+              }else{
+                  runSocket();
+              }
+          };
+
+          ss(socket).on('audio-stream', function (stream, data) {
+              var parts = [];
+              var audio = document.getElementById('audio');
+              console.log("DATA -->> ");
+              stream.on('data', (chunk) => {
+                  console.log(chunk);
+                  parts.push(chunk);
+              });
+              stream.on('end', function () {
+                 audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+                 audio.play();
+              });
+          });
+
+          $scope.PauseMusic = function(){
+              if (socket.connected === true) {
+                  socket.emit('play', {data:'data'});
+                  console.log("Qui chiamo guarda");
+              }else{
+                  runSocket();
+              }
+          };
+
+          socket.on('played',function (data) {
+              var audio = document.getElementById('audio');
+              audio.pause();
+          });
 
           socket.on('message', function (data) {
               $scope.messageArrived = data;
@@ -130,38 +170,6 @@
                 $scope.updateFriend_soc(response.data);
             }, function myError(response) {
                 console.log(response.status);
-            });
-        };
-
-        $scope.getAmici = function(){
-          //  var parameter = JSON.stringify({username:$scope.usernameAmico});
-            $http({
-                method : "POST",
-                url : 'http://'+window.location.hostname+':1337/playaround/getAmiciOn',
-               // data: parameter,
-                withCredentials: true,
-                headers: { 'Content-Type': 'application/json' }
-            }).then(function mySuccess(response) {
-                //var risposta = JSON.parse(response.data);
-                $scope.utenti = response.data.amici_on;
-            }, function myError(response) {
-                $scope.utenti = response.data;
-            });
-        };
-
-        $scope.getUtenti = function(){
-           // var parameter = JSON.stringify({username:$scope.usernameAmico});
-            $http({
-                method : "POST",
-                url : 'http://'+window.location.hostname+':1337/playaround/getUtentiOn',
-              //  data: parameter,
-                withCredentials: true,
-                headers: { 'Content-Type': 'application/json' }
-            }).then(function mySuccess(response) {
-                //var risposta = JSON.parse(response.data);
-                $scope.utenti = response.data.utenti_on;
-            }, function myError(response) {
-                $scope.utenti = response.data;
             });
         };
 

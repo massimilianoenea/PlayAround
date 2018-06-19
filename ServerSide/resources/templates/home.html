@@ -40,80 +40,34 @@
 <body>
 
 <div class="row">
+
     <div class="container" style="border-radius: 10px" align="center">
-        <h2 align="center">Playlist Giornaliera</h2>
-
-        <div class="repetition" style="float: left">
-            <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-            <p style="color: #FEC35E ">Playlist</p>s
+        <div class="repetition" style="float: left" ng-repeat="playlist in playlistG">
+           <a href="#!">
+            <img ng-src={{playlist.immagine}}>
+            <p style="color: whitesmoke ">{{playlist.nome}}</p>
+           </a>
         </div>
-
-        <div class="repetition">
-            <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-            <p style="color: #2a4463">Playlist</p>s
-        </div>
-        <div class="repetition">
-            <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-            <p style="color: #2a4463">Playlist</p>s
-        </div>
-        <div class="repetition">
-            <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-            <p style="color: #2a4463">Playlist</p>s
-        </div>
-        <div class="repetition">
-            <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-            <p style="color: #2a4463">Playlist</p>s
-        </div>
-
     </div>
     <div class="container" style="border-radius: 10px" align="center">
         <h2 align="center">Ascoltati di Recente</h2>
         <div style="width: 100%">
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
+
+            <div class="repetition" style="float: left" ng-repeat="brani in recently">
+                <img ng-src={{brani.immagine}}>
+                <p style="color: whitesmoke">{{brani.nome}}</p>
             </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
+
         </div>
     </div>
     <div class="container" style="border-radius: 10px" align="center">
         <h2 align="center">Cosa ascoltano i tuoi Amici</h2>
         <div style="width: 100%">
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                 <p style="color: #2a4463">Brano</p>s
+            <div class="repetition" style="float: left" ng-repeat="braniAmici in musicFriends">
+                <img ng-src={{braniAmici.immagine}}>
+                 <p style="color: #2a4463">{{braniAmici.nome}}</p>s
             </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
-            </div>
+
 
         </div>
     </div>

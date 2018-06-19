@@ -16,7 +16,7 @@ module.exports = {
                 return callback({code:0,data:succ,status:200});
             }
         });
-    }
+    },
 
   get_brani_album : function (codalbum,callback){
       album_model.get_brani_album(codalbum,function(err,succ,code){

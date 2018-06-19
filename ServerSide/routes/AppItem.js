@@ -18,7 +18,7 @@ router.get("/playlist_giornaliera/:data",function(req,res){
                json.push({
                    nome: a.data[playlist].NOME,
                    codice: a.data[playlist].CODPLAYLIST,
-                   immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST
+                   immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST+".jpeg"
                });
            }
        }
@@ -77,7 +77,7 @@ router.get("/utente/:username",function(req,res){
             if(a.status === 200) {
                 json = {
                     username: a.data[0].USERNAME,
-                    immagine: "image/profile/" + a.data[0].USERNAME,
+                    immagine: "image/profile/" + a.data[0].USERNAME+".png",
                     amici: a.amici
                 };
             }
@@ -144,7 +144,7 @@ router.get("/artisti_seguiti/:username",function (req,res){
                         nome_arte: a.data[artista].NOME_ARTE,
                         codice: a.data[artista].CODARTISTA,
                         nazionalita: a.data[artista].NAZIONALITA,
-                        immagine: "image/artisti/"+a.data[artista].CODARTISTA
+                        immagine: a.data[artista].IMMAGINE
                     });
                 }
             }
@@ -170,7 +170,7 @@ router.get("/artista/:codartista",function (req,res){
                     nome_arte: a.data.NOME_ARTE,
                     codice: a.data.CODARTISTA,
                     nazionalita: a.data.NAZIONALITA,
-                    immagine: "image/artisti/"+a.data.CODARTISTA,
+                    immagine: a.data[artista].IMMAGINE,
                     followed: a.follow
                 };
             }
@@ -203,23 +203,43 @@ router.get("/canzoni_ascoltate/:codartista",function(req,res){
    }
 });
 
+router.post("/follow_artista",function (req,res) {
+   if(req.session.islog === 1){
+       utente.follow_artista(req.session.email,req.body.codartista,function(a){
+          res.status(a.status).end(JSON.stringify(a));
+       });
+   }else{
+       res.status(500).end()
+   }
+});
+
+router.post("/unfollow_artista",function (req,res) {
+    if(req.session.islog === 1){
+        utente.unfollow_artista(req.session.email,req.body.codartista,function(a){
+            res.status(a.status).end(JSON.stringify(a));
+        });
+    }else{
+        res.status(500).end()
+    }
+});
+
 // PAGINA DEGLI ALBUM//
 
 router.get("/get_album/:codalbum",function(req,res){
     if(req.session.islog === 1) {
         album.get_album(req.params.codalbum, function (a) {
-            var json = [];
+            var json = "";
             if (a.status === 200) {
-                for (var album in a.data) {
-                    json.push({
-                        nome: a.data[album].TITOLO,
-                        codice: a.data[album].CODALBUM,
-                        anno: a.data[album].ANNO,
-                        immagine: "/image/album/"+a.data[album].CODALBUM
-                    });
-                }
+                json = ({
+                    nome: a.data[album].TITOLO,
+                    codice: a.data[album].CODALBUM,
+                    anno: a.data[album].ANNO,
+                    immagine: a.data[album].IMMAGINE
+                });
+                res.status(a.status).end(JSON.stringify(json));
+            }else {
+                res.status(a.status).end(JSON.stringify(a));
             }
-            res.status(a.status).end(JSON.stringify(json));
         });
     }else{
         res.status(500).end();
@@ -256,7 +276,7 @@ router.get("/get_altro_artista/:codartista",function(req,res){
                         nome: a.data[album].TITOLO,
                         codice: a.data[album].CODALBUM,
                         anno: a.data[album].ANNO,
-                        immagine: "/image/album/"+a.data[album].CODALBUM
+                        immagine: a.data[album].IMMAGINE
                     });
                 }
             }
@@ -271,6 +291,26 @@ router.get("/get_altro_artista/:codartista",function(req,res){
 // LA TUA LIBRERIA //
 
 // LE TUE PLAYLIST //
+
+router.get("/get_brani_playlist/:codplaylist",function (req,res) {
+    if(req.session.islog === 1) {
+        playlist.get_brani_playlist(req.params.codplaylist, function (a) {
+            var json = [];
+            if (a.status === 200) {
+                for (var brano in a.data) {
+                    json.push({
+                        nome: a.data[brano].TITOLO,
+                        codice: a.data[brano].CODBRANO,
+                        immagine: a.data[brano].IMMAGINE
+                    });
+                }
+            }
+            res.status(a.status).end(JSON.stringify(json));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
 
 router.get("/le_tue_playlist",function(req,res){
    if(req.session.islog === 1){
@@ -388,7 +428,7 @@ router.get("/artisti_seguiti",function (req,res){
                         nome_arte: a.data[artista].NOME_ARTE,
                         codice: a.data[artista].CODARTISTA,
                         nazionalita: a.data[artista].NAZIONALITA,
-                        immagine: "image/artisti/"+a.data[artista].CODARTISTA
+                        immagine: a.data[artista].IMMAGINE
                     });
                 }
             }
@@ -411,7 +451,7 @@ router.get("/get_amici",function(req,res){
                    json.push({
                        nome: a.data[utente].USERNAME,
                        codice: a.data[utente].CODUTENTE,
-                       immagine: "image/profile/"+a.data[utente].USERNAME
+                       immagine: "image/profile/"+a.data[utente].USERNAME+".png"
                    });
                }
            }

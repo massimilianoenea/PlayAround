@@ -24,7 +24,6 @@ module.exports = {
 
                         connection.query(sql,function(err,results) {
                            if (err) return callback(err, null,3);
-                           connection.release();
                            return callback(null,results,0);
                        });
 
@@ -55,7 +54,6 @@ module.exports = {
                 connection.query(sql, [GetHash.GetCodUtente(user.email), tok], function(err, results) {
                     if (err) return callback(err,null,2);
                     mailSender.sendMail(mailSender.SetmailOptions(user.email,url,tok));
-                    connection.release();
                     return callback(null,results,0);
                 });
             });
