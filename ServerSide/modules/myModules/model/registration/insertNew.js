@@ -49,8 +49,7 @@ module.exports = {
             var paramater = [user.email,GetHash.GetCodUtente(user.email), GetHash.GetCodUtente_span(user.email),user.username,GetHash.GetPassword(user.password),0,0];
             connection.query(sql, paramater, function(err, results){
                 if (err) return callback(err, null,3);
-
-                 sql = "INSERT INTO UTENTI_APPEND(CODUTENTE,TOKEN,DATA_INVIO) VALUES (?,?,null)";
+                 sql = "INSERT INTO UTENTI_APPEND(CODUTENTE,TOKEN) VALUES (?,?)";
                 connection.query(sql, [GetHash.GetCodUtente(user.email), tok], function(err, results) {
                     if (err) return callback(err,null,2);
                     mailSender.sendMail(mailSender.SetmailOptions(user.email,url,tok));
