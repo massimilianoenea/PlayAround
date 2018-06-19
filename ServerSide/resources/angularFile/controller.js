@@ -147,7 +147,8 @@ angular.module('PlayAround')
     })
 
 
-    .controller('artistaCtrl', function ($scope, $http,Artista, SongArtista){
+    .controller('artistaCtrl', function ($scope, $http,Artista, AlbumArtista){
+        /*
         window.onload = prepareButton();
         prepareButton = function () {
 
@@ -158,10 +159,10 @@ angular.module('PlayAround')
             }
             else {
                 document.getElementById("follow").innerText = "Follow";
-                document.getElementById("follow").onclick = try_Follow();
+                document.getElementById("follow").onclick = try_follow();
                 document.getElementById("follow").style.color = "blue";
             }
-        }
+        };
         $scope.try_follow = function () {
             $http({
                 method: "POST",
@@ -172,7 +173,7 @@ angular.module('PlayAround')
                     document.getElementById("follow").onclick = "try_unFollow()";
                     document.getElementById("follow").style.color = "red";
                 })
-        }
+        };
         $scope.try_unFollow = function () {
             $http({
                 method: "GET",
@@ -184,9 +185,10 @@ angular.module('PlayAround')
                     document.getElementById("follow").style.color = "blue";
 
                 })
-        }
+        };
+        */
         $scope.artista=Artista;
-        $scope.brani=SongArtista;
+        $scope.Album=AlbumArtista;
 
     })
     .controller('moodCtrl', function ($scope, Mood) {

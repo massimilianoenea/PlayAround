@@ -88,18 +88,25 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
             templateUrl: "/public/templates/artista.html",
             controller: "artistaCtrl",
             resolve:  {
-                Artista: function($http, $routeParams){
-                    return $http.get('/require/artista/'+ $routeParams.id)
+                Artista: function($http, $route){
+                    return $http.get('/require/artista/'+ $route.current.params.id)
                         .then(function(response){
                             return response.data;
                         })
                 },
-                SongArtista:function($http, $routeParams){
-                    return $http.get('/require/canzoni_ascoltate/'+ $routeParams.id)
+                SongArtista:function($http, $route){
+                    return $http.get('/require/canzoni_ascoltate/'+ $route.current.params.id)
+                        .then(function(response){
+                            return response.data;
+                        })
+                },
+                AlbumArtista:function($http, $route){
+                    return $http.get('/require/get_altro_artista/'+ $route.current.params.id)
                         .then(function(response){
                             return response.data;
                         })
                 }
+
             }
         })
 

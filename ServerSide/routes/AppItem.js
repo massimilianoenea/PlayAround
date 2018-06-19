@@ -170,7 +170,7 @@ router.get("/artista/:codartista",function (req,res){
                     nome_arte: a.data.NOME_ARTE,
                     codice: a.data.CODARTISTA,
                     nazionalita: a.data.NAZIONALITA,
-                    immagine: a.data[artista].IMMAGINE,
+                    immagine: a.data.IMMAGINE,
                     followed: a.follow
                 };
             }
