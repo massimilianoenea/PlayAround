@@ -2,9 +2,12 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<title>Page Title</title>
+<title>PlayAround</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/public/image/Symbol playaround logo.png" type="image/png" />
+
+    <meta name="description" content="Tutta la musica che cerchi, a portata di CLICK!">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular-route.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
@@ -211,7 +214,7 @@
     }
 
     .navbar a.active {
-      background-color: #4CAF50;
+      background-color: #2a4463;
       color: white;
     }
 
@@ -481,7 +484,7 @@ background-image: url("/image/sfondo_playerino2.jpg");
               </ul>
           </div>
             <br>
-            <div class="playerino">
+            <div class="playerino" ng-if ="getDisable()">
 
                 <audio id="audio" autoplay>
                     <source src="" type="audio/mpeg">
@@ -572,7 +575,7 @@ background-image: url("/image/sfondo_playerino2.jpg");
     <div class="navbar">
         <a href="#home" class="active">Home</a>
         <a href="#!amiciOn">Amici Online</a>
-        <a href="#contact">Utenti Online</a>
+        <a href="#!player">Music Player</a>
     </div>
     <!--
     <div class="footer">
