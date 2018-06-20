@@ -41,9 +41,9 @@ module.exports = {
             }
             var sql = "SELECT USERNAME,CODUTENTE FROM UTENTI WHERE CODUTENTE IN (SELECT CODUTENTE_AMICO FROM UTENTI_AMICI WHERE CODUTENTE LIKE ?)";
             connection.query(sql,[GetHash.GetCodUtente(email)],function (err,results) {
-                if(err || results.length === 0) {
+                if(err) {
                     connection.release();
-                    return callback('err',null,2);
+                    return callback(err,null,2);
                 }
                 connection.release();
                 return callback(null,results,0);
