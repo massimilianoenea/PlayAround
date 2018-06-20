@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <title>PlayAround</title>
@@ -71,9 +71,22 @@
             opacity: 1;
         }
 
-        @media screen and (max-width: 900px){
-            .repetition{
-                width: 30%;
+        @media screen and (min-width: 992px){
+            .overlay{
+                font-size: 20px;
+                padding: 15px;
+            }
+        }
+        @media screen and (max-width: 768px){
+            .overlay{
+                font-size: 15px;
+                padding: 5px;
+            }
+        }
+        @media screen and (max-width: 320px){
+            .overlay{
+                font-size: 13px;
+                padding: 5px;
             }
         }
 

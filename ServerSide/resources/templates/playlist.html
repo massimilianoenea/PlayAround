@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <title>PlayAround</title>
@@ -14,14 +14,14 @@
             margin-top: 3%;
             margin-top: 3%;
             overflow: hidden;
-            border: 1px solid #ccc;
-            background-color: #f1f1f1;
+            /*border: 1px solid #ccc;
+            background-color: #f1f1f1;*/
             width: 100%;
         }
 
         /* Style the buttons that are used to open the tab content */
         .tab a {
-            background-color: grey;
+            /*background-color: grey;*/
             float: left;
             border: none;
             outline: none;
@@ -37,24 +37,117 @@
             background-color: #2a4463;
         }
         .active{
-            background-color: #2a4463;
+           /* background-color: #2a4463;*/
             color: gold;
         }
         .tablinks{
             height: 100%;
         }
 
+        /* Image grid style */
 
+        .column_img, .row_img {
+            box-sizing: border-box;
+        }
+
+        .column_img {
+            float: left;
+            width: 33.33%;
+            padding-left: 1px;
+            margin-top: 20px;
+        }
+
+        /* Clearfix (clear floats) */
+        .row_img::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        /* Image overlay */
+
+        .container_img, .image, .overlay{
+            box-sizing: border-box;
+        }
+
+        .container_img {
+            position: relative;
+            width: 70%;
+            max-width: 300px;
+        }
+
+        .image {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            background: rgb(0, 0, 0);
+            background: rgba(0, 0, 0, 0.8); /* Black see-through */
+            color: #f1f1f1;
+            width: 100%;
+            transition: .5s ease;
+            opacity:0;
+            color: white;
+            font-size: 15px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .container_img:hover .overlay, .container_img:active .overlay {
+            opacity: 1;
+        }
+
+        @media screen and (min-width: 992px){
+            .overlay{
+                font-size: 20px;
+                padding: 15px;
+            }
+        }
+        @media screen and (max-width: 768px){
+            .overlay{
+                font-size: 15px;
+                padding: 5px;
+            }
+        }
+        @media screen and (max-width: 320px){
+            .overlay{
+                font-size: 13px;
+                padding: 5px;
+            }
+        }
     </style>
 </head>
 <body ng-app="PlayAround" ng-controller="libreriaCtrl">
+
 <div class="tab">
     <a href="#!libreria/playlist" class="tablinks active">Playlist</a>
     <a href="#!libreria/leTueCanzoni" class="tablinks">Le tue Canzoni</a>
     <a href="#!libreria/ascoltatiRecente" class="tablinks">Ascoltati di Recente</a>
 </div>
 
-
-
+<div class="row_img">
+    <div class="column_img">
+        <div class="container_img">
+            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
+            <div class="overlay">Nome Album</div>
+        </div>
+    </div>
+    <div class="column_img">
+        <div class="container_img">
+            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
+            <div class="overlay">Nome Album</div>
+        </div>
+    </div>
+    <div class="column_img">
+        <div class="container_img">
+            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
+            <div class="overlay">Nome Album</div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
