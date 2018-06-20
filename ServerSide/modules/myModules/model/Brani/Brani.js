@@ -51,7 +51,7 @@ module.exports = {
              connection.release();
              return callback(err,null,1);
          }
-         var sql = "SELECT * FROM BRANI WHERE CODBRANO = ?";
+         var sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.CODBRANO = ?";
           connection.query(sql,[codbrano], function(err, results) {
               if (err) {
                   connection.release();
@@ -61,6 +61,24 @@ module.exports = {
               return callback(null,results,0);
           });
       });
+    },
+
+    get_full_brano_titolo: function(titolo,callback){
+        connection.getConnection(function(err,connection){
+            if(err) {
+                connection.release();
+                return callback(err,null,1);
+            }
+            var sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.titolo LIKE ? ORDER BY LEVENSHTEIN(b.titolo,?)";
+            connection.query(sql,[titolo], function(err, results) {
+                if (err) {
+                    connection.release();
+                    return callback(err, null, 2);
+                }
+                connection.release();
+                return callback(null,results,0);
+            });
+        });
     },
 
     get_canzoni_salvate: function(email,callback){

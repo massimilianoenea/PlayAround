@@ -54,6 +54,25 @@ module.exports = {
         });
     },
 
+    get_full_brano_titolo : function(titolo,callback){
+        var toSearch = titolo.replace(' ','%');
+        toSearch = '%'+toSearch+'%';
+        brani_model.get_full_brano_titolo(toSearch,function(err,succ,code){
+            if (err !== null){
+                switch (code){
+                    case 1:
+                        return callback({code:1,text:"Errore connessione al database",errorCode:err.code,status:400});
+                    case 2:
+                        return callback({code:2,text:"Impossibile trovare il brano",errorCode:err.code,status:400});
+                    default:
+                        return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
+                }
+            }else{
+                return callback({code:0,data:succ,status:200});
+            }
+        });
+    },
+
     get_canzoni_salvate : function(email,callback){
         brani_model.get_canzoni_salvate(email,function(err,succ,code){
             if (err !== null){

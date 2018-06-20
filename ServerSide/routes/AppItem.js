@@ -487,4 +487,54 @@ router.get("/piu_ascoltate",function(req,res){
 
 // SCELTI PER TE DA FARE //
 
+
+// FUNZIONI PER I BRANI //
+router.get("/brano:codbrano",function(req,res){
+   if(req.session.islog){
+       brani.get_full_brano(req.params.codbrano,function(a){
+           var json = [];
+           if(a.status === 200) {
+               for (var brano in a.data) {
+                   json.push({
+                       titolo: a.data[brano].titolo,
+                       codice: a.data[brano].codice,
+                       immagine: a.data[brano].immagine,
+                       anno : a.data[brano].anno,
+                       album : a.data[brano].album,
+                       artista: a.data[brano].artista
+                   });
+               }
+           }
+           res.status(a.status).end(JSON.stringify(json));
+       });
+   }else{
+       // POTREBBE REINDIRIZZARE AL LOGIN
+       res.status(500).end();
+   }
+});
+// Ritorna il brano cercato per titolo del brano
+router.get("/brano_titolo:titolo",function(req,res){
+    if(req.session.islog){
+        brani.get_full_brano_titolo(req.params.titolo,function(a){
+            var json = [];
+            if(a.status === 200) {
+                for (var brano in a.data) {
+                    json.push({
+                        titolo: a.data[brano].titolo,
+                        codice: a.data[brano].codice,
+                        immagine: a.data[brano].immagine,
+                        anno : a.data[brano].anno,
+                        album : a.data[brano].album,
+                        artista: a.data[brano].artista
+                    });
+                }
+            }
+            res.status(a.status).end(JSON.stringify(json));
+        });
+    }else{
+        // POTREBBE REINDIRIZZARE AL LOGIN
+        res.status(500).end();
+    }
+});
+
 module.exports = router;
