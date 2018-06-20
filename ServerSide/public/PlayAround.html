@@ -214,7 +214,7 @@
     }
 
     .navbar a.active {
-      background-color: #4CAF50;
+      background-color: #2a4463;
       color: white;
     }
 
@@ -233,7 +233,9 @@
        /* background-color: white;*/
         padding: 20px;
     }
-
+.mobileHeader{
+    background: #4a4a4a;
+}
     /* Fake image, just for this example */
     .imgProfil {
         background-color: #aaa;
@@ -266,6 +268,9 @@
         .sidenav{
             display: none;
         }
+        .mobileHeader{
+            display: none;
+        }
     }
 
     /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
@@ -284,6 +289,9 @@
         }
         .sidenav{
             display: block;
+        }
+        .mobileHeader{
+            display: inline;
         }
         .row {
             flex-direction: column;
@@ -436,16 +444,19 @@ background-image: url("/image/sfondo_playerino2.jpg");
         <!-- Quando sei in mobile view -->
        <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="#">Home</a>
-           <a href="#">La tua Libreria</a>
-           <a href="#">Preferiti</a>
-           <a href="#">I tuoi Amici</a>
-            <a href="#">Genere & Mood</a>
-            <a href="#" onclick="active()">I più Ascoltati</a>
-            <a href="#">Scelti per Te</a>
+            <a href="#!">Home</a>
+           <a href="#!libreria">La tua Libreria</a>
+           <a href="#!preferiti">Preferiti</a>
+           <a href="#!amici">I tuoi Amici</a>
+            <a href="#!mood">Genere & Mood</a>
+            <a href="#!piuAscoltati" onclick="active()">I più Ascoltati</a>
+            <a href="#!sceltiPerTe">Scelti per Te</a>
         </div>
-        <span class="button" style="font-size:30px;cursor:pointer;background-color: #f4f4f4" onclick="openNav()">&#9776;</span>
+        <div  class="mobileHeader">
+            <img src="/image/Symbol_playaround_complete.png" style="width: 60%;float: right;display: inline;margin-right: 15%;">
+            <span class="button" style="font-size:30px;cursor:pointer;color: whitesmoke ;width:15%" onclick="openNav()">&#9776;</span>
 
+        </div>
 
         <!-- Quando sei in desktop view -->
         <div class="side">
@@ -575,7 +586,7 @@ background-image: url("/image/sfondo_playerino2.jpg");
     <div class="navbar">
         <a href="#home" class="active">Home</a>
         <a href="#!amiciOn">Amici Online</a>
-        <a href="#contact">Utenti Online</a>
+        <a href="#!player">Music Player</a>
     </div>
     <!--
     <div class="footer">
