@@ -316,7 +316,7 @@ router.get("/le_tue_playlist",function(req,res){
    if(req.session.islog === 1){
        playlist.get_playlist_utente(req.session.username,function(a){
            var json = [];
-           if(a.status === 200) {
+           if(a.status === 200 && a.code === 0) {
                for (var playlist in a.data) {
                    json.push({
                        nome: a.data[playlist].NOME,

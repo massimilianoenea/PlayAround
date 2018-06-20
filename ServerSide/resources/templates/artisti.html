@@ -30,10 +30,8 @@
     <div ng-controller="artistiPrefCtrl">
         <div ng-repeat="user in preferiti" class="containe">
 
-            <a href="#!artista
-            /{{user.nome}}">
-
-                <img src={{user.immagine}} alt="Avatar" style="width:90px">
+            <a href="#!artista/{{user.codice}}">
+                <img ng-src={{user.immagine}} alt="Avatar" style="width:90px">
                 <p style="color: #f4f4f4">{{user.nome}}</p>
 
             </a>

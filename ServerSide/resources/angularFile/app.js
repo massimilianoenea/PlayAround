@@ -75,7 +75,7 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
             controller: "recentiCtrl",
             resolve: {
                 Recenti: function ($http) {
-                    return $http.get('/require/ascoltate_recenti')
+                    return $http.get('/require/ascoltate_recente')
                         .then(function (response) {
                             return response.data;
                         });
