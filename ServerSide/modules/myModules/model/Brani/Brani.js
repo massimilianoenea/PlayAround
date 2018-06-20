@@ -70,7 +70,7 @@ module.exports = {
                 return callback(err,null,1);
             }
             var sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.titolo LIKE ? ORDER BY LEVENSHTEIN(b.titolo,?)";
-            connection.query(sql,[titolo], function(err, results) {
+            connection.query(sql,[titolo,titolo], function(err, results) {
                 if (err) {
                     connection.release();
                     return callback(err, null, 2);
