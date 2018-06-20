@@ -37,8 +37,8 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
             templateUrl:"/public/templates/utente.html",
             controller:"utenteCtrl",
             resolve:  {
-                User: function($http, $routeParams){
-                    return $http.get('require/utente/' + $routeParams.username)
+                User: function($http, $route){
+                    return $http.get('require/utente/' + $route.current.params.username)
                         .then(function(response){
                             return response.data;
                         })
