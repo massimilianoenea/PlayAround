@@ -207,6 +207,31 @@
             color: whitesmoke;
             background-color: orangered;
         }
+        @media screen and (max-width: 700px){
+           #section0 .contenitore{
+                width: 90%;
+            }
+            #section0 .navbar img{
+                width: 50%;
+            }
+            #section0 .navbar a{
+                width: auto;
+                padding: 20px 5px;
+                font-size: 100%;
+            }
+            .btnNav{
+                margin-right: 8%;
+            }
+            .fp-controlArrow{
+                top: 55%;
+            }
+            .fp-controlArrow.fp-next{
+                border-width: 19px 0 19px 17px;
+            }
+         .fp-controlArrow.fp-prev{
+           border-width:   19px 17px 19px 0;
+         }
+        }
 	</style>
 </head>
 <body>
@@ -216,15 +241,19 @@
 	<div class="section " id="section0">
 		<div class="navbar">
 				<img src="/image/Symbol_playaround_complete.png">
-				<a href="/registration">Registrati</a>
-				<a href="/login">Accedi</a>
+                <div class="btnNav">
+                    <a href="/registration">Registrati</a>
+                    <a href="/login">Accedi</a>
+                </div>
 		</div>
 		<div class="content">
 			<div class="contenitore">
                 <h1><b>Ascolta </b>
                     <br>
                     <em>tutta la <b>Musica</b> ovunque Tu sia</em></h1>
-					<button class="btn">ACCEDI</button>
+					<a href="/login">
+						<button class="btn">ACCEDI</button>
+					</a>
 			</div>
 		</div>
 	</div>
@@ -256,7 +285,9 @@
 		<div class="content">
 			<h1>Raggiungi i tuoi amici</h1>
                 <p>scopri cosa stanno ascoltando</p>
-            <button class="btn">Registrati</button>
+			<a href="/registration">
+            	<button class="btn">Registrati</button>
+			</a>s
 		</div>
 	</div>
 </div>
