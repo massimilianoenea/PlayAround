@@ -11,23 +11,66 @@
 
     <style>
         h2{
-            color: #FEC35E;
+            color: #370f14;
         }
-        .repetition{
-            display: inline;
-            padding: 8px;
+
+        /* Image grid style */
+
+        .column_img, .row_img {
+            box-sizing: border-box;
+        }
+
+        .column_img {
             float: left;
-            width: 20%;
-
-
+            width: 33.33%;
+            padding-left: 1px;
+            margin-top: 20px;
         }
-        .container{
-            width:100%;
 
+        /* Clearfix (clear floats) */
+        .row_img::after {
+            content: "";
+            clear: both;
+            display: table;
         }
-        p{
-            cursor: pointer;
+
+        /* Image overlay */
+
+        .container_img, .image, .overlay{
+            box-sizing: border-box;
         }
+
+        .container_img {
+            position: relative;
+            width: 70%;
+            max-width: 300px;
+        }
+
+        .image {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            background: rgb(0, 0, 0);
+            background: rgba(0, 0, 0, 0.8); /* Black see-through */
+            color: #f1f1f1;
+            width: 100%;
+            transition: .5s ease;
+            opacity:0;
+            color: white;
+            font-size: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container_img:hover .overlay, .container_img:active .overlay {
+            opacity: 1;
+        }
+
         @media screen and (max-width: 900px){
             .repetition{
                 width: 30%;
@@ -38,42 +81,42 @@
 
 </head>
 <body>
-
-<div class="row">
-
-    <div class="container" style="border-radius: 10px" align="center">
-        <h2 align="center">Playlist Giornaliera</h2>
+        <!--
         <div class="repetition" style="float: left" ng-repeat="playlist in playlistG">
            <a href="#!">
             <img ng-src={{playlist.immagine}} style="width: 120px; height: 120px;">
             <p style="color: whitesmoke ">{{playlist.nome}}</p>
            </a>
         </div>
-    </div>
-    <div class="container" style="border-radius: 10px" align="center">
+        -->
+        <h2 align="center">Playlist Giornaliera</h2>
+        <div class="row_img">
+            <div class="column_img" ng-repeat="playlist in playlistG">
+                <div class="container_img">
+                    <img ng-src={{playlist.immagine}} class="image">
+                    <div class="overlay">{{playlist.nome}}</div>
+                </div>
+            </div>
+        </div>
+
         <h2 align="center">Ascoltati di Recente</h2>
-        <div style="width: 100%">
-
-            <div class="repetition" style="float: left" ng-repeat="brani in recently">
-                <img ng-src={{brani.immagine}} style="width: 120px; height: 120px;">
-                <p style="color: whitesmoke">{{brani.nome}}</p>
+        <div class="row_img">
+            <div class="column_img" ng-repeat="brani in recently">
+                <div class="container_img">
+                    <img ng-src={{brani.immagine}} class="image">
+                    <div class="overlay">{{brani.nome}}</div>
+                </div>
             </div>
-
         </div>
-    </div>
-    <div class="container" style="border-radius: 10px" align="center">
+
         <h2 align="center">Cosa ascoltano i tuoi Amici</h2>
-        <div style="width: 100%">
-            <div class="repetition" style="float: left" ng-repeat="braniAmici in musicFriends">
-                <img ng-src={{braniAmici.immagine}} style="width: 120px; height: 120px;">
-                 <p style="color: #2a4463">{{braniAmici.nome}}</p>s
+        <div class="row_img">
+            <div class="column_img" ng-repeat="braniAmici in musicFriends">
+                <div class="container_img">
+                    <img ng-src={{braniAmici.immagine}} class="image">
+                    <div class="overlay">{{braniAmici.nome}}</div>
+                </div>
             </div>
-
-
         </div>
-    </div>
-
-
-</div>
 </body>
 </html>

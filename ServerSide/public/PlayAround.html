@@ -52,6 +52,7 @@
 
     /* Column container */
     .row {
+        background: linear-gradient(#009688, #003059);
         display: -ms-flexbox; /* IE10 */
         display: flex;
         justify-content: space-between;
@@ -67,10 +68,10 @@
         z-index: 1;
         top: 0;
         left: 0;
-        background-color: #2a4463;
+        background-color: #000000d9;
         overflow-x: hidden;
         transition: 0.5s;
-        padding-top: 60px;
+        padding-top: 40px;
     }
 
     .sidenav a {
@@ -79,7 +80,7 @@
         font-size: 25px;
         color: whitesmoke;
         display: block;
-        transition: 0.3s;
+        transition: 0.8s;
     }
 
     .sidenav a:hover {
@@ -99,10 +100,10 @@
     .side {
         -ms-flex: 10%; /* IE10 */
         flex: 10%;
-        background-color: #2a4463;
-        padding: 20px;
+        background-color: rgba(0,0,0,0.2);
+        padding: 10px;
         color: whitesmoke;
-        border-right-style: solid;
+        /*border-right-style: solid;*/
         border-right-color: whitesmoke;
         border-right-width: 1px ;
     }
@@ -111,15 +112,19 @@
     .sidedx {
         -ms-flex: 10%; /* IE10 */
         flex: 10%;
-        background-color: #2a4463;
-        padding: 20px;
+        background-color: rgba(0,0,0,0.1);
+        padding: 10px;
+        /*
         border-left-style: solid;
         border-left-color: whitesmoke;
         border-left-width: 1px;
+        */
     }
     .container {
+        /*
       border: 1px solid #ccc;
       border-radius: 3px;
+      */
       padding: 5px;
       margin: 5px ;
         color: whitesmoke;
@@ -143,13 +148,12 @@
       margin-right: 5px;
     }
     .chip {
-
         padding: 0 25px;
         height: 50px;
         font-size: 16px;
         line-height: 50px;
         border-radius: 25px;
-        background-color: #2a4463;
+      /*  background-color: #2a4463;*/
         margin: auto;
         text-align: center;
     }
@@ -221,9 +225,8 @@
     .main {
       padding: 16px;
       margin-bottom: 30px;
-        background-color: #4a4a4a;
         color: #2a4463;
-        height: 100%;
+        /*height: 100%;*/
     }
 
     /* Main column */
@@ -234,7 +237,7 @@
         padding: 20px;
     }
 .mobileHeader{
-    background: #4a4a4a;
+    background: #4a4a4a73;
 }
     /* Fake image, just for this example */
     .imgProfil {
@@ -252,83 +255,33 @@
         background: #ddd;
     }
     */
-    @media screen and (max-width: 1900px) {
-        .side{
-            display: inline;
-        }
-        .sidedx{
-            display: inline;
-        }
-        .button{
-            display: none;
-        }
-        .navbar{
-            display: none;
-        }
-        .sidenav{
-            display: none;
-        }
-        .mobileHeader{
-            display: none;
-        }
-    }
-
-    /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
-    @media screen and (max-width: 700px) {
-        .side{
-            display: none;
-        }
-        .sidedx{
-            display:none;
-        }
-        .button{
-            display: block;
-        }
-        .navbar{
-            display: inline;
-        }
-        .sidenav{
-            display: block;
-        }
-        .mobileHeader{
-            display: inline;
-        }
-        .row {
-            flex-direction: column;
-        }
-    }
-
-    @media (max-width: 500px) {
-      .container {
-          text-align: center;
-      }
-      .container img {
-          margin: auto;
-          float: none;
-          display: block;
-      }
-    }
-
-    @media screen and (max-height: 450px) {
-      .sidenav {padding-top: 15px;}
-      .sidenav a {font-size: 18px;}
-    }
-
-    /* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
-    @media screen and (max-width: 400px) {
-
-    }
         #searchBar{
-            background-color: #e7e5e5;
-            color: #2a4463;
-            border-style: solid;
+            background-color: rgba(0,0,0,0);
+            color: whitesmoke;
             border-radius: 20px;
+            padding:5px;
+            /*
+            border-style: solid;
             border-width: 2px;
             border-color: #AAAAAA;
+            */
+            border:2px solid #008173;
             width: 100%;
             height: 100%;
             font-size: large;
         }
+
+        #searchBar:focus{
+            outline:none;
+            background-color: rgba(0,0,0,0.13);
+           border:none;
+        }
+
+        #searchBar::placeholder{
+            color: #dbdbdb;
+        }
+
+
     ul {
         list-style-type: none;
         margin: 0;
@@ -352,7 +305,7 @@
     .playerino{
 background-image: url("/image/sfondo_playerino2.jpg");
         height: 360px;
-        width:90%;
+        width:100%;
         margin: auto;
         border-radius: 20px;
         position: relative;
@@ -407,9 +360,50 @@ background-image: url("/image/sfondo_playerino2.jpg");
         color: whitesmoke;
     }
 
+    @media screen and (max-width: 1900px) {
+        .side{
+            display: inline;
+        }
+        .sidedx{
+            display: inline;
+        }
+        .button{
+            display: none;
+        }
+        .navbar{
+            display: none;
+        }
+        .sidenav{
+            display: none;
+        }
+        .mobileHeader{
+            display: none;
+        }
+    }
 
-
-    @media screen and (max-width: 700px){
+    /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+    @media screen and (max-width: 700px) {
+        .side{
+            display: none;
+        }
+        .sidedx{
+            display:none;
+        }
+        .button{
+            display: block;
+        }
+        .navbar{
+            display: inline;
+        }
+        .sidenav{
+            display: block;
+        }
+        .mobileHeader{
+            display: inline;
+        }
+        .row {
+            flex-direction: column;
+        }
         .col-30{
             display: none;
         }
@@ -417,6 +411,28 @@ background-image: url("/image/sfondo_playerino2.jpg");
             height: auto;
         }
     }
+
+    @media (max-width: 500px) {
+        .container {
+            text-align: center;
+        }
+        .container img {
+            margin: auto;
+            float: none;
+            display: block;
+        }
+    }
+
+    @media screen and (max-height: 450px) {
+        .sidenav {padding-top: 15px;}
+        .sidenav a {font-size: 18px;}
+    }
+
+    /* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
+    @media screen and (max-width: 400px) {
+
+    }
+
     </style>
     </head>
     <body ng-app="PlayAround" ng-controller="PlayAround">
@@ -460,8 +476,8 @@ background-image: url("/image/sfondo_playerino2.jpg");
 
         <!-- Quando sei in desktop view -->
         <div class="side">
-            <div style="margin: 0 5% 5% 5%">
-            <img src="/image/Symbol_playaround_complete.png" alt="logo" style="height: 70px">
+            <div>
+            <img src="/image/Symbol_playaround_complete.png" alt="logo" style="height: 60px; margin-right:10px;">
             </div>
                 <div class="chip">
           <img ng-src="image/profile/{{Utente.username}}.png" alt="Avatar"/>
@@ -513,7 +529,6 @@ background-image: url("/image/sfondo_playerino2.jpg");
                     <div class="time_slider">
                         <progress id="progress-bar" min='0' max='100' value='0'></progress>
                         <span class="runing_time">0:00</span>
-                        <input type="range" value="0">
                     </div>
                     <i class="fa fa-fast-backward" aria-hidden="true"></i>
                     <i class="fa fa-play" aria-hidden="true"></i>
@@ -525,8 +540,8 @@ background-image: url("/image/sfondo_playerino2.jpg");
       <!-- sempre attiva, parte centrale-->
         <div class="main">
 
-          <header style="padding-bottom: 3%;height: 70px" >
-              <input type="search" id="searchBar" placeholder="Search" style="height: 100%">
+          <header>
+              <input type="text" id="searchBar" placeholder="Search">
           </header>
             <div ng-view="">
           <h2>TITLE HEADING</h2>
