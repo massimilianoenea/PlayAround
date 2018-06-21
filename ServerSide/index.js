@@ -13,6 +13,7 @@ var fs = require('fs');
 
 
 var socketFunction = require('./SocketFunction/Friend.js');
+app.set('port', ( process.env.PORT || 1337 ));
 app.use('/public',express.static(__dirname+'/resources'));
 app.use('/image',express.static(__dirname+'/resources/image'));
 
@@ -167,6 +168,6 @@ io.on('connection', function(client) {
     });
 });
 
-http.listen(1337,function(){
-    console.log("Listen on 1337");
+http.listen(app.get('port'),function(){
+    console.log("Listen on" + app.get('port'));
 });
