@@ -1,5 +1,5 @@
 var mysql = require ("mysql");
-if(process.env.PORT && process.env.PORT!==5000){
+if(process.env.PORT && process.env.PORT!=='5000'){
 var con = mysql.createPool({
         host: process.env.DATABASE_HOST,
         user: process.env.DATABASE_USER,
