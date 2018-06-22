@@ -1,13 +1,14 @@
 angular.module('PlayAround')
     .factory('socket', function ($rootScope) {
-    var socket = io.connect('http://127.0.0.1:1337', {'forceNew': true});
+        var path = window.location.protocol+"//"+ window.location.host;
+        var socket = io.connect(path, {'forceNew': true});
     return {
         runSocket: function(){
-            socket = io.connect('http://127.0.0.1:1337', {'forceNew': true});
-            return socket.connected();
+            socket = io.connect(path, {'forceNew': true});
+            return socket.connected;
         },
         isConnected: function(){
-            if(socket.connected === false) return socket.runSocket();
+            if(socket.connected === false) return this.runSocket();
             return socket.connected;
         },
         on: function (eventName, callback) {
@@ -19,7 +20,7 @@ angular.module('PlayAround')
             });
         },
         emit: function (eventName, data, callback) {
-            if(socket.isConnected()) {
+            if(this.isConnected()) {
                 socket.emit(eventName, data, function () {
                     var args = arguments;
                     $rootScope.$apply(function () {
@@ -31,5 +32,5 @@ angular.module('PlayAround')
             }
         }
     };
-})
+});
 

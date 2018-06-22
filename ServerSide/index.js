@@ -77,6 +77,7 @@ io.on('connection', function(client) {
     });
 
     client.on('getFriend',function(data){
+        console.log('getFriend per '+ data.username);
         socketFunction.GetFriend(data.email,function (a){
             if(a.code === 0){
                 for (var room in a.amici_on) {
@@ -84,7 +85,15 @@ io.on('connection', function(client) {
                     console.log(' Client joined the room ' + a.amici_on[room].USERNAME + ' and client id is ' + client.id);
                 }
             }
+            client.join(data.username);
         });
+    });
+
+
+    client.on('event', function(data) {
+        console.log('event');
+        io.sockets.in(data.username).emit('message', data.data);
+       // client.in(data.username).emit('message', data.data);
     });
 
 
@@ -162,9 +171,6 @@ io.on('connection', function(client) {
         }
     });
 
-    client.on('event', function(data) {
-       client.in(data.username).emit('message', data.data);
-    });
 });
 
 http.listen(1337,function(){

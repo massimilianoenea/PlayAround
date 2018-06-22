@@ -1,8 +1,7 @@
 angular.module('PlayAround')
 
-.controller('PlayAround',function ($scope, $sessionStorage,$http) {
+.controller('PlayAround',function ($scope, $sessionStorage,$http,socket) {
     delete $http.defaults.headers.common['X-Requested-With'];
-
     this.$onInit = function (){
         $http({
             method : "POST",
@@ -15,6 +14,11 @@ angular.module('PlayAround')
             window.location.replace('/login');
         });
     };
+
+    $scope.$on('$viewContentLoaded', function(event) {
+        socket.emit('getFriend', {username: $scope.Utente.username, email: $scope.Utente.email});
+        socket.emit('player_room', {username: $scope.Utente.username});
+    });
 /*
     $scope.sendMess = function(){
         var json = {username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}};
@@ -27,6 +31,8 @@ angular.module('PlayAround')
         }
     };
     */
+    $sessionStorage.socket = socket;
+
      $scope.disablePlayerino = function(){
        $sessionStorage.disable = false;
      };
@@ -38,19 +44,17 @@ angular.module('PlayAround')
          return true;
      };
 
-})
-.controller('amiciOnCtrl', function ($scope, socket, $sessionStorage) {
+     $scope.sendMessage = function(){
+         $sessionStorage.socket.emit('event', {username: $scope.Utente.username, data:{username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
+     };
 
-    $scope.$on('$viewContentLoaded', function(event) {
-        if(socket.isConnected()===true){
-            socket.emit('getFriend', {username: $scope.Utente.username, email: $scope.Utente.email});
-            socket.emit('player_room', {username: $scope.Utente.username});
-            //send_message({username:response.data.username,text:response.data.username+" ha effettuato l'accesso"});
-        }else{
-            console.log("not connected");
-            return true;
-        }
-    });
+     $scope.socketOn = function(){
+         $sessionStorage.socket.isConnected();
+     }
+
+})
+.controller('amiciOnCtrl', function ($scope, $sessionStorage) {
+    var socket = $sessionStorage.socket;
 
  socket.on('message',function (data) {
 

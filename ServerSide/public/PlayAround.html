@@ -80,7 +80,7 @@
         font-size: 25px;
         color: whitesmoke;
         display: block;
-        transition: 0.8s;
+        transition: 0.3s;
     }
 
     .sidenav a:hover {
@@ -518,9 +518,7 @@
                     <source src="" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
-                <button ng-click="checkIsOn()">check</button>
-                <button onclick="load_Music({username:'massi1'})">Select Song</button>
-                <button onclick="play_new({username:'massi1'})" id="Play_button">pause</button>
+                <button ng-click="sendMessage()">SendMessage</button>
                 <a href="#!player" ng-click="disablePlayerino()">
                     <i class="fa fa-expand"></i>
                     <img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar"/>
