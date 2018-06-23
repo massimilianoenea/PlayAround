@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <title>PlayAround</title>
@@ -50,33 +50,34 @@
         <h2 style="margin: auto;padding-bottom: 3%;">Username</h2>
         <div style="width: 100%;" align="center">
             <img style="border-radius: 40px" src="https://www.w3schools.com/w3images/bandmember.jpg">
-                <button id="follow"></button>
-
         </div>
-    <button ng-click="addAmico()">Follow</button>
+
+    <button  ng-click="isFriend ? deleteFriend() : addFriend()" >
+        <span ng-hide="isFriend">Follow</span><span ng-show="isFriend">Unfollow</span>
+    </button>
     <div class="container" style="border-radius: 10px;margin-top: 4%">
         <h2 align="center">Ascoltati di Recente</h2>
 
         <div style="width: 100%">
             <div class="repetition" style="float: left">
                 <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
+                <p style="color: #2a4463">Brano</p>
             </div>
             <div class="repetition" style="float: left">
                 <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
+                <p style="color: #2a4463">Brano</p>
             </div>
             <div class="repetition" style="float: left">
                 <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
+                <p style="color: #2a4463">Brano</p>
             </div>
             <div class="repetition" style="float: left">
                 <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
+                <p style="color: #2a4463">Brano</p>
             </div>
             <div class="repetition" style="float: left">
                 <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>s
+                <p style="color: #2a4463">Brano</p>
             </div>
         </div>
     </div>

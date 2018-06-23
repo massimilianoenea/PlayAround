@@ -89,9 +89,9 @@ router.get("/utente/:username",function(req,res){
     }
 });
 
-router.get("/add_amico/:username",function(req,res){
+router.post("/add_amico",function(req,res){
     if(req.session.islog === 1) {
-        utente.add_amico(req.session.email,req.params.username,function(a){
+        utente.add_amico(req.session.email,req.body.username,function(a){
             res.status(a.status).end(JSON.stringify(a));
         });
     }else{
@@ -100,9 +100,9 @@ router.get("/add_amico/:username",function(req,res){
     }
 });
 
-router.get("/delete_amico/:username",function(req,res){
+router.post("/delete_amico",function(req,res){
     if(req.session.islog === 1) {
-        utente.delete_amico(req.session.email,req.params.username,function(a){
+        utente.delete_amico(req.session.email,req.body.username,function(a){
             res.status(a.status).end(JSON.stringify(a));
         });
     }else{
@@ -489,7 +489,7 @@ router.get("/piu_ascoltate",function(req,res){
 
 
 // FUNZIONI PER I BRANI //
-router.get("/brano:codbrano",function(req,res){
+router.get("/brano/:codbrano",function(req,res){
    if(req.session.islog){
        brani.get_full_brano(req.params.codbrano,function(a){
            var json = [];
@@ -513,7 +513,7 @@ router.get("/brano:codbrano",function(req,res){
    }
 });
 // Ritorna il brano cercato per titolo del brano
-router.get("/brano_titolo:titolo",function(req,res){
+router.get("/brano_titolo/:titolo",function(req,res){
     if(req.session.islog){
         brani.get_full_brano_titolo(req.params.titolo,function(a){
             var json = [];

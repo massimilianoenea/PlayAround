@@ -83,44 +83,32 @@ angular.module('PlayAround')
     }
 })
     .controller('utenteCtrl', function($scope,$http,User) {
+        $scope.isFriend = User.amici;
+
         var recently = [];
-        window.onload = prepareButton();
-        prepareButton = function () {
-
-            if (User.amici) {
-                document.getElementById("follow").innerText = "Unfollow";
-                document.getElementById("follow").onclick = try_unFollow();
-                document.getElementById("follow").style.color = "red";
-            }
-            else {
-                document.getElementById("follow").innerText = "Follow";
-                document.getElementById("follow").onclick = try_Follow();
-                document.getElementById("follow").style.color = "blue";
-            }
-        };
-
-        $scope.try_follow = function () {
+        $scope.addFriend = function () {
             $http({
-                method: "GET",
-                url: "require/add_amico/" + User.username
+                method : "POST",
+                url : 'require/add_amico',
+                data: {username:User.username},
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
             })
                 .then(function mySuccess(response) {
-                    document.getElementById("follow").innerHTML = "unfollow";
-                    document.getElementById("follow").onclick = "try_unFollow()";
-                    document.getElementById("follow").style.color = "red";
+                    $scope.isFriend = true;
                 })
         };
 
-        $scope.try_unFollow = function () {
+        $scope.deleteFriend = function () {
             $http({
-                method: "GET",
-                url: "require/delete_amico/+" + User.username
+                method : "POST",
+                url : 'require/delete_amico',
+                data: {username:User.username},
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
             })
                 .then(function mySuccess(response) {
-                    document.getElementById("follow").innerHTML = "follow";
-                    document.getElementById("follow").onclick = "try_follow()";
-                    document.getElementById("follow").style.color = "blue";
-
+                    $scope.isFriend = false;
                 })
         };
 
