@@ -11,6 +11,10 @@
     <script src="/public/angularFile/service.js"></script>
 
     <style>
+        h2{
+            text-align: center;
+            color: #FEC35E;
+        }
         .tab {
             margin-top: 3%;
             margin-top: 3%;
@@ -146,6 +150,19 @@
             from {top:-300px; opacity:0}
             to {top:0; opacity:1}
         }
+        /*button Aggiungi Nuova Playlist*/
+        .fa.fa-plus-square{
+            color: white;
+
+        }
+        .fa.fa-plus-square:hover{
+            color: #a00e6d;
+
+        }
+        #textBtn{
+            font-family: Verdana;
+            color: white;
+        }
 
         /* The Close Button */
         .close {
@@ -195,7 +212,7 @@
             border-color: #357ebd;
             border: 1px solid;
             border-radius: 5px;
-            width: 15%;
+            width: auto;
             height: auto;
             position: absolute;
             right: 10%;
@@ -310,6 +327,10 @@ margin: 10%;
                 font-size: 15px;
                 padding: 5px;
             }
+            .modal-content{
+                width: 95%;
+            }
+
         }
         @media screen and (max-width: 320px){
             .overlay{
@@ -331,13 +352,16 @@ margin: 10%;
 </div>
 
 
-
+<h2>LE TUE PLAYLIST</h2>
 
 
 
 
 <!-- Trigger/Open The Modal -->
-<button id="myBtn" ng-click="showBox()">Aggiungi Playlist</button>
+<div align="center" style="margin-bottom: 2%;margin-top: -2%;">
+    <i class="fa fa-plus-square" aria-hidden="true" ng-click="showBox()"><span id="textBtn"> Nuova Playlist</span></i>
+</div>
+
 
 <!-- The Modal -->
 <div id="myModal" class="modal" ng-show="visible">
@@ -359,21 +383,21 @@ margin: 10%;
                     angucomplete-alt  id="Song"
                                       placeholder="Search Song"
                                       pause="400"
-                                      selected-object="song"
+                                      selected-object="addSong"
                                       remote-url="/require/brano_titolo/"
                                       title-field="titolo,artista"
                                     clear-selected="true"
                 ng-hide="create">
 
                 </div>
-                     <p ng-hide="create">Hai aggiunto: {{song.title}}</p>
+                     <p ng-hide="create">Hai aggiunto: {{nomeBrano}}</p>
                 </div>
 
             </div>
 
         <div class="modal-footer">
             <button class="btnSave" ng-click="newPlaylist()" ng-disabled="myPlaylist.$invalid" ng-show="create">Conferma</button>
-            <button class="btnSave" ng-click="" ng-disabled="myPlaylist.$invalid" ng-hide="create">Salva</button>
+            <button class="btnSave" ng-click="salva()" ng-disabled="myPlaylist.$invalid" ng-hide="create">Salva</button>
         </div>
 
         </form>
@@ -382,24 +406,14 @@ margin: 10%;
 </div>
 
 <div class="row_img">
-    <div class="column_img">
+    <div class="column_img" ng-repeat="list in playlist">
         <div class="container_img">
-            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
-            <div class="overlay">Nome Album</div>
+            <img ng-src="{{list.immagine}}" alt="Snow" class="image">
+            <div class="overlay">{{list.nome}}</div>
+            <p>{{list.codice}}</p>
         </div>
     </div>
-    <div class="column_img">
-        <div class="container_img">
-            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
-            <div class="overlay">Nome Album</div>
-        </div>
-    </div>
-    <div class="column_img">
-        <div class="container_img">
-            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
-            <div class="overlay">Nome Album</div>
-        </div>
-    </div>
+
 </div>
 
 

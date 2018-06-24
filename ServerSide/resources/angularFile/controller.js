@@ -83,6 +83,7 @@ angular.module('PlayAround')
     }
 })
     .controller('utenteCtrl', function($scope,$http,User) {
+        $scope.utente=User;
         $scope.isFriend = User.amici;
 
         var recently = [];
@@ -150,8 +151,9 @@ angular.module('PlayAround')
            },function myError(response){
                $scope.message=true;
                $scope.error = response.data;
+               console.log(response.data);
            });
-       }
+       };
        $scope.addSong=function (selected) {
            var parameter = {codbrano:selected};
            $http({
@@ -161,10 +163,11 @@ angular.module('PlayAround')
                withCredentials: true,
                headers: { 'Content-Type': 'application/json' }
            })
-       }
+           $scope.nomeBrano=selected.title;
+       };
        $scope.salva=function(){
            $scope.visible=$scope.visible=false;
-       }
+       };
 
         })
     .controller('tueCanzoniCtrl', function ($scope, Saved){
