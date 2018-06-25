@@ -9,7 +9,12 @@
     <script src="/public/angularFile/app.js"></script>
     <script src="/public/angularFile/controller.js"></script>
     <script src="/public/angularFile/service.js"></script>
+
     <style>
+        h2{
+            text-align: center;
+            color: #FEC35E;
+        }
         .tab {
             margin-top: 3%;
             margin-top: 3%;
@@ -104,6 +109,213 @@
             opacity: 1;
         }
 
+   /*modalBOXES*/
+        /* The Modal (background) */
+        .modal {
+            /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 60%;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+
+        @keyframes animatetop {
+            from {top:-300px; opacity:0}
+            to {top:0; opacity:1}
+        }
+        /*button Aggiungi Nuova Playlist*/
+        .fa.fa-plus-square{
+            color: white;
+
+        }
+        .fa.fa-plus-square:hover{
+            color: #a00e6d;
+
+        }
+        #textBtn{
+            font-family: Verdana;
+            color: white;
+        }
+
+        /* The Close Button */
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #2a4463;
+            color: white;
+        }
+
+        .modal-body {
+            padding: 5% 16px;
+            width: 90%;
+            margin: auto;
+            background-color: white;
+        }
+
+        .modal-footer {
+            padding: 2px 16px;
+            background-color: #2a4463;
+            color: white;
+            height: 40px;
+        }
+        #nameplaylist{
+            width: 100%;
+            height:40px;
+            text-align: center;
+            font-size: large;
+            margin-top: 3%;
+            border: 2px dotted gray;
+        }
+        .btnSave{
+            color: #fff;
+            background-color: #a00e6d;
+            border-color: #357ebd;
+            border: 1px solid;
+            border-radius: 5px;
+            width: auto;
+            height: auto;
+            position: absolute;
+            right: 10%;
+            font-size: medium;
+            bottom: 4%;
+
+        }
+        .btnSave:hover{
+            background-color: #357ebd;
+
+        }
+        #addSong{
+            margin: 5% 0px 10% 0;
+            background: teal;
+            color: whitesmoke;
+            border: 1px solid;
+            height: 80%;
+        }
+        /*angucomplete Style*/
+        .angucomplete-holder {
+            position: relative;
+        }
+
+        .angucomplete-dropdown {
+            border-color: #ececec;
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 2px;
+            width: 250px;
+            padding: 6px;
+            cursor: pointer;
+            z-index: 9999;
+            overflow-y: auto;
+            max-height: 200px;
+            /*position: absolute;
+            /*top: 32px;
+            left: 0px;
+            */
+            margin-top: -6px;
+            background-color: #ffffff;
+        }
+
+        .angucomplete-searching {
+            color: #acacac;
+            font-size: 14px;
+        }
+
+        .angucomplete-description {
+            font-size: 14px;
+        }
+
+        .angucomplete-row {
+            padding: 5px;
+            color: #000000;
+            margin-bottom: 4px;
+            clear: both;
+        }
+
+        .angucomplete-selected-row {
+            background-color: lightblue;
+            color: #ffffff;
+        }
+
+        .angucomplete-image-holder {
+            padding-top: 2px;
+            float: left;
+            margin-right: 10px;
+            margin-left: 5px;
+        }
+
+        .angucomplete-image {
+            height: 34px;
+            width: 34px;
+            border-radius: 50%;
+            border-color: #ececec;
+            border-style: solid;
+            border-width: 1px;
+        }
+
+        .angucomplete-image-default {
+            /* Add your own default image here
+             background-image: url('/assets/default.png');
+            */
+            background-position: center;
+            background-size: contain;
+            height: 34px;
+            width: 34px;
+        }
+#Song_value{
+margin: 10%;
+    margin: 5% 0 5% 0;
+    border-radius: 5px;
+    border: 1px solid lightblue;
+    width: 100%;
+    font-size: medium;
+
+}
+#Song{
+    width: 100%;
+    height: auto;
+
+}
+
         @media screen and (min-width: 992px){
             .overlay{
                 font-size: 20px;
@@ -115,6 +327,10 @@
                 font-size: 15px;
                 padding: 5px;
             }
+            .modal-content{
+                width: 95%;
+            }
+
         }
         @media screen and (max-width: 320px){
             .overlay{
@@ -122,9 +338,12 @@
                 padding: 5px;
             }
         }
+
+
     </style>
+
 </head>
-<body ng-app="PlayAround" ng-controller="libreriaCtrl">
+<body ng-app="PlayAround" ng-controller="libreriaCtrl as ctrl">
 
 <div class="tab">
     <a href="#!libreria/playlist" class="tablinks active">Playlist</a>
@@ -132,25 +351,71 @@
     <a href="#!libreria/ascoltatiRecente" class="tablinks">Ascoltati di Recente</a>
 </div>
 
-<div class="row_img">
-    <div class="column_img">
-        <div class="container_img">
-            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
-            <div class="overlay">Nome Album</div>
-        </div>
-    </div>
-    <div class="column_img">
-        <div class="container_img">
-            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
-            <div class="overlay">Nome Album</div>
-        </div>
-    </div>
-    <div class="column_img">
-        <div class="container_img">
-            <img src="https://www.w3schools.com/howto/img_snow.jpg" alt="Snow" class="image">
-            <div class="overlay">Nome Album</div>
-        </div>
-    </div>
+
+<h2>LE TUE PLAYLIST</h2>
+
+
+
+
+<!-- Trigger/Open The Modal -->
+<div align="center" style="margin-bottom: 2%;margin-top: -2%;">
+    <i class="fa fa-plus-square" aria-hidden="true" ng-click="showBox()"><span id="textBtn"> Nuova Playlist</span></i>
 </div>
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal" ng-show="visible">
+
+    <!-- Modal content -->
+    <div class="modal-content" >
+        <div class="modal-header">
+            <span class="close" ng-click="hideBox()">&times;</span>
+            <h2>Crea Nuova Playlist</h2>
+        </div>
+        <div class="modal-body" align="center">
+            <div class="row" style="background: white">
+                <form name="myPlaylist" novalidate style="margin: auto">
+                <input type="text" id="nameplaylist" name="namePlaylist" placeholder="Inserire Nome Playlist" ng-model="namePlaylist" ng-show="create"  ng-minlength="3" required/>
+                <span ng-show="myPlaylist.namePlaylist.$invalid" style="color: red">Il nome deve contenere almeno 3 caratteri</span>
+                    <p ng-show="message" style="color: red;" ng-bind="error.text"></p>
+
+                <div
+                    angucomplete-alt  id="Song"
+                                      placeholder="Search Song"
+                                      pause="400"
+                                      selected-object="addSong"
+                                      remote-url="/require/brano_titolo/"
+                                      title-field="titolo,artista"
+                                    clear-selected="true"
+                ng-hide="create">
+
+                </div>
+                     <p ng-hide="create">Hai aggiunto: {{nomeBrano}}</p>
+                </div>
+
+            </div>
+
+        <div class="modal-footer">
+            <button class="btnSave" ng-click="newPlaylist()" ng-disabled="myPlaylist.$invalid" ng-show="create">Conferma</button>
+            <button class="btnSave" ng-click="salva()" ng-disabled="myPlaylist.$invalid" ng-hide="create">Salva</button>
+        </div>
+
+        </form>
+    </div>
+
+</div>
+
+<div class="row_img">
+    <div class="column_img" ng-repeat="list in playlist">
+        <div class="container_img">
+            <img ng-src="{{list.immagine}}" alt="Snow" class="image">
+            <div class="overlay">{{list.nome}}</div>
+            <p>{{list.codice}}</p>
+        </div>
+    </div>
+
+</div>
+
+
 </body>
 </html>

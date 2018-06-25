@@ -1,6 +1,6 @@
-angular.module('PlayAround', ['ngRoute','ngStorage'])
+angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
 
-/* Routing */
+/* Routing  autoCompleteModule' ,'ngSanitize'*/
 
 .config(function($routeProvider) {
     $routeProvider
@@ -106,8 +106,7 @@ angular.module('PlayAround', ['ngRoute','ngStorage'])
                             return response.data;
                         })
                 }
-
-            }
+                }
         })
 
         .when("/player",{

@@ -144,6 +144,7 @@ angular.module('PlayAround')
     }
 })
     .controller('utenteCtrl', function($scope,$http,User) {
+        $scope.utente=User;
         $scope.isFriend = User.amici;
 
         var recently = [];
@@ -185,9 +186,51 @@ angular.module('PlayAround')
     })
 
 
-    .controller('playlistCtrl', function($scope, PersonalPlaylist){
+    .controller('playlistCtrl', function($scope, PersonalPlaylist, $http){
         $scope.playlist=PersonalPlaylist;
-    })
+        $scope.visible=false;
+        $scope.create=true;
+
+        $scope.showBox=function () {
+            $scope.visible=$scope.visible=true;
+        }
+        $scope.hideBox=function () {
+            $scope.visible=$scope.visible=false;
+        }
+
+       $scope.newPlaylist=function () {
+
+           var parameter={nome_playlist:$scope.namePlaylist};
+           $http({
+               method:"POST",
+               url : '/require/nuova_playlist',
+               data: parameter,
+               withCredentials: true,
+               headers: { 'Content-Type': 'application/json' }
+           }).then(function mySuccess(response){
+               $scope.create=false;
+           },function myError(response){
+               $scope.message=true;
+               $scope.error = response.data;
+               console.log(response.data);
+           });
+       };
+       $scope.addSong=function (selected) {
+           var parameter = {codbrano:selected};
+           $http({
+               method:"POST",
+               url : '/require/add_song',
+               data: parameter,
+               withCredentials: true,
+               headers: { 'Content-Type': 'application/json' }
+           })
+           $scope.nomeBrano=selected.title;
+       };
+       $scope.salva=function(){
+           $scope.visible=$scope.visible=false;
+       };
+
+        })
     .controller('tueCanzoniCtrl', function ($scope, Saved){
         $scope.salvate=Saved;
     })
@@ -201,11 +244,13 @@ angular.module('PlayAround')
 
 
     .controller('artistaCtrl', function ($scope, $http,Artista, AlbumArtista){
-        /*
-        window.onload = prepareButton();
+        $scope.artista=Artista;
+        $scope.Album=AlbumArtista;
+
+       window.onload = prepareButton();
         prepareButton = function () {
 
-            if (Artista.amici) {
+            if (Artista.followed) {
                 document.getElementById("follow").innerText = "Unfollow";
                 document.getElementById("follow").onclick = try_unFollow();
                 document.getElementById("follow").style.color = "red";
@@ -217,9 +262,13 @@ angular.module('PlayAround')
             }
         };
         $scope.try_follow = function () {
+            var parameter = {codArtista:Artista.codice};
             $http({
                 method: "POST",
-                url: "require/add_amico/" + Artista.username
+                url: "require/follow_artista/" ,
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
             })
                 .then(function mySuccess(response) {
                     document.getElementById("follow").innerHTML = "unfollow";
@@ -228,9 +277,14 @@ angular.module('PlayAround')
                 })
         };
         $scope.try_unFollow = function () {
+            var parameter = {codArtista:Artista.codice};
             $http({
-                method: "GET",
-                url: "require/delete_amico/+" + Artista.username
+                method: "POST",
+                url: "require/delete_amico/+",
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+
             })
                 .then(function mySuccess(response) {
                     document.getElementById("follow").innerHTML = "follow";
@@ -239,9 +293,8 @@ angular.module('PlayAround')
 
                 })
         };
-        */
-        $scope.artista=Artista;
-        $scope.Album=AlbumArtista;
+
+
 
     })
     .controller('moodCtrl', function ($scope, Mood) {

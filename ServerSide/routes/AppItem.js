@@ -319,9 +319,9 @@ router.get("/le_tue_playlist",function(req,res){
            if(a.status === 200 && a.code === 0) {
                for (var playlist in a.data) {
                    json.push({
-                       nome: a.data[playlist].NOME,
+                       nome: a.data[playlist].NOME_PLAYLIST,
                        codice: a.data[playlist].CODPLAYLIST,
-                       immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST
+                       immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST+".jpg"
                    });
                }
            }
@@ -332,7 +332,7 @@ router.get("/le_tue_playlist",function(req,res){
    }
 });
 
-router.post("/nuova_playlist",function (req,res){
+router.post("/nuova_playlist" ,function (req,res){
     if(req.session.islog === 1){
         playlist.new_playlist(req.session.email,req.body.nome_playlist,function(a){
             res.status(a.status).end(JSON.stringify(a.data));
