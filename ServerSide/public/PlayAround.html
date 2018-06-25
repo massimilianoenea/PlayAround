@@ -513,8 +513,7 @@
               </ul>
           </div>
             <br>
-            <div class="playerino" ng-if="getDisable()">
-
+            <div class="playerino" ng-hide="!getDisable()">
                 <audio id="audio" autoplay>
                     <source src="" type="audio/mpeg">
                     Your browser does not support the audio element.
@@ -527,11 +526,11 @@
                 </a>
                 <div class="controllerMusic">
                     <div class="time_slider">
-                        <progress id="progress-bar" min='0' max='100' value='0'></progress>
-                        <span class="runing_time">0:00</span>
+                        <progress id="progressBar" min='0' max='100' value='0'></progress>
+                        <span id = "musicTime" class="runing_time">0:00</span>
                     </div>
                     <i class="fa fa-fast-backward" aria-hidden="true"></i>
-                    <i class="fa fa-play" aria-hidden="true"></i>
+                    <i id = "playPause" class="fa fa-play" aria-hidden="true" ng-click="playPause()"></i>
                     <i class="fa fa-fast-forward" aria-hidden="true"></i>
                     <i class="fa fa-retweet" aria-hidden="true"></i>
                 </div>

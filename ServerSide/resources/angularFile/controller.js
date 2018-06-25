@@ -2,9 +2,6 @@ angular.module('PlayAround')
 
 .controller('PlayAround',function ($scope, $sessionStorage,$http,socket) {
     delete $http.defaults.headers.common['X-Requested-With'];
-    var player = document.getElementById('audio');
-    var progressBar  = document.getElementById('progress-bar');
-
     /**
      *
      * Funzioni di avvio per check utente loggato e socket
@@ -22,6 +19,8 @@ angular.module('PlayAround')
             $sessionStorage.UserLogged = response.data;
             socket.emit('getFriend', {username: $sessionStorage.UserLogged.username, email: $sessionStorage.UserLogged.email});
             socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+            progressBar.addEventListener("click", seek);
+            audio.addEventListener('timeupdate', updateProgressBar, false);
         }, function myError(response) {
             window.location.replace('/login');
         });
@@ -97,10 +96,81 @@ angular.module('PlayAround')
         });
         stream.on('end', function () {
             audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+            playPause.className = 'fa fa-pause';
         });
     });
 
+    function seek(e) {
+        if (audio.src) {
+            var percent = e.offsetX / this.offsetWidth;
+            audio.currentTime = percent * audio.duration;
+            e.target.value = Math.floor(percent / 100);
+        }
+    }
+
+    function updateProgressBar() {
+        // Work out how much of the media has played via the duration and currentTime parameters
+       if(audio !== undefined) {
+           var percentage = Math.floor((100 / audio.duration) * audio.currentTime);
+           //LOCAL VERSION
+           // Update the progress bar's value
+           //progressBar.value = percentage;
+           // Update the progress bar's text (for browsers that don't support the progress element)
+           //progressBar.innerHTML = progressBar.title = percentage + '% played';
+           socket.emit('PercentageBar', {
+               username: $sessionStorage.UserLogged.username,
+               progress: percentage,
+               currentTime: audio.currentTime
+           });
+       }
+    }
+
+    function formatTime(seconds) {
+        minutes = Math.floor(seconds / 60);
+        minutes = (minutes >= 10) ? minutes : "0" + minutes;
+        seconds = Math.floor(seconds % 60);
+        seconds = (seconds >= 10) ? seconds : "0" + seconds;
+        return minutes + ":" + seconds;
+    }
+
+    socket.on('updateProgressBar',function(data){
+        progressBar.value = data.progress;
+        musicTime.innerText = formatTime(data.currentTime);
+    });
+
+    $scope.playPause = function(){
+       if(playPause.getAttribute('class') ==='fa fa-play' && audio.paused){
+           socket.emit('play', {username:$sessionStorage.UserLogged.username});
+           playPause.className = 'fa fa-pause';
+       }else{
+           socket.emit('pause', {username:$sessionStorage.UserLogged.username});
+           playPause.className = 'fa fa-play';
+       }
+    };
+
+    socket.on('play_music',function(data){
+        audio.play();
+    });
+    socket.on('pause_music',function(data){
+        audio.pause();
+    });
+    socket.on('play_button',function(data){
+        playPause.className = 'fa fa-play';
+    });
+    socket.on('pause_button',function(data){
+        playPause.className = 'fa fa-pause';
+    });
+
+
 })
+
+
+
+
+
+
+
+
 
 
 .controller('amiciOnCtrl', function ($scope, $sessionStorage) {
