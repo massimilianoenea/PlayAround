@@ -103,17 +103,6 @@ angular.module('PlayAround')
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
 .controller('amiciOnCtrl', function ($scope, $sessionStorage) {
     var socket = $sessionStorage.socket;
 
@@ -187,16 +176,17 @@ angular.module('PlayAround')
 
 
     .controller('playlistCtrl', function($scope, PersonalPlaylist, $http){
+        var nomePlaylist = "";
         $scope.playlist=PersonalPlaylist;
         $scope.visible=false;
         $scope.create=true;
 
         $scope.showBox=function () {
             $scope.visible=$scope.visible=true;
-        }
+        };
         $scope.hideBox=function () {
             $scope.visible=$scope.visible=false;
-        }
+        };
 
        $scope.newPlaylist=function () {
 
@@ -208,22 +198,23 @@ angular.module('PlayAround')
                withCredentials: true,
                headers: { 'Content-Type': 'application/json' }
            }).then(function mySuccess(response){
+               nomePlaylist = $scope.namePlaylist;
                $scope.create=false;
            },function myError(response){
                $scope.message=true;
                $scope.error = response.data;
-               console.log(response.data);
+               console.log(response);
            });
        };
        $scope.addSong=function (selected) {
-           var parameter = {codbrano:selected};
+           var parameter = {codbrano:selected.originalObject.codice,nome_playlist:nomePlaylist};
            $http({
                method:"POST",
                url : '/require/add_song',
                data: parameter,
                withCredentials: true,
                headers: { 'Content-Type': 'application/json' }
-           })
+           });
            $scope.nomeBrano=selected.title;
        };
        $scope.salva=function(){

@@ -14,7 +14,8 @@ module.exports = {
                   connection.release();
                   return callback('err',null,2);
               }
-              sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI WHERE CODUTENTE = ? ORDER BY DATA)";
+              sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI WHERE CODUTENTE = ? ORDER BY DATA)";
+             // sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI WHERE CODUTENTE = ? ORDER BY DATA)";
               connection.query(sql,[results[0].CODUTENTE], function(err, results) {
                   if (err){
                       connection.release();
@@ -33,7 +34,8 @@ module.exports = {
                connection.release();
                return callback(err,null,1);
            }
-           var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI WHERE CODUTENTE IN (SELECT CODUTENTE_AMICO FROM UTENTI_AMICI WHERE CODUTENTE = ?) ORDER BY DATA)";
+           var sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI WHERE CODUTENTE IN (SELECT CODUTENTE_AMICO FROM UTENTI_AMICI WHERE CODUTENTE = ?) ORDER BY DATA)";
+           //var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI WHERE CODUTENTE IN (SELECT CODUTENTE_AMICO FROM UTENTI_AMICI WHERE CODUTENTE = ?) ORDER BY DATA)";
            connection.query(sql,[GetHash.GetCodUtente(email)], function(err, results) {
                if (err){
                    connection.release();
@@ -87,7 +89,7 @@ module.exports = {
               connection.release();
               return callback(err,null,1);
           }
-          var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN(SELECT CODBRANO FROM BRANI_SALVATI WHERE CODUTENTE = ?)";
+          var sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.CODBRANO IN(SELECT CODBRANO FROM BRANI_SALVATI WHERE CODUTENTE = ?)";
           connection.query(sql,[GetHash.GetCodUtente(email)], function(err, results) {
               if (err) {
                   connection.release();
@@ -108,9 +110,9 @@ module.exports = {
          var sql = "";
 
          if(codartista === ""){
-             sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI GROUP BY CODBRANO ORDER BY COUNTER)";
+             sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI GROUP BY CODBRANO ORDER BY COUNTER)";
          }else{
-             sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODARTISTA ='"+codartista+"' AND CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI GROUP BY CODBRANO ORDER BY COUNTER)";
+             sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.CODARTISTA ='"+codartista+"' AND b.CODBRANO IN (SELECT CODBRANO FROM BRANI_ASCOLTATI GROUP BY CODBRANO ORDER BY COUNTER)";
          }
 
           connection.query(sql, function(err, results) {
