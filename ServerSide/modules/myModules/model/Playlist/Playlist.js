@@ -27,7 +27,7 @@ module.exports ={
                 connection.release();
                 return callback(err,null,1);
             }
-            var sql = "select nome_playlist as nome ,pl.codplaylist from playlist_ut as put, playlist as pl where pl.codplaylist = ptu.codplaylist and pl.codplaylist = ?\n" +
+            var sql = "select nome_playlist as nome ,pl.codplaylist from playlist_ut as put, playlist as pl where pl.codplaylist = put.codplaylist and pl.codplaylist = ?\n" +
                 "UNION\n" +
                 "select nome,pl.codplaylist from playlist_def as pde, playlist as pl where pl.codplaylist = pde.codplaylist and pl.codplaylist = ?";
             connection.query(sql,[codPlaylist,codPlaylist], function(err, results) {
@@ -116,14 +116,14 @@ module.exports ={
                 connection.release();
                 return callback(err, null, 1);
             }
-            var sql = "SELECT CODPLAYLIST FROM PLAYLIST_UT WHERE CODUTENTE = ? AND NOME_PLAYLIST = ?";
+            var sql = "SELECT CODPLAYLIST as cod FROM PLAYLIST_UT WHERE CODUTENTE = ? AND NOME_PLAYLIST = ?";
             connection.query(sql,[GetHash.GetCodUtente(email),nomePlaylist], function(err, results) {
                 if(results.length === 0 || err) {
                     connection.release();
                     return callback('err',null,2);
                 }
                 sql = "DELETE FROM PLAYLIST WHERE CODPLAYLIST = ?";
-                connection.query(sql,[results[0]], function(err, results) {
+                connection.query(sql,[results[0].cod], function(err, results) {
                     if(err) {
                         connection.release();
                         return callback(err,null,3);

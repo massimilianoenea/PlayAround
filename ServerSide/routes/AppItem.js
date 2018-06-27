@@ -6,8 +6,25 @@ var brani = require('../modules/myModules/Controller/Music/Brani');
 var artisti = require('../modules/myModules/Controller/Music/Artisti');
 var album = require('../modules/myModules/Controller/Music/Album');
 var utente = require('../modules/myModules/Controller/Utente/Utente_action');
+var search = require('../modules/myModules/Controller/Search/search');
 app.use(router);
 
+//SEARCH BAR
+
+router.get("/search/:string",function(req,res){
+   if(req.session.islog === 1){
+       search.get_search(req.params.string,function(a){
+          if(a.status === 200){
+              res.status(a.status).end(JSON.stringify(a.data));
+          }else{
+              res.status(a.status).end(JSON.stringify(a));
+          }
+       });
+
+   }else{
+       res.status(500).end();
+   }
+});
 
 //HOMEPAGE
 router.get("/playlist_giornaliera/:data",function(req,res){
@@ -365,7 +382,7 @@ router.get("/nome_playlist/:codplaylist",function(req,res){
     if(req.session.islog === 1){
         playlist.get_nome_playlist(req.params.codplaylist,function(a){
             var json = "";
-            if(a.status = 200 && a.data[0].nome !== undefined){
+            if(a.status === 200 && a.data[0].nome !== undefined){
                 json = {nome:a.data[0].nome};
             }else{
                 json = a;
@@ -416,7 +433,7 @@ router.post("/nuova_playlist" ,function (req,res){
 
 router.post("/delete_playlist",function (req,res){
     if(req.session.islog === 1){
-        playlist.delete_playlist()(req.session.email,req.body.nome_playlist,function(a){
+        playlist.delete_playlist(req.session.email,req.body.nome_playlist,function(a){
             if(a.status === 200) {
                 res.status(a.status).end(JSON.stringify(a.data));
             }else{
