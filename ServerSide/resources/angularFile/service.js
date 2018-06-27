@@ -30,6 +30,9 @@ angular.module('PlayAround')
                     });
                 })
             }
+        },
+        getsocket: function(){
+            return socket;
         }
     };
 });

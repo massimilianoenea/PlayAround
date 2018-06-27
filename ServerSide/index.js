@@ -155,7 +155,7 @@ io.on('connection', function(client) {
     });
 
     client.on('PercentageBar',function(data){
-        client.in(data.username+"_player").emit('updateProgressBar',data.progress);
+        io.sockets.in(data.username+"_player").emit('updateProgressBar',{progress:data.progress,currentTime:data.currentTime});
     });
 
     client.on('stream', function(data) {

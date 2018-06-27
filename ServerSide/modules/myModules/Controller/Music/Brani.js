@@ -55,7 +55,7 @@ module.exports = {
     },
 
     get_full_brano_titolo : function(titolo,callback){
-        var toSearch = titolo.replace(' ','%');
+        var toSearch = titolo.replace(/ /g,'%');
         toSearch = '%'+toSearch+'%';
         brani_model.get_full_brano_titolo(toSearch,function(err,succ,code){
             if (err !== null){

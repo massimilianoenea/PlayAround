@@ -12,8 +12,9 @@ app.use(router);
 //HOMEPAGE
 router.get("/playlist_giornaliera/:data",function(req,res){
    playlist.playlist_giornaliera(req.params.data,function(a){
-       var json = [];
+       var json;
        if(a.status === 200) {
+           json = [];
            for (var playlist in a.data) {
                json.push({
                    nome: a.data[playlist].NOME,
@@ -21,6 +22,8 @@ router.get("/playlist_giornaliera/:data",function(req,res){
                    immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST + ".jpeg"
                });
            }
+       }else{
+           json = a;
        }
      res.status(a.status).end(JSON.stringify(json));
    });
@@ -29,15 +32,21 @@ router.get("/playlist_giornaliera/:data",function(req,res){
 router.get("/ascoltati_recente",function (req,res){
     if(req.session.islog === 1) {
         brani.ascoltati_di_recente(req.session.username,function(a){
-            var json = [];
+            var json;
             if(a.status === 200) {
+                json = [];
                 for (var brano in a.data) {
                     json.push({
-                        nome: a.data[brano].TITOLO,
-                        codice: a.data[brano].CODBRANO,
-                        immagine: a.data[brano].IMMAGINE
+                        titolo: a.data[brano].titolo,
+                        codice: a.data[brano].codice,
+                        immagine: a.data[brano].immagine,
+                        anno : a.data[brano].anno,
+                        album : a.data[brano].album,
+                        artista: a.data[brano].artista
                     });
                 }
+            }else {
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -50,15 +59,21 @@ router.get("/ascoltati_recente",function (req,res){
 router.get("/ascoltano_amici",function (req,res){
     if(req.session.islog === 1) {
         brani.ascoltano_amici(req.session.email,function(a){
-            var json = [];
+            var json;
             if(a.status === 200) {
+                json = [];
                 for (var brano in a.data) {
                     json.push({
-                        nome: a.data[brano].TITOLO,
-                        codice: a.data[brano].CODBRANO,
-                        immagine: a.data[brano].IMMAGINE
+                        titolo: a.data[brano].titolo,
+                        codice: a.data[brano].codice,
+                        immagine: a.data[brano].immagine,
+                        anno : a.data[brano].anno,
+                        album : a.data[brano].album,
+                        artista: a.data[brano].artista
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -80,6 +95,8 @@ router.get("/utente/:username",function(req,res){
                     immagine: "image/profile/" + a.data[0].USERNAME+".png",
                     amici: a.amici
                 };
+            }else{
+                json = a;
             }
         res.status(a.status).end(JSON.stringify(json));
         });
@@ -114,15 +131,21 @@ router.post("/delete_amico",function(req,res){
 router.get("/ascoltati_recente_utente/:username",function (req,res){
     if(req.session.islog === 1) {
         brani.ascoltati_di_recente(req.params.username,function(a){
-            var json = [];
+            var json;
             if(a.status === 200) {
+                json = [];
                 for (var brano in a.data) {
                     json.push({
-                        nome: a.data[brano].TITOLO,
-                        codice: a.data[brano].CODBRANO,
-                        immagine: a.data[brano].IMMAGINE
+                        titolo: a.data[brano].titolo,
+                        codice: a.data[brano].codice,
+                        immagine: a.data[brano].immagine,
+                        anno : a.data[brano].anno,
+                        album : a.data[brano].album,
+                        artista: a.data[brano].artista
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -135,8 +158,9 @@ router.get("/ascoltati_recente_utente/:username",function (req,res){
 router.get("/artisti_seguiti/:username",function (req,res){
     if(req.session.islog === 1) {
         artisti.get_artisti_seguiti(req.params.username,function(a){
-            var json = [];
+            var json;
             if(a.status === 200) {
+                json = [];
                 for (var artista in a.data) {
                     json.push({
                         tipo: a.data[artista].TIPO,
@@ -147,6 +171,8 @@ router.get("/artisti_seguiti/:username",function (req,res){
                         immagine: a.data[artista].IMMAGINE
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -173,6 +199,8 @@ router.get("/artista/:codartista",function (req,res){
                     immagine: a.data.IMMAGINE,
                     followed: a.follow
                 };
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -185,15 +213,21 @@ router.get("/artista/:codartista",function (req,res){
 router.get("/canzoni_ascoltate/:codartista",function(req,res){
    if(req.session.islog === 1){
        brani.get_piu_ascoltate(req.params.codartista,function(a){
-           var json = [];
+           var json;
            if(a.status === 200) {
+               json = [];
                for (var brano in a.data) {
                    json.push({
-                       nome: a.data[brano].TITOLO,
-                       codice: a.data[brano].CODBRANO,
-                       immagine: a.data[brano].IMMAGINE
+                       titolo: a.data[brano].titolo,
+                       codice: a.data[brano].codice,
+                       immagine: a.data[brano].immagine,
+                       anno : a.data[brano].anno,
+                       album : a.data[brano].album,
+                       artista: a.data[brano].artista
                    });
                }
+           }else{
+               json = a;
            }
            res.status(a.status).end(JSON.stringify(json));
        });
@@ -249,15 +283,21 @@ router.get("/get_album/:codalbum",function(req,res){
 router.get("/get_brani_album/:codalbum",function(req,res){
     if(req.session.islog === 1) {
         album.get_brani_album(req.params.codalbum, function (a) {
-            var json = [];
+            var json;
             if (a.status === 200) {
+                json = [];
                 for (var brano in a.data) {
                     json.push({
-                        nome: a.data[brano].TITOLO,
-                        codice: a.data[brano].CODBRANO,
-                        immagine: a.data[brano].IMMAGINE
+                        titolo: a.data[brano].titolo,
+                        codice: a.data[brano].codice,
+                        immagine: a.data[brano].immagine,
+                        anno : a.data[brano].anno,
+                        album : a.data[brano].album,
+                        artista: a.data[brano].artista
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -269,8 +309,9 @@ router.get("/get_brani_album/:codalbum",function(req,res){
 router.get("/get_altro_artista/:codartista",function(req,res){
     if(req.session.islog === 1) {
         album.get_altro_artista(req.params.codartista, function (a) {
-            var json = [];
+            var json;
             if (a.status === 200) {
+                json = [];
                 for (var album in a.data) {
                     json.push({
                         nome: a.data[album].TITOLO,
@@ -279,6 +320,8 @@ router.get("/get_altro_artista/:codartista",function(req,res){
                         immagine: a.data[album].IMMAGINE
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -295,15 +338,21 @@ router.get("/get_altro_artista/:codartista",function(req,res){
 router.get("/get_brani_playlist/:codplaylist",function (req,res) {
     if(req.session.islog === 1) {
         playlist.get_brani_playlist(req.params.codplaylist, function (a) {
-            var json = [];
+            var json;
             if (a.status === 200) {
+                json = [];
                 for (var brano in a.data) {
                     json.push({
-                        nome: a.data[brano].TITOLO,
-                        codice: a.data[brano].CODBRANO,
-                        immagine: a.data[brano].IMMAGINE
+                        titolo: a.data[brano].titolo,
+                        codice: a.data[brano].codice,
+                        immagine: a.data[brano].immagine,
+                        anno : a.data[brano].anno,
+                        album : a.data[brano].album,
+                        artista: a.data[brano].artista
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -315,8 +364,9 @@ router.get("/get_brani_playlist/:codplaylist",function (req,res) {
 router.get("/le_tue_playlist",function(req,res){
    if(req.session.islog === 1){
        playlist.get_playlist_utente(req.session.username,function(a){
-           var json = [];
+           var json;
            if(a.status === 200 && a.code === 0) {
+               json = [];
                for (var playlist in a.data) {
                    json.push({
                        nome: a.data[playlist].NOME_PLAYLIST,
@@ -324,6 +374,8 @@ router.get("/le_tue_playlist",function(req,res){
                        immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST+".jpg"
                    });
                }
+           }else{
+               json = a;
            }
            res.status(a.status).end(JSON.stringify(json));
        });
@@ -335,7 +387,11 @@ router.get("/le_tue_playlist",function(req,res){
 router.post("/nuova_playlist" ,function (req,res){
     if(req.session.islog === 1){
         playlist.new_playlist(req.session.email,req.body.nome_playlist,function(a){
-            res.status(a.status).end(JSON.stringify(a.data));
+            if(a.status === 200) {
+                res.status(a.status).end(JSON.stringify(a.data));
+            }else{
+                res.status(a.status).end(JSON.stringify(a));
+            }
         });
     }else{
         res.status(500).end();
@@ -345,7 +401,11 @@ router.post("/nuova_playlist" ,function (req,res){
 router.post("/delete_playlist",function (req,res){
     if(req.session.islog === 1){
         playlist.delete_playlist()(req.session.email,req.body.nome_playlist,function(a){
-            res.status(a.status).end(JSON.stringify(a.data));
+            if(a.status === 200) {
+                res.status(a.status).end(JSON.stringify(a.data));
+            }else{
+                res.status(a.status).end(JSON.stringify(a));
+            }
         });
     }else{
         res.status(500).end();
@@ -355,7 +415,11 @@ router.post("/delete_playlist",function (req,res){
 router.post("/add_song",function(req,res){
     if(req.session.islog === 1){
      playlist.add_song_playlist(req.session.email,req.body.nome_playlist,req.body.codbrano,function(a){
-         res.status(a.status).end(JSON.stringify(a.data));
+         if(a.status === 200) {
+             res.status(a.status).end(JSON.stringify(a.data));
+         }else{
+             res.status(a.status).end(JSON.stringify(a));
+         }
      });
     }else{
         res.status(500).end();
@@ -365,7 +429,11 @@ router.post("/add_song",function(req,res){
 router.post("/delete_song",function(req,res){
     if(req.session.islog === 1){
         playlist.delete_song_playlist(req.session.email,req.body.nome_playlist,req.body.codbrano,function(a){
-            res.status(a.status).end(JSON.stringify(a.data));
+            if(a.status === 200) {
+                res.status(a.status).end(JSON.stringify(a.data));
+            }else{
+                res.status(a.status).end(JSON.stringify(a));
+            }
         });
     }else{
         res.status(500).end();
@@ -377,15 +445,21 @@ router.post("/delete_song",function(req,res){
 router.get("/canzoni_salvate",function(req,res){
     if(req.session.islog === 1){
         brani.get_canzoni_salvate(req.session.email,function(a){
-            var json = [];
+            var json;
             if(a.status === 200) {
+                json = [];
                 for (var brano in a.data) {
                     json.push({
-                        nome: a.data[brano].TITOLO,
-                        codice: a.data[brano].CODBRANO,
-                        immagine: a.data[brano].IMMAGINE
+                        titolo: a.data[brano].titolo,
+                        codice: a.data[brano].codice,
+                        immagine: a.data[brano].immagine,
+                        anno : a.data[brano].anno,
+                        album : a.data[brano].album,
+                        artista: a.data[brano].artista
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -397,15 +471,21 @@ router.get("/canzoni_salvate",function(req,res){
 router.get("/ascoltate_recente",function(req,res){
    if(req.session.islog === 1){
        brani.ascoltati_di_recente(req.session.username,function(a){
-           var json = [];
+           var json;
            if(a.status === 200) {
+               json = [];
                for (var brano in a.data) {
                    json.push({
-                       nome: a.data[brano].TITOLO,
-                       codice: a.data[brano].CODBRANO,
-                       immagine: a.data[brano].IMMAGINE
+                       titolo: a.data[brano].titolo,
+                       codice: a.data[brano].codice,
+                       immagine: a.data[brano].immagine,
+                       anno : a.data[brano].anno,
+                       album : a.data[brano].album,
+                       artista: a.data[brano].artista
                    });
                }
+           }else{
+               json = a;
            }
            res.status(a.status).end(JSON.stringify(json));
        });
@@ -419,8 +499,9 @@ router.get("/ascoltate_recente",function(req,res){
 router.get("/artisti_seguiti",function (req,res){
     if(req.session.islog === 1) {
         artisti.get_artisti_seguiti(req.session.username,function(a){
-            var json = [];
+            var json;
             if(a.status === 200) {
+                json = [];
                 for (var artista in a.data) {
                     json.push({
                         tipo: a.data[artista].TIPO,
@@ -431,6 +512,8 @@ router.get("/artisti_seguiti",function (req,res){
                         immagine: a.data[artista].IMMAGINE
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });
@@ -445,8 +528,9 @@ router.get("/artisti_seguiti",function (req,res){
 router.get("/get_amici",function(req,res){
    if(req.session.islog === 1){
        utente.get_amici(req.session.email,function(a){
-           var json = [];
+           var json;
            if(a.status === 200) {
+               json = [];
                for (var utente in a.data) {
                    json.push({
                        nome: a.data[utente].USERNAME,
@@ -454,6 +538,8 @@ router.get("/get_amici",function(req,res){
                        immagine: "image/profile/"+a.data[utente].USERNAME+".png"
                    });
                }
+           }else{
+               json = a;
            }
            res.status(a.status).end(JSON.stringify(json));
        });
@@ -467,15 +553,21 @@ router.get("/get_amici",function(req,res){
 router.get("/piu_ascoltate",function(req,res){
    if(req.session.islog){
        brani.get_piu_ascoltate("",function(a){
-           var json = [];
+           var json;
            if(a.status === 200) {
+               json = [];
                for (var brano in a.data) {
                    json.push({
-                       nome: a.data[brano].TITOLO,
-                       codice: a.data[brano].CODBRANO,
-                       immagine: a.data[brano].IMMAGINE
+                       titolo: a.data[brano].titolo,
+                       codice: a.data[brano].codice,
+                       immagine: a.data[brano].immagine,
+                       anno : a.data[brano].anno,
+                       album : a.data[brano].album,
+                       artista: a.data[brano].artista
                    });
                }
+           }else {
+               json = a;
            }
            res.status(a.status).end(JSON.stringify(json));
        });
@@ -492,8 +584,9 @@ router.get("/piu_ascoltate",function(req,res){
 router.get("/brano/:codbrano",function(req,res){
    if(req.session.islog){
        brani.get_full_brano(req.params.codbrano,function(a){
-           var json = [];
+           var json;
            if(a.status === 200) {
+               json = [];
                for (var brano in a.data) {
                    json.push({
                        titolo: a.data[brano].titolo,
@@ -504,6 +597,8 @@ router.get("/brano/:codbrano",function(req,res){
                        artista: a.data[brano].artista
                    });
                }
+           }else{
+               json = a;
            }
            res.status(a.status).end(JSON.stringify(json));
        });
@@ -516,8 +611,9 @@ router.get("/brano/:codbrano",function(req,res){
 router.get("/brano_titolo/:titolo",function(req,res){
     if(req.session.islog){
         brani.get_full_brano_titolo(req.params.titolo,function(a){
-            var json = [];
+            var json;
             if(a.status === 200) {
+                json = [];
                 for (var brano in a.data) {
                     json.push({
                         titolo: a.data[brano].titolo,
@@ -528,6 +624,8 @@ router.get("/brano_titolo/:titolo",function(req,res){
                         artista: a.data[brano].artista
                     });
                 }
+            }else{
+                json = a;
             }
             res.status(a.status).end(JSON.stringify(json));
         });

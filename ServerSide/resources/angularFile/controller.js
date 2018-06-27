@@ -2,6 +2,12 @@ angular.module('PlayAround')
 
 .controller('PlayAround',function ($scope, $sessionStorage,$http,socket) {
     delete $http.defaults.headers.common['X-Requested-With'];
+    /**
+     *
+     * Funzioni di avvio per check utente loggato e socket
+     *
+     */
+
     this.$onInit = function (){
         $http({
             method : "POST",
@@ -10,33 +16,58 @@ angular.module('PlayAround')
             headers: { 'Content-Type': 'application/json' }
         }).then(function mySuccess(response) {
             $scope.Utente = response.data;
+            $sessionStorage.UserLogged = response.data;
+            socket.emit('getFriend', {username: $sessionStorage.UserLogged.username, email: $sessionStorage.UserLogged.email});
+            socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+            progressBar.addEventListener("click", seek);
+            audio.addEventListener('timeupdate', updateProgressBar, false);
         }, function myError(response) {
             window.location.replace('/login');
         });
     };
-
-    $scope.$on('$viewContentLoaded', function(event) {
-        socket.emit('getFriend', {username: $scope.Utente.username, email: $scope.Utente.email});
-        socket.emit('player_room', {username: $scope.Utente.username});
-    });
 /*
-    $scope.sendMess = function(){
-        var json = {username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}};
-        if(isConnected()===true){
-            //Manda un messaggio
-            send_message({username:'peppe',text:json});
-            //send_message({username:response.data.username,text:response.data.username+" ha effettuato l'accesso"});
-        }else {
-            console.log("not connected");
-        }
-    };
-    */
+    $scope.$on('$viewContentLoaded', function(event) {
+        socket.emit('getFriend', {username: $sessionStorage.UserLogged.username, email: $sessionStorage.UserLogged.email});
+        socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+    });
+*/
     $sessionStorage.socket = socket;
+
+    $scope.socketOn = function(){
+        $sessionStorage.socket.isConnected();
+    };
+
+    /**
+     *
+     * Player response per la gestione dei dispositivi
+     *
+     */
+
+    socket.on('player_room_response',function (data) {
+        if(data.length >= 1){
+            //var modal = document.getElementById('myModal');
+            //modal.style.display = "block";
+            for (var dispositivo in data){
+                if(data[dispositivo].Current_client) {
+                    console.log("il dispositivo corrente è: " + data[dispositivo].Current_client + "con ID: " + data[dispositivo].clientId);
+                }else{
+                    console.log("un dispositivo è: " + data[dispositivo].client + "con ID: " + data[dispositivo].clientId);
+                }
+            }
+        }
+    });
+
+
+    /**
+     *
+     * Funzioni per enable e disable playerino
+     *
+     */
 
      $scope.disablePlayerino = function(){
        $sessionStorage.disable = false;
      };
-     $scope.enablePlayerino= function () {
+     $scope.enablePlayerino = function () {
          $sessionStorage.disable=true;
      };
      $scope.getDisable=function () {
@@ -44,15 +75,104 @@ angular.module('PlayAround')
          return true;
      };
 
-     $scope.sendMessage = function(){
-         $sessionStorage.socket.emit('event', {username: $scope.Utente.username, data:{username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
+    /**
+     *
+     * funzioni e socket per il player
+     *
+     */
+
+    $scope.sendMessage = function(){
+         $sessionStorage.socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
      };
 
-     $scope.socketOn = function(){
-         $sessionStorage.socket.isConnected();
-     }
+    $scope.loadBrano = function(codbrano){
+        socket.emit('stream', {username:$sessionStorage.UserLogged.username});
+    };
+
+    ss(socket.getsocket()).on('audio-stream', function (stream, data) {
+        var parts = [];
+        stream.on('data', (chunk) => {
+            parts.push(chunk);
+        });
+        stream.on('end', function () {
+            audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+            playPause.className = 'fa fa-pause';
+        });
+    });
+
+    function seek(e) {
+        if (audio.src) {
+            var percent = e.offsetX / this.offsetWidth;
+            audio.currentTime = percent * audio.duration;
+            e.target.value = Math.floor(percent / 100);
+        }
+    }
+
+    function updateProgressBar() {
+        // Work out how much of the media has played via the duration and currentTime parameters
+       if(audio !== undefined) {
+           var percentage = Math.floor((100 / audio.duration) * audio.currentTime);
+           //LOCAL VERSION
+           // Update the progress bar's value
+           //progressBar.value = percentage;
+           // Update the progress bar's text (for browsers that don't support the progress element)
+           //progressBar.innerHTML = progressBar.title = percentage + '% played';
+           socket.emit('PercentageBar', {
+               username: $sessionStorage.UserLogged.username,
+               progress: percentage,
+               currentTime: audio.currentTime
+           });
+       }
+    }
+
+    function formatTime(seconds) {
+        minutes = Math.floor(seconds / 60);
+        minutes = (minutes >= 10) ? minutes : "0" + minutes;
+        seconds = Math.floor(seconds % 60);
+        seconds = (seconds >= 10) ? seconds : "0" + seconds;
+        return minutes + ":" + seconds;
+    }
+
+    socket.on('updateProgressBar',function(data){
+        progressBar.value = data.progress;
+        musicTime.innerText = formatTime(data.currentTime);
+    });
+
+    $scope.playPause = function(){
+       if(playPause.getAttribute('class') ==='fa fa-play' && audio.paused){
+           socket.emit('play', {username:$sessionStorage.UserLogged.username});
+           playPause.className = 'fa fa-pause';
+       }else{
+           socket.emit('pause', {username:$sessionStorage.UserLogged.username});
+           playPause.className = 'fa fa-play';
+       }
+    };
+
+    socket.on('play_music',function(data){
+        audio.play();
+    });
+    socket.on('pause_music',function(data){
+        audio.pause();
+    });
+    socket.on('play_button',function(data){
+        playPause.className = 'fa fa-play';
+    });
+    socket.on('pause_button',function(data){
+        playPause.className = 'fa fa-pause';
+    });
+
 
 })
+
+
+
+
+
+
+
+
+
+
 .controller('amiciOnCtrl', function ($scope, $sessionStorage) {
     var socket = $sessionStorage.socket;
 
@@ -126,16 +246,17 @@ angular.module('PlayAround')
 
 
     .controller('playlistCtrl', function($scope, PersonalPlaylist, $http){
+        var nomePlaylist = "";
         $scope.playlist=PersonalPlaylist;
         $scope.visible=false;
         $scope.create=true;
 
         $scope.showBox=function () {
             $scope.visible=$scope.visible=true;
-        }
+        };
         $scope.hideBox=function () {
             $scope.visible=$scope.visible=false;
-        }
+        };
 
        $scope.newPlaylist=function () {
 
@@ -147,22 +268,23 @@ angular.module('PlayAround')
                withCredentials: true,
                headers: { 'Content-Type': 'application/json' }
            }).then(function mySuccess(response){
+               nomePlaylist = $scope.namePlaylist;
                $scope.create=false;
            },function myError(response){
                $scope.message=true;
                $scope.error = response.data;
-               console.log(response.data);
+               console.log(response);
            });
        };
        $scope.addSong=function (selected) {
-           var parameter = {codbrano:selected};
+           var parameter = {codbrano:selected.originalObject.codice,nome_playlist:nomePlaylist};
            $http({
                method:"POST",
                url : '/require/add_song',
                data: parameter,
                withCredentials: true,
                headers: { 'Content-Type': 'application/json' }
-           })
+           });
            $scope.nomeBrano=selected.title;
        };
        $scope.salva=function(){
