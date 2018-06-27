@@ -3,24 +3,43 @@ var GetHash = require('../../HashGenerator/HashGeneretor');
 
 module.exports ={
 
-  playlist_giornaliera: function (giorno,ora,callback){
-      connection.getConnection(function (err,connection){
-         if(err)  {
-             connection.release();
-             return callback(err,null,1);
-         }
-         var sql = "SELECT CODPLAYLIST,NOME FROM PLAYLIST_DEF WHERE MOOD = '1'";
-          connection.query(sql, function(err, results) {
-              if (err) {
+    playlist_giornaliera: function (giorno,ora,callback){
+          connection.getConnection(function (err,connection){
+             if(err)  {
+                 connection.release();
+                 return callback(err,null,1);
+             }
+             var sql = "SELECT CODPLAYLIST,NOME FROM PLAYLIST_DEF WHERE MOOD = '1'";
+              connection.query(sql, function(err, results) {
+                  if (err) {
+                      connection.release();
+                      return callback(err, null, 2);
+                  }
                   connection.release();
-                  return callback(err, null, 2);
-              }
-              connection.release();
-              return callback(null,results,0);
+                  return callback(null,results,0);
+              });
           });
-      });
-  },
+    },
 
+    get_nome_playlist: function(codPlaylist,callback){
+        connection.getConnection(function (err,connection){
+            if(err)  {
+                connection.release();
+                return callback(err,null,1);
+            }
+            var sql = "select nome_playlist as nome ,pl.codplaylist from playlist_ut as put, playlist as pl where pl.codplaylist = ?\n" +
+                "UNION\n" +
+                "select nome,pl.codplaylist from playlist_def as pde, playlist as pl where pl.codplaylist = ?";
+            connection.query(sql,[codPlaylist,codPlaylist], function(err, results) {
+                if (err) {
+                    connection.release();
+                    return callback(err, null, 2);
+                }
+                connection.release();
+                return callback(null,results,0);
+            });
+        });
+    },
 
     get_brani_playlist: function (codPlaylist,callback){
         connection.getConnection(function (err,connection){

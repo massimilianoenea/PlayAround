@@ -265,10 +265,10 @@ router.get("/get_album/:codalbum",function(req,res){
             var json = "";
             if (a.status === 200) {
                 json = ({
-                    nome: a.data[album].TITOLO,
-                    codice: a.data[album].CODALBUM,
-                    anno: a.data[album].ANNO,
-                    immagine: a.data[album].IMMAGINE
+                    nome: a.data.TITOLO,
+                    codice: a.data.CODALBUM,
+                    anno: a.data.ANNO,
+                    immagine: a.data.IMMAGINE
                 });
                 res.status(a.status).end(JSON.stringify(json));
             }else {
@@ -351,6 +351,22 @@ router.get("/get_brani_playlist/:codplaylist",function (req,res) {
                         artista: a.data[brano].artista
                     });
                 }
+            }else{
+                json = a;
+            }
+            res.status(a.status).end(JSON.stringify(json));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
+
+router.get("/nome_playlist/:codplaylist",function(req,res){
+    if(req.session.islog === 1){
+        playlist.get_nome_playlist(req.params.codplaylist,function(a){
+            var json = "";
+            if(a.status = 200 && a.data[0].nome !== undefined){
+                json = {nome:a.data[0].nome};
             }else{
                 json = a;
             }
