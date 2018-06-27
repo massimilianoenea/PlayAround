@@ -297,8 +297,29 @@ angular.module('PlayAround')
        };
 
         })
-    .controller('playlistUtCtrl', function ($scope, Playlist) {
+    .controller('playlistUtCtrl', function ($scope, Playlist, $http) {
         $scope.playlistUt=Playlist;
+        $scope.delete=function () {
+            var parameter = {};
+            $http({
+                method: "POST",
+                url: "/require/delete_playlist",
+                data: parameter,
+                withCredentials: true,
+                headers: {'Content-Type': 'application/json'}
+            })
+        };
+        $scope.add=function () {
+            var parameter = {codbrano:$scope.codice};
+            $http({
+                method: "POST",
+                url: "/require/add_song",
+                data: parameter,
+                withCredentials: true,
+                headers: {'Content-Type': 'application/json'}
+            })
+        };
+
     })
     .controller('tueCanzoniCtrl', function ($scope, Saved){
         $scope.salvate=Saved;
@@ -314,7 +335,7 @@ angular.module('PlayAround')
 
     .controller('artistaCtrl', function ($scope, $http,Artista, AlbumArtista){
         $scope.artista=Artista;
-        $scope.Album=AlbumArtista;
+        $scope.album=AlbumArtista;
         $scope.isFollowed=Artista.followed;
 
         $scope.addArtista = function () {
@@ -366,7 +387,9 @@ angular.module('PlayAround')
     .controller('playerCtrl', function($scope){
 
     })
-    .controller('albumCtrl', function($scope,Album, BraniAlbum,){
+    .controller('albumCtrl', function($scope,Album, BraniAlbum){
         $scope.album=Album;
         $scope.brani=BraniAlbum;
+        //$scope.altri=AltriAlbum;
+
     });
