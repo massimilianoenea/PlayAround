@@ -48,9 +48,9 @@ angular.module('PlayAround')
             modalDevice.style.display = "block";
             for (var dispositivo in data){
                 if(data[dispositivo].Current_client) {
-                    console.log("il dispositivo corrente è: " + data[dispositivo].Current_client + "con ID: " + data[dispositivo].clientId);
+                    console.log("il dispositivo corrente è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
                 }else{
-                    console.log("un dispositivo è: " + data[dispositivo].client + "con ID: " + data[dispositivo].clientId);
+                    console.log("un dispositivo è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
                 }
             }
         }
@@ -73,6 +73,23 @@ angular.module('PlayAround')
          if($sessionStorage.disable!==undefined) return $sessionStorage.disable;
          return true;
      };
+
+    /**
+     *
+     * Funzione per il riconoscimento del dispositivo
+     *
+     */
+
+    function deviceType(userAgent){
+        if(userAgent.match(/Macintosh/i)) return "MacOS";
+        if(userAgent.match(/Android/i)) return "Android";
+        if(userAgent.match(/BlackBerry/i)) return "BlackBerry";
+        if(userAgent.match(/iPhone/i)) return "iPhone";
+        if(userAgent.match(/iPod/i)) return "iPod";
+        if(userAgent.match(/iPad/i)) return "iPad";
+        if(userAgent.match(/Windows Phone/i)) return "windows Phone";
+        if(userAgent.match(/Ubuntu/i)) return "Linux";
+    }
 
     /**
      *
