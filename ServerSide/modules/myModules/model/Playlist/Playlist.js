@@ -28,7 +28,7 @@ module.exports ={
                 connection.release();
                 return callback(err,null,1);
             }
-            var sql = "SELECT CODBRANO,TITOLO,IMMAGINE FROM BRANI WHERE CODBRANO IN (SELECT CODBRANO FROM PLAYLIST_BRANI WHERE CODPLAYLIST = ?)";
+            var sql = "SELECT b.codbrano as codice, b.titolo as titolo, b.anno as anno, b.immagine as immagine, al.titolo as album, ar.nome as artista FROM BRANI b, artista ar, album al WHERE al.codalbum = b.codalbum and ar.codartista = b.codartista and b.CODBRANO IN (SELECT CODBRANO FROM PLAYLIST_BRANI WHERE CODPLAYLIST = ?)";
             connection.query(sql,[codPlaylist], function(err, results) {
                 if (err){
                     connection.release();
