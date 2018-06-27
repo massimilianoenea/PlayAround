@@ -82,6 +82,18 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
                 }
             }
         })
+        .when("/libreria/playlist/:codice",{
+            templateUrl: "public/templates/playlist_Ut.html",
+            controller:"playlistUtCtrl",
+            resolve:{
+                Playlist: function ($http, $route) {
+                    return $http.get("require/get_brani_playlist/" + $route.current.params.codice)
+                        .then(function (response) {
+                            return response.data;
+                        })
+                }
+            }
+        })
 
 
         .when("/artista/:id",{

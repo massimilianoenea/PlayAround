@@ -45,7 +45,7 @@ angular.module('PlayAround')
 
     socket.on('player_room_response',function (data) {
         if(data.length >= 1){
-            myModal.style.display = "block";
+            modalDevice.style.display = "block";
             for (var dispositivo in data){
                 if(data[dispositivo].Current_client) {
                     console.log("il dispositivo corrente è: " + data[dispositivo].Current_client + "con ID: " + data[dispositivo].clientId);
@@ -257,10 +257,10 @@ angular.module('PlayAround')
         $scope.create=true;
 
         $scope.showBox=function () {
-            $scope.visible=$scope.visible=true;
+            $scope.visible=true;
         };
         $scope.hideBox=function () {
-            $scope.visible=$scope.visible=false;
+            $scope.visible=false;
         };
 
        $scope.newPlaylist=function () {
@@ -297,6 +297,9 @@ angular.module('PlayAround')
        };
 
         })
+    .controller('playlistUtCtrl', function ($scope, Playlist) {
+        $scope.playlistUt=Playlist;
+    })
     .controller('tueCanzoniCtrl', function ($scope, Saved){
         $scope.salvate=Saved;
     })
@@ -312,54 +315,33 @@ angular.module('PlayAround')
     .controller('artistaCtrl', function ($scope, $http,Artista, AlbumArtista){
         $scope.artista=Artista;
         $scope.Album=AlbumArtista;
+        $scope.isFollowed=Artista.followed;
 
-       window.onload = prepareButton();
-        prepareButton = function () {
-
-            if (Artista.followed) {
-                document.getElementById("follow").innerText = "Unfollow";
-                document.getElementById("follow").onclick = try_unFollow();
-                document.getElementById("follow").style.color = "red";
-            }
-            else {
-                document.getElementById("follow").innerText = "Follow";
-                document.getElementById("follow").onclick = try_follow();
-                document.getElementById("follow").style.color = "blue";
-            }
-        };
-        $scope.try_follow = function () {
-            var parameter = {codArtista:Artista.codice};
+        $scope.addArtista = function () {
             $http({
-                method: "POST",
-                url: "require/follow_artista/" ,
-                data: parameter,
+                method : "POST",
+                url : 'require/follow_artista',
+                data: {username:Artista.nome},
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
             })
                 .then(function mySuccess(response) {
-                    document.getElementById("follow").innerHTML = "unfollow";
-                    document.getElementById("follow").onclick = "try_unFollow()";
-                    document.getElementById("follow").style.color = "red";
+                    $scope.isFollowed = true;
                 })
         };
-        $scope.try_unFollow = function () {
-            var parameter = {codArtista:Artista.codice};
+
+        $scope.deleteArtista = function () {
             $http({
-                method: "POST",
-                url: "require/delete_amico/+",
-                data: parameter,
+                method : "POST",
+                url : 'require/unfollow_artista',
+                data: {username:Artista.nome},
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
-
             })
                 .then(function mySuccess(response) {
-                    document.getElementById("follow").innerHTML = "follow";
-                    document.getElementById("follow").onclick = "try_follow()";
-                    document.getElementById("follow").style.color = "blue";
-
+                    $scope.isFollowed = false;
                 })
         };
-
 
 
     })
