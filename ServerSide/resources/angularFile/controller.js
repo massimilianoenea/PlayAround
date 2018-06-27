@@ -45,8 +45,7 @@ angular.module('PlayAround')
 
     socket.on('player_room_response',function (data) {
         if(data.length >= 1){
-            //var modal = document.getElementById('myModal');
-            //modal.style.display = "block";
+            myModal.style.display = "block";
             for (var dispositivo in data){
                 if(data[dispositivo].Current_client) {
                     console.log("il dispositivo corrente è: " + data[dispositivo].Current_client + "con ID: " + data[dispositivo].clientId);
@@ -142,10 +141,16 @@ angular.module('PlayAround')
        if(playPause.getAttribute('class') ==='fa fa-play' && audio.paused){
            socket.emit('play', {username:$sessionStorage.UserLogged.username});
            playPause.className = 'fa fa-pause';
+           if(!this.getDisable()) playerPlayPause.className = 'fa fa-pause';
        }else{
            socket.emit('pause', {username:$sessionStorage.UserLogged.username});
            playPause.className = 'fa fa-play';
+           if(!this.getDisable()) playerPlayPause.className = 'fa fa-play';
        }
+    };
+
+    $scope.isPaused = function(){
+      return audio.paused;
     };
 
     socket.on('play_music',function(data){

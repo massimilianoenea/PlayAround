@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -10,7 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular-route.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
-    <script src="/public/angucomplete-alt-master/angucomplete-alt.js"></script>
+    <script src="/public/angucomplete-alt-master/dist/angucomplete-alt.min.js"></script>
     <script src="/public/socket.io-client-master/dist/socket.io.js"></script>
     <script src="/public/socket.io-stream.js"></script>
     <script src="/public/angularFile/app.js"></script>
@@ -361,6 +362,71 @@
         color: whitesmoke;
     }
 
+    /*
+         Modal box for select current device
+    */
+
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* The button */
+
+    .btn {
+        box-sizing: inherit;
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        padding: 12px 25px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn i{
+        position: inherit;
+    }
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+
+    /* END modal code */
+
+
     @media screen and (max-width: 1900px) {
         .side{
             display: inline;
@@ -447,10 +513,10 @@
             document.getElementById("mySidenav").style.width = "0";
         }
         function activeItem(){
-           var element=document.getElementsByClassName("list");
+            var element=document.getElementsByClassName("list");
             element.classList.add("active");
-            document.getElementById("mySidenav").style.width = "0";
         }
+
     </script>
     <!--
     <div class="header">
@@ -458,17 +524,30 @@
       <p>A website created by me.</p>
     </div>
     -->
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Seleziona il device da usare come riproduttore</p>
+            <button class="btn"><i class="fa fa-laptop"></i><i class="fa fa-apple"></i> Mac</button>
+        </div>
+
+    </div>
+
+
     <div class="row">
         <!-- Quando sei in mobile view -->
        <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="#!" onclick="activeItem()">Home</a>
-           <a href="#!libreria/playlist" onclick="closeNav()" >La tua Libreria</a>
-           <a href="#!preferiti" onclick="closeNav()">Preferiti</a>
-           <a href="#!amici" onclick="closeNav()">I tuoi Amici</a>
-            <a href="#!mood" onclick="closeNav()">Genere & Mood</a>
-            <a href="#!piuAscoltati" onclick="closeNav()">I più Ascoltati</a>
-            <a href="#!sceltiPerTe" onclick="closeNav()">Scelti per Te</a>
+            <a href="#!">Home</a>
+           <a href="#!libreria">La tua Libreria</a>
+           <a href="#!preferiti">Preferiti</a>
+           <a href="#!amici">I tuoi Amici</a>
+            <a href="#!mood">Genere & Mood</a>
+            <a href="#!piuAscoltati" onclick="active()">I più Ascoltati</a>
+            <a href="#!sceltiPerTe">Scelti per Te</a>
         </div>
         <div  class="mobileHeader">
             <img src="/image/Symbol_playaround_complete.png" style="width: 60%;float: right;display: inline;margin-right: 15%;">
@@ -513,13 +592,12 @@
               </ul>
           </div>
             <br>
-            <div class="playerino" ng-if="getDisable()">
-
+            <div class="playerino" ng-hide="!getDisable()">
                 <audio id="audio" autoplay>
                     <source src="" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
-                <button ng-click="sendMessage()">SendMessage</button>
+                <button ng-click="loadBrano('1234')">SendMessage</button>
                 <a href="#!player" ng-click="disablePlayerino()">
                     <i class="fa fa-expand"></i>
                     <img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar"/>
@@ -527,11 +605,11 @@
                 </a>
                 <div class="controllerMusic">
                     <div class="time_slider">
-                        <progress id="progress-bar" min='0' max='100' value='0'></progress>
-                        <span class="runing_time">0:00</span>
+                        <progress id="progressBar" min='0' max='100' value='0'></progress>
+                        <span id = "musicTime" class="runing_time">00:00</span>
                     </div>
                     <i class="fa fa-fast-backward" aria-hidden="true"></i>
-                    <i class="fa fa-play" aria-hidden="true"></i>
+                    <i id = "playPause" class="fa fa-play" aria-hidden="true" ng-click="playPause()"></i>
                     <i class="fa fa-fast-forward" aria-hidden="true"></i>
                     <i class="fa fa-retweet" aria-hidden="true"></i>
                 </div>
@@ -539,7 +617,6 @@
       </div>
       <!-- sempre attiva, parte centrale-->
         <div class="main">
-
           <header>
               <input type="text" id="searchBar" placeholder="Search">
           </header>
@@ -608,5 +685,24 @@
       <h2>Footer</h2>
     </div>
     -->
+    <script>
+        var modal = document.getElementById('myModal');
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
     </body>
     </html>
