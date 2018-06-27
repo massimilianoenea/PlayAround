@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PlayAround</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular-route.min.js"></script>
+    <script src="/public/angularFile/app.js"></script>
+    <script src="/public/angularFile/controller.js"></script>
+    <script src="/public/angularFile/service.js"></script>
+</head>
+<style>
+
+    h2{
+        text-align: center;
+        color: #FEC35E;
+        margin: auto;
+        padding-top: 3%;
+    }
+    /* Image grid style */
+
+    .column_img, .row_img {
+        box-sizing: border-box;
+    }
+
+    .column_img {
+        float: left;
+        width: 33.33%;
+        padding-left: 1px;
+        margin-top: 20px;
+    }
+
+    /* Clearfix (clear floats) */
+    .row_img::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    /* Image overlay */
+
+    .container_img, .image, .overlay{
+        box-sizing: border-box;
+    }
+
+    .container_img {
+        position: relative;
+        width: 70%;
+        max-width: 300px;
+    }
+
+    .image {
+        border-radius: 20px;
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .overlay {
+        position: absolute;
+        bottom: 0;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        background: rgb(0, 0, 0);
+        background: rgba(0, 0, 0, 0.8); /* Black see-through */
+        color: #f1f1f1;
+        width: 100%;
+        transition: .5s ease;
+        opacity:0;
+        color: white;
+        font-size: 15px;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .container_img:hover .overlay, .container_img:active .overlay {
+        opacity: 1;
+    }
+    .listSong{
+        width: 100%;
+    }
+    .listSong>ul >li{
+        width: 100%;
+        height:100%;
+        background-color: rgba(0,0,0,0.3);
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+    .fa.fa-trash-o{
+        color: whitesmoke;
+        float: right;
+    }
+    .fa.fa-trash-o:hover{
+        font-size: larger;
+        color: orangered;
+    }
+    .fa.fa-plus{
+        color: whitesmoke;
+        float: left;
+    }
+    .fa.fa-plus:hover{
+        color:#4CAF50;
+        font-size: larger;
+    }
+    .imgAlbum{
+        margin-top: 10px;
+    }
+    .row2{
+
+    }
+</style>
+<body>
+<div class="row2">
+
+
+ <h2>CIAO</h2>
+    <div style="margin-bottom: 8%">
+        <i class="fa fa-plus" aria-hidden="true" ng-click="add()"> Aggiungi Brano</i>
+
+        <i class="fa fa-trash-o" aria-hidden="true" ng-click="delete()"> Elimina Playlist</i>
+    </div>
+        <div class="listSong">
+
+        <ul class="" ng-repeat="brani in playlistUt">
+            <li ng-click="loadBrano({{brani.codice}})">
+              <img  class="imgAlbum" ng-src={{brani.immagine}}>  {{brani.titolo}}  {{brani.artista}}
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+</body>
+</html>

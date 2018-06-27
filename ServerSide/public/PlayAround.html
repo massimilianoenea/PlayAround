@@ -366,7 +366,7 @@
          Modal box for select current device
     */
 
-    .modal {
+    .modalDev {
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 1; /* Sit on top */
@@ -380,7 +380,7 @@
     }
 
     /* Modal Content/Box */
-    .modal-content {
+    .modal-content-Dev {
         background-color: #fefefe;
         margin: 15% auto; /* 15% from the top and centered */
         padding: 20px;
@@ -525,10 +525,10 @@
     </div>
     -->
 
-    <div id="myModal" class="modal">
+    <div id="modalDevice" class="modalDev">
 
         <!-- Modal content -->
-        <div class="modal-content">
+        <div class="modal-content-Dev">
             <span class="close">&times;</span>
             <p>Seleziona il device da usare come riproduttore</p>
             <button class="btn"><i class="fa fa-laptop"></i><i class="fa fa-apple"></i> Mac</button>
@@ -542,12 +542,12 @@
        <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="#!">Home</a>
-           <a href="#!libreria">La tua Libreria</a>
-           <a href="#!preferiti">Preferiti</a>
-           <a href="#!amici">I tuoi Amici</a>
-            <a href="#!mood">Genere & Mood</a>
-            <a href="#!piuAscoltati" onclick="active()">I più Ascoltati</a>
-            <a href="#!sceltiPerTe">Scelti per Te</a>
+           <a href="#!libreria" onclick="closeNav()">La tua Libreria</a>
+           <a href="#!preferiti" onclick="closeNav()">Preferiti</a>
+           <a href="#!amici" onclick="closeNav()">I tuoi Amici</a>
+            <a href="#!mood" onclick="closeNav()">Genere & Mood</a>
+            <a href="#!piuAscoltati" onclick="closeNav()">I più Ascoltati</a>
+            <a href="#!sceltiPerTe" onclick="closeNav()">Scelti per Te</a>
         </div>
         <div  class="mobileHeader">
             <img src="/image/Symbol_playaround_complete.png" style="width: 60%;float: right;display: inline;margin-right: 15%;">
@@ -686,7 +686,7 @@
     </div>
     -->
     <script>
-        var modal = document.getElementById('myModal');
+        var modal = document.getElementById('modalDevice');
 
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];

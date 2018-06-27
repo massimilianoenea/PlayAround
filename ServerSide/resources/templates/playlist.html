@@ -408,13 +408,13 @@ margin: 10%;
 
 <div class="row_img">
     <div class="column_img" ng-repeat="list in playlist">
-        <div class="container_img">
-            <img ng-src="{{list.immagine}}" alt="Snow" class="image">
-            <div class="overlay">{{list.nome}}</div>
-            <p>{{list.codice}}</p>
-        </div>
+        <a href="#!libreria/playlist/{{list.codice}}">
+            <div class="container_img">
+                <img ng-src="{{list.immagine}}" alt="Snow" class="image">
+                <div class="overlay">{{list.nome}}</div>
+            </div>
+        </a>
     </div>
-
 </div>
 
 
