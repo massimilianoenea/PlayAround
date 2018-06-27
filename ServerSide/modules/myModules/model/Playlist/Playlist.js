@@ -27,9 +27,9 @@ module.exports ={
                 connection.release();
                 return callback(err,null,1);
             }
-            var sql = "select nome_playlist as nome ,pl.codplaylist from playlist_ut as put, playlist as pl where pl.codplaylist = ?\n" +
+            var sql = "select nome_playlist as nome ,pl.codplaylist from playlist_ut as put, playlist as pl where pl.codplaylist = ptu.codplaylist and pl.codplaylist = ?\n" +
                 "UNION\n" +
-                "select nome,pl.codplaylist from playlist_def as pde, playlist as pl where pl.codplaylist = ?";
+                "select nome,pl.codplaylist from playlist_def as pde, playlist as pl where pl.codplaylist = pde.codplaylist and pl.codplaylist = ?";
             connection.query(sql,[codPlaylist,codPlaylist], function(err, results) {
                 if (err) {
                     connection.release();
