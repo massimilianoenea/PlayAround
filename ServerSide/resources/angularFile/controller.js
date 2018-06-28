@@ -290,11 +290,10 @@ angular.module('PlayAround')
                withCredentials: true,
                headers: { 'Content-Type': 'application/json' }
            }).then(function mySuccess(response){
-               //nomePlaylist = $scope.namePlaylist;
+               nomePlaylist = $scope.namePlaylist;//questo la passo sotto per aggiungere i brani
                $scope.playlist.push({codice:response.data.codice, immagine: "/image/playlist"+response.data.codice+".png", nome: response.data.nome});
-               $scope.apply();
-               )
                $scope.create=false;
+               $scope.apply();
            },function myError(response){
                $scope.message=true;
                $scope.error = response.data;
@@ -313,7 +312,7 @@ angular.module('PlayAround')
            $scope.nomeBrano=selected.title;
        };
        $scope.salva=function(){
-           $scope.visible=$scope.visible=false;
+           $scope.visible=false;
        };
 
         })
@@ -338,7 +337,11 @@ angular.module('PlayAround')
                 data: parameter,
                 withCredentials: true,
                 headers: {'Content-Type': 'application/json'}
-            })
+            }).then(function mySuccess(response){
+               window.location = "#!libreria/playlist"
+            },function myError(response){
+
+            });
         };
         $scope.addSong=function (selected) {
             var parameter = {codbrano:selected.originalObject.codice,nome_playlist:NomePlaylist.nome};
