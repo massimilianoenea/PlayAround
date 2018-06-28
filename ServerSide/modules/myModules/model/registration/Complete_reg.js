@@ -4,13 +4,11 @@ module.exports = {
   find_artist: function(searched,callback){
       connection.getConnection(function(err,connection){
          if (err) {
-             connection.release();
              return callback(err,null,1);
          }
          var sql = "SELECT NOME,NOME_ARTE,CODARTISTA AS COD FROM ARTISTA WHERE NOME LIKE ? ORDER BY LEVENSHTEIN(NOME,?)";
           connection.query(sql,[searched,searched],function (err,results) {
               if (err) {
-                  connection.release();
                   return callback(err, null, 2);
               }
               connection.release();
@@ -22,13 +20,11 @@ module.exports = {
     find_genere: function(searched,callback){
         connection.getConnection(function(err,connection){
             if (err) {
-                connection.release();
                 return callback(err,null,1);
             }
             var sql = "SELECT NOME,CODGENERE AS COD FROM GENERE WHERE NOME LIKE ? ORDER BY LEVENSHTEIN(NOME,?)";
             connection.query(sql,[searched,searched],function (err,results) {
                 if (err) {
-                    connection.release();
                     return callback(err, null, 2);
                 }
                 connection.release();
@@ -40,7 +36,6 @@ module.exports = {
     complete_reg: function (Artist_Array,Genere_Array,callback){
         connection.getConnection(function(err,connection){
             if (err) {
-                connection.release();
                 return callback(err,null,1);
             }
             var genErr;
@@ -53,7 +48,6 @@ module.exports = {
                 if (err) genErr = err;
             });
             if(genErr) {
-                connection.release();
                 return callback(genErr,null,1);
             }
             connection.release();
@@ -63,13 +57,11 @@ module.exports = {
     flag_complete_reg:function(codutente,callback){
       connection.getConnection(function (err,connection){
           if(err) {
-              connection.release();
               return callback(err,null,1);
           }
           var sql = "UPDATE UTENTI SET COMPLETED = '1' WHERE CODUTENTE = ?";
           connection.query(sql,[codutente],function (err,results) {
               if (err) {
-                  connection.release();
                   return callback(err,null,2);
               }
               connection.release();

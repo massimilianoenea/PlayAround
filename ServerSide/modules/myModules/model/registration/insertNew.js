@@ -10,14 +10,12 @@ module.exports = {
     {
         connection.getConnection(function(err,connection){
            if(err) {
-               connection.release();
                return callback(err,null,1);
            }
 
            var sql = "SELECT CODUTENTE FROM UTENTI_APPEND WHERE TOKEN ='"+token+"'";
            connection.query(sql,function (err,results){
                if (err) {
-                   connection.release();
                    return callback(err,null,2);
                }
                if (results.length === 1){
@@ -26,14 +24,12 @@ module.exports = {
 
                    connection.query(sql,function(err,results){
                        if(err) {
-                           connection.release();
                            return callback(err,null,3);
                        }
                         sql = "DELETE FROM UTENTI_APPEND WHERE CODUTENTE = '"+codutente+"'";
 
                         connection.query(sql,function(err,results) {
                            if (err) {
-                               connection.release();
                                return callback(err, null,3);
                            }
                            connection.release();
@@ -57,7 +53,6 @@ module.exports = {
     {
         connection.getConnection(function (err,connection) {
             if (err) {
-                connection.release();
                 return callback(err,null,1);
             }
 
@@ -66,14 +61,12 @@ module.exports = {
             var paramater = [user.email,GetHash.GetCodUtente(user.email), GetHash.GetCodUtente_span(user.email),user.username,GetHash.GetPassword(user.password),0,0];
             connection.query(sql, paramater, function(err, results){
                 if (err) {
-                    connection.release();
                     return callback(err, null,3);
                 }
 
                  sql = "INSERT INTO UTENTI_APPEND(CODUTENTE,TOKEN) VALUES (?,?)";
                 connection.query(sql, [GetHash.GetCodUtente(user.email), tok], function(err, results) {
                     if (err) {
-                        connection.release();
                         return callback(err,null,2);
                     }
                     mailSender.sendMail(mailSender.SetmailOptions(user.email,url,tok));
