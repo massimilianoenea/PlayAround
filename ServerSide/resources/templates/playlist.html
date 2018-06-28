@@ -398,7 +398,9 @@ margin: 10%;
 
         <div class="modal-footer">
             <button class="btnSave" ng-click="newPlaylist()" ng-disabled="myPlaylist.$invalid" ng-show="create">Conferma</button>
-            <button class="btnSave" ng-click="salva()" ng-disabled="myPlaylist.$invalid" ng-hide="create">Salva</button>
+            <a href="#!libreria/playlist">
+            <button class="btnSave" ng-click="salva()" ng-disabled="myPlaylist.$invalid" ng-hide="create">Finish</button>
+            </a>
         </div>
 
         </form>

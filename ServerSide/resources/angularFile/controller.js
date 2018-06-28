@@ -290,7 +290,10 @@ angular.module('PlayAround')
                withCredentials: true,
                headers: { 'Content-Type': 'application/json' }
            }).then(function mySuccess(response){
-               nomePlaylist = $scope.namePlaylist;
+               //nomePlaylist = $scope.namePlaylist;
+               $scope.playlist.push({codice:response.data.codice, immagine: "/image/playlist"+response.data.codice+".png", nome: response.data.nome});
+               $scope.apply();
+               )
                $scope.create=false;
            },function myError(response){
                $scope.message=true;
