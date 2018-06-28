@@ -104,7 +104,7 @@ module.exports ={
                         return callback(err,null,3);
                     }
                     connection.release();
-                    return callback(null,results,0);
+                    return callback(null,{nome:nomePlaylist,codice:id},0);
                 });
             });
         });
