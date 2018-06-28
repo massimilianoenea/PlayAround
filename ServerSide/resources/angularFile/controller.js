@@ -38,11 +38,25 @@ angular.module('PlayAround')
             angular.forEach(response,function(value,key){
                 angular.forEach(value,function(subValue,subKey){
                     angular.forEach(subValue,function(val,chiave){
-                        data.push({[subKey]:val});
+                        switch (subKey) {
+                            case "brani":
+                                data.push({val:{type:"Brano: ",response:{nome:val.titolo + " "+ val.anno,codice:val.codice,immagine:val.immagine},original:val}});
+                                break;
+                            case "artisti":
+                                data.push({val:{type:"Artista: ",response:{nome:val.nome,codice:val.codice,immagine:val.immagine},original:val}});
+                                break;
+                            case "album":
+                                data.push({val:{type:"Album: ",response:{nome:val.titolo + " "+ val.anno,codice:val.codice,immagine:val.immagine},original:val}});
+                                break;
+                            case "utenti":
+                                data.push({val:{type:"Utente: ",response:{nome:val.username,codice:val.codice,immagine:"/image/profile/"+val.username+".png"},original:val}});
+                                break;
+                            default:
+                                data.length = 0;
+                        }
                     });
                 });
             });
-            console.log(data);
             return data;
         }else{
             return data;
@@ -111,6 +125,7 @@ angular.module('PlayAround')
         if(userAgent.match(/iPod/i)) return "iPod";
         if(userAgent.match(/iPad/i)) return "iPad";
         if(userAgent.match(/Windows Phone/i)) return "windows Phone";
+        if(userAgent.match(/Windows/i)) return "windows";
         if(userAgent.match(/Ubuntu/i)) return "Linux";
     }
 

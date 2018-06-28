@@ -614,6 +614,18 @@ router.get("/piu_ascoltate",function(req,res){
 
 
 // FUNZIONI PER I BRANI //
+
+router.set("/setPreferito",function(req,res){
+    if(req.session.islog){
+        brani.set_canzoni_salvate(req.session.email,req.body.codbrano,function(a) {
+            res.status(a.status).end(a);
+        });
+    }else{
+        // POTREBBE REINDIRIZZARE AL LOGIN
+        res.status(500).end();
+    }
+});
+
 router.get("/brano/:codbrano",function(req,res){
    if(req.session.islog){
        brani.get_full_brano(req.params.codbrano,function(a){

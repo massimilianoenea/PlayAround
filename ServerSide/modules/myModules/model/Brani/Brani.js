@@ -74,6 +74,22 @@ module.exports = {
         });
     },
 
+    set_canzoni_salvate: function(email,codbrano,callback){
+        connection.getConnection(function (err,connection) {
+            if(err) {
+                return callback(err,null,1);
+            }
+            var sql = "INSERT INTO BRANI_SALVATI (CODUTENTE,CODBRANO) VALUES (?,?)";
+            connection.query(sql,[GetHash.GetCodUtente(email),codbrano], function(err, results) {
+                if (err) {
+                    return callback(err, null, 2);
+                }
+                connection.release();
+                return callback(null,results,0);
+            });
+        });
+    },
+
     get_canzoni_salvate: function(email,callback){
       connection.getConnection(function (err,connection) {
           if(err) {
