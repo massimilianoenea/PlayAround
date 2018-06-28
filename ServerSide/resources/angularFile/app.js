@@ -139,7 +139,7 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
             templateUrl: "/public/templates/artisti.html",
             controller: "artistiPrefCtrl",
             resolve: {
-                ArtistiPreferiti: function ($http) {
+                ArtistiPreferiti: function ($http, $sessionStorage) {
                     return $http.get('/require/artisti_seguiti')
                         .then(function (response) {
                             return response.data;

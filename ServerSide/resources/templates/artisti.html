@@ -26,13 +26,13 @@
 <body ng-app="PlayAround">
 <div class="row">
 
-    <h2 align="center" style="color: #FEC35E">I tuoi Amici</h2>
+    <h2 align="center" style="color: #FEC35E">Artisti Preferiti</h2>
     <div ng-controller="artistiPrefCtrl">
-        <div ng-repeat="user in preferiti" class="containe">
+        <div ng-repeat="artista in preferiti" class="containe">
 
-            <a href="#!artista/{{user.codice}}">
-                <img ng-src={{user.immagine}} alt="Avatar" style="width:90px">
-                <p style="color: #f4f4f4">{{user.nome}}</p>
+            <a href="#!artista/{{artista.codice}}">
+                <img ng-src={{artista.immagine}} alt="Avatar" style="width:90px">
+                <p style="color: #f4f4f4">{{artista.nome}}</p>
 
             </a>
 
