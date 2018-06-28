@@ -382,7 +382,7 @@ router.get("/nome_playlist/:codplaylist",function(req,res){
     if(req.session.islog === 1){
         playlist.get_nome_playlist(req.params.codplaylist,function(a){
             var json = "";
-            if(a.status === 200 && a.data[0].nome !== undefined){
+            if(a.status === 200 && a.data[0] !== undefined){
                 json = {nome:a.data[0].nome};
             }else{
                 json = a;

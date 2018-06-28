@@ -10,22 +10,41 @@
     <script src="/public/angularFile/service.js"></script>
 </head>
 <style>
-    listAlbum> li{
-        list-style: none;
+    .listAlbum > ul > li{
+
+        width: 100%;
+        height:150%;
+        background-color: rgba(0,0,0,0.3);
+        margin-bottom: 10px;
+        cursor: pointer;
     }
+    .listAlbum > ul{
+      list-style-type: upper-roman;
+    }
+    h2{
+        text-align: center;
+        color: #FEC35E;
+        margin: auto;
+        padding-top: 3%;
+    }
+
 </style>
 <body>
-<div class="row">
+<div class="row2">
 
     <h2 style="margin: auto;padding-bottom: 3%;">{{album.nome}}</h2>
     <div style="width: 100%;" align="center">
         <img style="border-radius: 40px; margin: auto;" ng-src={{album.immagine}}>
     </div>
-    <div class="listAlbum" align="center" ng-repeat="song in brani">
-         <li>
-             <a ngf-src={{brani.codalbum}}>{{brani.nome}}</a>
-         </li>
+    <div class="listAlbum">
+
+        <ul class="">
+            <li  ng-repeat="song in brani" ng-click="loadBrano({{song.codice}})">
+                 {{song.titolo}}
+            </li>
+        </ul>
     </div>
+
 </div>
 
 </body>

@@ -87,10 +87,17 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
             controller:"playlistUtCtrl",
             resolve:{
                 Playlist: function ($http, $route) {
-                    return $http.get("require/get_brani_playlist/" + $route.current.params.codice)
+                    return $http.get("/require/get_brani_playlist/" + $route.current.params.codice)
                         .then(function (response) {
+                            //return JSON.stringify({nome:$scope.nomePlaylist,response:response.data});
                             return response.data;
                         })
+                },
+                NomePlaylist: function ($http, $route) {
+                    return $http.get("/require/nome_playlist/"+ $route.current.params.codice)
+                        .then(function(response){
+                            return {nome:response.data.nome,codice:$route.current.params.codice};
+                        });
                 }
             }
         })
@@ -199,31 +206,52 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
                 templateUrl: "/public/templates/album.html",
                 controller: "albumCtrl",
                 resolve:  {
-                    Album: function($http, $routeParams){
-                        return $http.get('/require/get_album/'+ $routeParams.codalbum)
+                    Album: function($http, $route){
+                        return $http.get('/require/get_album/'+ $route.current.params.codAlbum)
                             .then(function(response){
                                 return response.data;
                             })
                     },
-                    BraniAlbum: function($http){
-                        return $http.get('/require/get_brani_album/' + $routeParams.codalbum)
-                            .then(function(response){
-                                return response.data;
-                            })
-                    },
-
-                    altriAlbum: function($http){
-                        return $http.get('/get_altro_artista/' + codartista)
+                    BraniAlbum: function($http, $route){
+                        return $http.get('/require/get_brani_album/' + $route.current.params.codAlbum)
                             .then(function(response){
                                 return response.data;
                             })
                     }
+
+                   /*AltriAlbum: function($http){
+                        return $http.get('/get_altro_artista/')
+                            .then(function(response){
+                                return response.data;
+                            })
+                    }*/
                 }
 
         })
         .otherwise({
             template: "/public/templates/home.html",
-            controller:"homeCtrl"
+            controller:"homeCtrl",
+            resolve:{
+                Giornaliera: function ($http) {
+                    var data =new Date();
+                    return $http.get('/require/playlist_giornaliera/'+ data)
+                        .then(function (response){
+                            return response.data;
+                        });
+                },
+                Recently: function ($http) {
+                    return $http.get('/require/ascoltati_recente')
+                        .then(function (response){
+                            return response.data;
+                        });
+                },
+                AmiciSong: function ($http) {
+                    return $http.get('/require/ascoltano_amici')
+                        .then(function (response){
+                            return response.data;
+                        });
+                }
+            }
         })
 });
 

@@ -314,8 +314,47 @@ angular.module('PlayAround')
        };
 
         })
-    .controller('playlistUtCtrl', function ($scope, Playlist) {
+    .controller('playlistUtCtrl', function ($scope, Playlist, $http,NomePlaylist) {
         $scope.playlistUt=Playlist;
+        $scope.nomePlay=NomePlaylist.nome;
+        $scope.codPlay = NomePlaylist.codice;
+
+        $scope.visible=false;
+        $scope.showBox=function () {
+            $scope.visible=true;
+        };
+        $scope.hideBox=function () {
+            $scope.visible=false;
+        };
+
+        $scope.delete=function () {
+            var parameter = {nome_playlist:NomePlaylist.nome};
+            $http({
+                method: "POST",
+                url: "/require/delete_playlist",
+                data: parameter,
+                withCredentials: true,
+                headers: {'Content-Type': 'application/json'}
+            })
+        };
+        $scope.addSong=function (selected) {
+            var parameter = {codbrano:selected.originalObject.codice,nome_playlist:NomePlaylist.nome};
+            $http({
+                method:"POST",
+                url : '/require/add_song',
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response){
+                $scope.nomeBrano=selected.title;
+                $scope.playlistUt.push(selected.originalObject);
+                $scope.apply();
+            },function myError(response){
+                $scope.nomeBrano= "non è stato possibile caricare "+selected.title;
+            });
+
+        };
+
     })
     .controller('tueCanzoniCtrl', function ($scope, Saved){
         $scope.salvate=Saved;
@@ -331,7 +370,7 @@ angular.module('PlayAround')
 
     .controller('artistaCtrl', function ($scope, $http,Artista, AlbumArtista){
         $scope.artista=Artista;
-        $scope.Album=AlbumArtista;
+        $scope.album=AlbumArtista;
         $scope.isFollowed=Artista.followed;
 
         $scope.addArtista = function () {
@@ -383,7 +422,9 @@ angular.module('PlayAround')
     .controller('playerCtrl', function($scope){
 
     })
-    .controller('albumCtrl', function($scope,Album, BraniAlbum,){
+    .controller('albumCtrl', function($scope,Album, BraniAlbum){
         $scope.album=Album;
         $scope.brani=BraniAlbum;
+        //$scope.altri=AltriAlbum;
+
     });
