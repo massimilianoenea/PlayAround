@@ -6,20 +6,17 @@ module.exports = {
   get_artista: function(codartista,email,callback){
       connection.getConnection(function(err,connection){
           if (err) {
-              connection.release();
               return callback(err,null,1);
           }
           var sql = "SELECT * FROM ARTISTA WHERE CODARTISTA = ?";
           connection.query(sql,[codartista],function (err,results) {
               var res = results[0];
               if(err || results.length === 0) {
-                  connection.release();
                   return callback('err',null,2);
               }
               sql = "SELECT * FROM FOLLOW_ARTISTI WHERE CODARTISTA = ? AND CODUTENTE LIKE ?";
               connection.query(sql,[codartista,GetHash.GetCodUtente(email)],function(err,results){
                   if(err) {
-                      connection.release();
                       return callback(err,null,3);
                   }
                   if(results.length === 0){

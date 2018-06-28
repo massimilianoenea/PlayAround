@@ -10,7 +10,6 @@ module.exports ={
 
             connection.query(sql, [GetHash.GetCodUtente(user.email)], function(err, results) {
                 if (err) {
-                    connection.release();
                     return callback(err, null,1);
                 }
 
