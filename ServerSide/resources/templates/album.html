@@ -10,6 +10,10 @@
     <script src="/public/angularFile/service.js"></script>
 </head>
 <style>
+    .listAlbum{
+        width: 80%;
+        margin: auto;
+    }
     .listAlbum > ul > li{
 
         width: 100%;
@@ -19,7 +23,7 @@
         cursor: pointer;
     }
     .listAlbum > ul{
-      list-style-type: upper-roman;
+      list-style-type: decimal;
     }
     h2{
         text-align: center;
@@ -27,6 +31,29 @@
         margin: auto;
         padding-top: 3%;
     }
+    .fa.fa-bookmark{
+        float: right;
+        top: -35px;
+    }
+    .fa.fa-plus{
+        float: right;
+        top: -35px;
+    }
+    /*dropdown per scegliere playlist*/
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+        /*display: none;*/
+        position: absolute;
+        background-color: rgba(255,255,255,0.8);
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
 
 </style>
 <body>
@@ -39,13 +66,25 @@
     <div class="listAlbum">
 
         <ul class="">
-            <li  ng-repeat="song in brani" ng-click="loadBrano({{song.codice}})">
-                 {{song.titolo}}
+            <li  ng-repeat="song in brani">
+                <p ng-click="loadBrano(song.codice)">{{song.titolo}}</p>
+                <i class="fa fa-plus dropbtn" aria-hidden="true" ng-click="showDrop(song.codice)"></i>
+                <div class="dropdown" ng-show="codice === song.codice ? true : false">
+                    <div class="dropdown-content">
+                        <div><!--qua devo mettere ng-repeat-->
+                            <p>Playlist</p>
+                        </div>
+                    </div>
+                </div>
+
+                <i class="fa fa-bookmark" aria-hidden="true" ng-click="salvaBrano()"></i>
+
             </li>
         </ul>
     </div>
 
 </div>
+
 
 </body>
 </html>

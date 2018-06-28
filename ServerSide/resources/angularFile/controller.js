@@ -383,7 +383,7 @@ angular.module('PlayAround')
             $http({
                 method : "POST",
                 url : 'require/follow_artista',
-                data: {username:Artista.nome},
+                data: {codartista:Artista.codice},
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
             })
@@ -396,7 +396,7 @@ angular.module('PlayAround')
             $http({
                 method : "POST",
                 url : 'require/unfollow_artista',
-                data: {username:Artista.nome},
+                data: {codartista:Artista.codice},
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
             })
@@ -432,5 +432,17 @@ angular.module('PlayAround')
         $scope.album=Album;
         $scope.brani=BraniAlbum;
         //$scope.altri=AltriAlbum;
+        //gestisco la dropdown per le playlist
+
+        $scope.showDrop=function (codice) {
+            if($scope.codice!==codice){
+                $scope.codice=codice
+            }else{
+                $scope.codice=-1;
+            }
+        };
+        $scope.hideDrop=function () {
+            $scope.visible=false;
+        };
 
     });
