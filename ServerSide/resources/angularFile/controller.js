@@ -49,7 +49,7 @@ angular.module('PlayAround')
                                 data.push({val:{type:"Album: ",response:{nome:val.titolo + " "+ val.anno,codice:val.codice,immagine:val.immagine},original:val}});
                                 break;
                             case "utenti":
-                                data.push({val:{type:"Utente: ",response:{nome:val.username,codice:val.codice,immagine:"/image/profile/"+val.username+".png"},original:val}});
+                                data.push({val:{type:"Utente: ",response:{nome:val.username,codice:val.username,immagine:"/image/profile/"+val.username+".png"},original:val}});
                                 break;
                             default:
                                 data.length = 0;
