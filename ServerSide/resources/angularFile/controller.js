@@ -25,6 +25,29 @@ angular.module('PlayAround')
             window.location.replace('/login');
         });
     };
+
+    /**
+     *
+     * Funzione per formattare il return della search
+     *
+     */
+
+    $scope.searchResponseFormatter=function(response){
+        var data = [];
+        if(response.length>0){
+            angular.forEach(response,function(value,key){
+                angular.forEach(value,function(subValue,subKey){
+                    angular.forEach(subValue,function(val,chiave){
+                        data.push({[subKey]:val});
+                    });
+                });
+            });
+            console.log(data);
+            return data;
+        }else{
+            return data;
+        }
+    };
 /*
     $scope.$on('$viewContentLoaded', function(event) {
         socket.emit('getFriend', {username: $sessionStorage.UserLogged.username, email: $sessionStorage.UserLogged.email});
