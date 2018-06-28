@@ -365,7 +365,7 @@ router.get("/nome_playlist/:codplaylist",function(req,res){
     if(req.session.islog === 1){
         playlist.get_nome_playlist(req.params.codplaylist,function(a){
             var json = "";
-            if(a.status = 200 && a.data[0].nome !== undefined){
+            if(a.status === 200 && a.data[0] !== undefined){
                 json = {nome:a.data[0].nome};
             }else{
                 json = a;
@@ -416,7 +416,7 @@ router.post("/nuova_playlist" ,function (req,res){
 
 router.post("/delete_playlist",function (req,res){
     if(req.session.islog === 1){
-        playlist.delete_playlist()(req.session.email,req.body.nome_playlist,function(a){
+        playlist.delete_playlist(req.session.email,req.body.nome_playlist,function(a){
             if(a.status === 200) {
                 res.status(a.status).end(JSON.stringify(a.data));
             }else{

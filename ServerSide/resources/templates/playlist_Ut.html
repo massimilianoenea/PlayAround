@@ -108,21 +108,262 @@
     .row2{
 
     }
+
+    /*modalBOXES*/
+    /* The Modal (background) */
+    .modal {
+        /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        position: relative;
+        background-color: #fefefe;
+        margin: auto;
+        padding: 0;
+        border: 1px solid #888;
+        width: 60%;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+        -webkit-animation-name: animatetop;
+        -webkit-animation-duration: 0.4s;
+        animation-name: animatetop;
+        animation-duration: 0.4s
+    }
+
+    /* Add Animation */
+    @-webkit-keyframes animatetop {
+        from {top:-300px; opacity:0}
+        to {top:0; opacity:1}
+    }
+
+    @keyframes animatetop {
+        from {top:-300px; opacity:0}
+        to {top:0; opacity:1}
+    }
+    /* The Close Button */
+    .close {
+        color: white;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .modal-header {
+        padding: 2px 16px;
+        background-color: #2a4463;
+        color: white;
+    }
+
+    .modal-body {
+        padding: 5% 16px;
+        width: 90%;
+        margin: auto;
+        background-color: white;
+    }
+
+    .modal-footer {
+        padding: 2px 16px;
+        background-color: #2a4463;
+        color: white;
+        height: 40px;
+    }
+    .btnSave{
+        color: #fff;
+        background-color: #a00e6d;
+        border-color: #357ebd;
+        border: 1px solid;
+        border-radius: 5px;
+        width: auto;
+        height: auto;
+        position: absolute;
+        right: 10%;
+        font-size: medium;
+        bottom: 4%;
+
+    }
+    .btnSave:hover{
+        background-color: #357ebd;
+
+    }
+    .angucomplete-holder {
+        position: relative;
+    }
+
+    .angucomplete-dropdown {
+        border-color: #ececec;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px;
+        width: 250px;
+        padding: 6px;
+        cursor: pointer;
+        z-index: 9999;
+        overflow-y: auto;
+        max-height: 200px;
+        /*position: absolute;
+        /*top: 32px;
+        left: 0px;
+        */
+        margin-top: -6px;
+        background-color: #ffffff;
+    }
+
+    .angucomplete-searching {
+        color: #acacac;
+        font-size: 14px;
+    }
+
+    .angucomplete-description {
+        font-size: 14px;
+    }
+
+    .angucomplete-row {
+        padding: 5px;
+        color: #000000;
+        margin-bottom: 4px;
+        clear: both;
+    }
+
+    .angucomplete-selected-row {
+        background-color: lightblue;
+        color: #ffffff;
+    }
+
+    .angucomplete-image-holder {
+        padding-top: 2px;
+        float: left;
+        margin-right: 10px;
+        margin-left: 5px;
+    }
+
+    .angucomplete-image {
+        height: 34px;
+        width: 34px;
+        border-radius: 50%;
+        border-color: #ececec;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .angucomplete-image-default {
+        /* Add your own default image here
+         background-image: url('/assets/default.png');
+        */
+        background-position: center;
+        background-size: contain;
+        height: 34px;
+        width: 34px;
+    }
+    #Song_value{
+        margin: 10%;
+        margin: 5% 0 5% 0;
+        border-radius: 5px;
+        border: 1px solid lightblue;
+        width: 100%;
+        font-size: medium;
+
+    }
+    #Song{
+        width: 100%;
+        height: auto;
+
+    }
+
+    @media screen and (min-width: 992px){
+        .overlay{
+            font-size: 20px;
+            padding: 15px;
+        }
+    }
+    @media screen and (max-width: 768px){
+        .overlay{
+            font-size: 15px;
+            padding: 5px;
+        }
+        .modal-content{
+            width: 95%;
+        }
+
+    }
+    @media screen and (max-width: 320px){
+        .overlay{
+            font-size: 13px;
+            padding: 5px;
+        }
+    }
+
 </style>
 <body>
 <div class="row2">
 
+    <div id="myModal" class="modal" ng-show="visible">
 
- <h2>CIAO</h2>
+        <!-- Modal content -->
+        <div class="modal-content" >
+            <div class="modal-header">
+                <span class="close" ng-click="hideBox()">&times;</span>
+                <h2>Crea Nuova Playlist</h2>
+            </div>
+            <div class="modal-body" align="center">
+                <div class="row" style="background: white">
+
+                        <div
+                                angucomplete-alt  id="Song"
+                                placeholder="Search Song"
+                                pause="400"
+                                selected-object="addSong"
+                                remote-url="/require/brano_titolo/"
+                                title-field="titolo,artista,anno"
+                                clear-selected="true"
+                                >
+                        </div>
+                        <p>Hai aggiunto: {{nomeBrano}}</p>
+
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <a href="#!liberia/playlist/{{codPlay}}">
+                <button class="btnSave" ng-click="hideBox()">Salva</button>
+                </a>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+ <h2>{{nomePlay.nome}}</h2>
     <div style="margin-bottom: 8%">
-        <i class="fa fa-plus" aria-hidden="true" ng-click="add()"> Aggiungi Brano</i>
-
-        <i class="fa fa-trash-o" aria-hidden="true" ng-click="delete()"> Elimina Playlist</i>
+        <i class="fa fa-plus" aria-hidden="true" ng-click="showBox()"> Aggiungi Brano</i>
+         <a href="#!libreria/playlist">
+            <i class="fa fa-trash-o" aria-hidden="true" ng-click="delete()"> Elimina Playlist</i>
+         </a>
     </div>
         <div class="listSong">
 
         <ul class="" ng-repeat="brani in playlistUt">
-            <li ng-click="loadBrano({{brani.codice}})">
+            <li ng-click="loadBrano(brani.codice)">
               <img  class="imgAlbum" ng-src={{brani.immagine}}>  {{brani.titolo}}  {{brani.artista}}
             </li>
         </ul>

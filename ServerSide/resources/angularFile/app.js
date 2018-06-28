@@ -92,6 +92,12 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
                             //return JSON.stringify({nome:$scope.nomePlaylist,response:response.data});
                             return response.data;
                         })
+                },
+                NomePlaylist: function ($http, $route) {
+                    return $http.get("/require/nome_playlist/"+ $route.current.params.codice)
+                        .then(function(response){
+                            return {nome:response.data.nome,codice:$route.current.params.codice};
+                        });
                 }
             }
         })

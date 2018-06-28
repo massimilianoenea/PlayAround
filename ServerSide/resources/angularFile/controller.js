@@ -314,10 +314,21 @@ angular.module('PlayAround')
        };
 
         })
-    .controller('playlistUtCtrl', function ($scope, Playlist, $http) {
+    .controller('playlistUtCtrl', function ($scope, Playlist, $http,NomePlaylist) {
         $scope.playlistUt=Playlist;
+        $scope.nomePlay=NomePlaylist.nome;
+        $scope.codPlay = NomePlaylist.codice;
+
+        $scope.visible=false;
+        $scope.showBox=function () {
+            $scope.visible=true;
+        };
+        $scope.hideBox=function () {
+            $scope.visible=false;
+        };
+
         $scope.delete=function () {
-            var parameter = {};
+            var parameter = {nome_playlist:NomePlaylist.nome};
             $http({
                 method: "POST",
                 url: "/require/delete_playlist",
@@ -326,15 +337,22 @@ angular.module('PlayAround')
                 headers: {'Content-Type': 'application/json'}
             })
         };
-        $scope.add=function () {
-            var parameter = {codbrano:$scope.codice};
+        $scope.addSong=function (selected) {
+            var parameter = {codbrano:selected.originalObject.codice,nome_playlist:NomePlaylist.nome};
             $http({
-                method: "POST",
-                url: "/require/add_song",
+                method:"POST",
+                url : '/require/add_song',
                 data: parameter,
                 withCredentials: true,
-                headers: {'Content-Type': 'application/json'}
-            })
+                headers: { 'Content-Type': 'application/json' }
+            }).then(function mySuccess(response){
+                $scope.nomeBrano=selected.title;
+                $scope.playlistUt.push(selected.originalObject);
+                $scope.apply();
+            },function myError(response){
+                $scope.nomeBrano= "non è stato possibile caricare "+selected.title;
+            });
+
         };
 
     })
