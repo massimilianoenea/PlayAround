@@ -10,11 +10,85 @@
     <script src="/public/angularFile/controller.js"></script>
     <script src="/public/angularFile/service.js"></script>
     <style>
-        .containe{
-            float: left;
-            margin: auto;
-            width: 20%;
+        /* Image grid style */
+
+        .column_img, .row_img {
+            box-sizing: border-box;
         }
+
+        .column_img {
+            float: left;
+            width: 33.33%;
+            padding-left: 1px;
+            margin-top: 20px;
+        }
+
+        /* Clearfix (clear floats) */
+        .row_img::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        /* Image overlay */
+
+        .container_img, .image, .overlay{
+            box-sizing: border-box;
+        }
+
+        .container_img {
+            position: relative;
+            width: 70%;
+            max-width: 300px;
+        }
+
+        .image {
+            display: block;
+            border-radius: 20px;
+            width: 100%;
+            height: auto;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            background: rgb(0, 0, 0);
+            background: rgba(0, 0, 0, 0.8); /* Black see-through */
+            color: #f1f1f1;
+            width: 100%;
+            transition: .5s ease;
+            opacity:0;
+            color: white;
+            font-size: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container_img:hover .overlay, .container_img:active .overlay {
+            opacity: 1;
+        }
+
+        @media screen and (min-width: 992px){
+            .overlay{
+                font-size: 20px;
+                padding: 15px;
+            }
+        }
+        @media screen and (max-width: 768px){
+            .overlay{
+                font-size: 15px;
+                padding: 5px;
+            }
+        }
+        @media screen and (max-width: 320px){
+            .overlay{
+                font-size: 13px;
+                padding: 5px;
+            }
+        }
+
         @media screen and (max-width: 700px){
             .containe{
                 width: 50%;
@@ -24,20 +98,17 @@
 
 </head>
 <body ng-app="PlayAround">
-<div class="row">
 
-    <h2 align="center" style="color: #FEC35E">I tuoi Amici</h2>
-    <div ng-controller="artistiPrefCtrl">
-        <div ng-repeat="user in preferiti" class="containe">
-
-            <a href="#!artista/{{user.codice}}">
-                <img ng-src={{user.immagine}} alt="Avatar" style="width:90px">
-                <p style="color: #f4f4f4">{{user.nome}}</p>
-
+    <h2 align="center" style="color: #FEC35E">Artisti Preferiti</h2>
+    <div class="row_img">
+        <div class="column_img" ng-repeat="artista in preferiti">
+            <a href="#!artista/{{artista.codice}}">
+                <div class="container_img">
+                    <img ng-src={{artista.immagine}} class="image">
+                    <div class="overlay">{{artista.nome}}</div>
+                </div>
             </a>
-
         </div>
     </div>
-</div>
 </body>
 </html>
