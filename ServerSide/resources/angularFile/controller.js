@@ -1,6 +1,6 @@
 angular.module('PlayAround')
 
-.controller('PlayAround',function ($scope, $sessionStorage,$http,socket) {
+.controller('PlayAround',function ($scope, $sessionStorage,$http,socket,$compile) {
     delete $http.defaults.headers.common['X-Requested-With'];
     /**
      *
@@ -22,6 +22,8 @@ angular.module('PlayAround')
             socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
             progressBar.addEventListener("click", seek);
             audio.addEventListener('timeupdate', updateProgressBar, false);
+            audio.addEventListener('ended',audioEnd);
+            $scope.getRepeatStyle();
         }, function myError(response) {
             window.location.replace('/login');
         });
@@ -95,10 +97,17 @@ angular.module('PlayAround')
             modalDevice.style.display = "block";
             for (var dispositivo in data){
                 if(data[dispositivo].Current_client) {
-                    deviceSetting.innerHTML = "<button id=\"DeviceSetting\" class=\"btn\">"+ deviceType(data[dispositivo].Current_client)+"<p>dispositivo Corrente</p></button>";
+                    var dev = "<button id=\"DeviceSetting\" class=\"btn\"  ng-click=\"setCurDev('"+data[dispositivo].clientId+"')\">"+ deviceType(data[dispositivo].Current_client)+"<p>dispositivo Corrente</p></button>";
+                    dev = $compile(dev)($scope);
+                    angular.element(deviceSetting).append(dev);
+
                     console.log("il dispositivo corrente è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
                 }else{
-                    console.log("un dispositivo è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
+                    var dev = "<button id=\"DeviceSetting\" class=\"btn\" ng-click=\"setCurDev('"+data[dispositivo].clientId+"')\">"+ deviceType(data[dispositivo].client)+"</button>";
+                    dev = $compile(dev)($scope);
+                    angular.element(deviceSetting).append(dev);
+
+                    console.log("un dispositivo è: " + deviceType(data[dispositivo].client) + "\ncon ID: " + data[dispositivo].clientId);
                 }
             }
         }
@@ -153,12 +162,19 @@ angular.module('PlayAround')
          $sessionStorage.socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
      };
 
-    $scope.loadBrano = function(codbrano,listOfSong){
-        if(audio.src) audio.pause();
+    $scope.setCurDev = function(currentId){
+        console.log(currentId);
+        socket.emit("setCurrent",{username:$sessionStorage.UserLogged.username,currentId:currentId});
+        modalDevice.style.display = "none";
+    };
+
+    $scope.loadBrano = function(codbrano,listOfSong,reset){
+       // if(audio.src) audio.pause();
         console.log("DEvice SEtted "+ $sessionStorage.deviceSetted);
         if($sessionStorage.deviceSetted === true) {
             socket.emit('stream', {username: $sessionStorage.UserLogged.username});
-            genereteListOfSong(listOfSong,true);
+            if(reset !== true || reset !== false) reset = true;
+            genereteListOfSong(listOfSong,reset);
         }else{
             console.log("entro qui "+ $sessionStorage.deviceSetted);
             socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
@@ -239,6 +255,34 @@ angular.module('PlayAround')
         return minutes + ":" + seconds;
     }
 
+    function audioEnd(){
+        if(!$sessionStorage.loop) $sessionStorage.loop=0;
+
+            if($sessionStorage.loop === 0){
+                if($sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length){
+                    audioStop();
+                }else{
+                    $scope.succ();
+                }
+            }else if($sessionStorage.loop === 1){
+                if($sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length){
+                    $sessionStorage.listOfSong.current = 0;
+                    $scope.loadBrano($sessionStorage.listOfSong.list[0].codice,$sessionStorage.listOfSong.list,false);
+                }else{
+                    $scope.succ();
+                }
+            }else if($sessionStorage.loop === 2){
+                audio.currentTime = 0;
+                socket.emit('play', {username: $sessionStorage.UserLogged.username});
+               if(audio.src) audio.play();
+            }
+    }
+
+    function audioStop(){
+        socket.emit('pause', {username: $sessionStorage.UserLogged.username});
+        audio.currentTime = 0;
+    }
+
     socket.on('updateProgressBar',function(data){
         progressBar.value = data.progress;
         musicTime.innerText = formatTime(data.currentTime);
@@ -261,47 +305,21 @@ angular.module('PlayAround')
     };
 
     $scope.succ = function(){
-        if(audio.src) audio.pause();
-            if($sessionStorage.listOfSong) {
-            var succ = $sessionStorage.listOfSong.current + 1;
-
-            if ($sessionStorage.loop === 1 && $sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length) {
-                succ = 0;
-            } else if ($sessionStorage.loop === 2) {
-                succ = $sessionStorage.listOfSong.current;
-            } else if ($sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length) {
-                return 0;
-            }
-
-            var codbrano = $sessionStorage.listOfSong.list[succ].codice;
-            if ($sessionStorage.deviceSetted === true) {
-                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
-            } else {
-                socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
-                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
-            }
-
-            $sessionStorage.listOfSong.current = succ;
-        }
+        socket.emit('succ',{username: $sessionStorage.UserLogged.username});
     };
 
     $scope.prec = function(){
-        if(audio.src) audio.pause();
-        if($sessionStorage.listOfSong) {
-            var prec = $sessionStorage.listOfSong.current - 1;
+        socket.emit('prec',{username: $sessionStorage.UserLogged.username});
+    };
 
-            if ($sessionStorage.listOfSong.current - 1 < 0) {
-                prec = 0;
-            }
-            var codbrano = $sessionStorage.listOfSong.list[prec].codice;
-            if ($sessionStorage.deviceSetted === true) {
-                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
-            } else {
-                socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
-                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
-            }
-            $sessionStorage.listOfSong.current = prec;
+    $scope.repeatSong= function(){
+        if(!$sessionStorage.loop) $sessionStorage.loop = 0;
+        if($sessionStorage.loop + 1 > 2){
+            $sessionStorage.loop = 0;
+        }else{
+            $sessionStorage.loop++;
         }
+        socket.emit('repeat',{username:$sessionStorage.UserLogged.username,loopCode:$sessionStorage.loop});
     };
 
     $scope.currentSongName = function(){
@@ -320,6 +338,52 @@ angular.module('PlayAround')
     socket.on('pause_button',function(data){
         playPause.className = 'fa fa-pause';
     });
+
+    socket.on('successivo',function(data){
+        if($sessionStorage.listOfSong) {
+            var succ = $sessionStorage.listOfSong.current + 1;
+            if ($sessionStorage.loop === 1 && $sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length) {
+                succ = 0;
+            } else if ($sessionStorage.loop === 2) {
+                succ = $sessionStorage.listOfSong.current;
+            } else if ($sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length) {
+                return 0;
+            }
+            if(audio.src) {
+                var codbrano = $sessionStorage.listOfSong.list[succ].codice;
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codice: codbrano});
+            }
+            $sessionStorage.listOfSong.current = succ;
+        }
+    });
+
+    socket.on('precedente',function(data){
+        if($sessionStorage.listOfSong) {
+            var prec = $sessionStorage.listOfSong.current - 1;
+
+            if ($sessionStorage.listOfSong.current - 1 < 0) {
+                prec = 0;
+            }
+            if(audio.src) {
+                var codbrano = $sessionStorage.listOfSong.list[prec].codice;
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codice: codbrano});
+            }
+            $sessionStorage.listOfSong.current = prec;
+        }
+    });
+
+    $scope.getRepeatStyle = function(){
+        if(!$sessionStorage.loop) $sessionStorage.loop = 0;
+        socket.emit('repeat',{username:$sessionStorage.UserLogged.username,loopCode:$sessionStorage.loop});
+    };
+
+    socket.on('repeatSong',function(data){
+       $sessionStorage.loop = data;
+        if(data === 0) repeatLoop.style.color = "#6d6d6d";
+        if(data === 1) repeatLoop.style.color = "#ffffff";
+        if(data === 2) repeatLoop.style.color = "red";
+    });
+
 
 
     $scope.resizeHome50 = function(){

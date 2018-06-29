@@ -590,11 +590,12 @@
     -->
 
     <div id="modalDevice" class="modalDev">
-
         <!-- Modal content -->
-        <div id="deviceSetting" class="modal-content-Dev">
+        <div class="modal-content-Dev">
             <span class="close">&times;</span>
             <p>Seleziona il device da usare come riproduttore</p>
+            <div id="deviceSetting">
+            </div>
         </div>
     </div>
 
@@ -672,7 +673,7 @@
                     <i class="fa fa-fast-backward" aria-hidden="true" ng-click="prec()"></i>
                     <i id = "playPause" class="fa fa-play" aria-hidden="true" ng-click="playPause()"></i>
                     <i class="fa fa-fast-forward" aria-hidden="true" ng-click="succ()"></i>
-                    <i class="fa fa-retweet icon-grey badge" aria-hidden="true"></i>
+                    <i id="repeatLoop" class="fa fa-retweet" aria-hidden="true" ng-click="repeatSong()"></i>
                 </div>
             </div>
       </div>

@@ -85,7 +85,7 @@ io.on('connection', function(client) {
                     console.log(' Client joined the room ' + a.amici_on[room].USERNAME + ' and client id is ' + client.id);
                 }
             }
-            client.join(data.username);
+            //client.join(data.username);
         });
     });
 
@@ -103,26 +103,63 @@ io.on('connection', function(client) {
         if(io.sockets.adapter.rooms[data.username+"_player"]) clients = io.sockets.adapter.rooms[data.username+"_player"].sockets;
         if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]) currentClients = io.sockets.adapter.rooms[data.username+"_CurrentPlayer"].sockets;
         var array=[];
-        if(clients === undefined && currentClients === undefined){
+        if(clients === undefined || currentClients === undefined){
             client.join(data.username+"_CurrentPlayer");
             client.join(data.username+"_player");
             array.push({Current_client:client.request.headers['user-agent'],clientId:client.id});
         } else {
             client.join(data.username+"_player");
             var SocketCurrent;
+            var userAgent = "";
             for(var Id in currentClients){
-                SocketCurrent = io.sockets.connected[Id];
+                SocketCurrent = io.sockets.sockets[Id];
                 array.push({Current_client:SocketCurrent.request.headers['user-agent'], clientId: SocketCurrent.id});
             }
             for (var clientId in clients ) {
                 //this is the socket of each client in the room.
-                var SocketofClient = io.sockets.connected[clientId];
+                var SocketofClient = io.sockets.sockets[clientId];
                 if(SocketofClient.id !== SocketCurrent.id) {
                     array.push({client:SocketofClient.request.headers['user-agent'], clientId: SocketofClient.id});
                 }
             }
         }
         client.emit('player_room_response',array);
+    });
+
+    client.on("setCurrent",function(data){
+        if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]) {
+            var currentClients = io.sockets.adapter.rooms[data.username+"_CurrentPlayer"].sockets;
+            var currentId;
+            for(var Id in currentClients){
+                currentId = io.sockets.connected[Id].id;
+            }
+            if(currentId === client.id){
+                io.sockets.in(data.username+"_CurrentPlayer").emit('pause_music',data.username);
+            }else{
+                client.in(data.username+"_CurrentPlayer").emit('pause_music',data.username);
+            }
+            io.sockets.in(data.username+"_player").emit('play_button',data.username);
+        }else{
+            io.sockets.in(data.username).emit('newSetDevice',data.username);
+        }
+
+        var clients;
+        var currentClients;
+        if(io.sockets.adapter.rooms[data.username+"_player"]) clients = io.sockets.adapter.rooms[data.username+"_player"].sockets;
+        if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]) currentClients = io.sockets.adapter.rooms[data.username+"_CurrentPlayer"].sockets;
+        if(clients === undefined || currentClients === undefined){
+            client.join(data.username+"_CurrentPlayer");
+            client.join(data.username+"_player");
+        }else{
+            io.of('/').in(data.username+"_CurrentPlayer").clients(function(error, clients) {
+                if (clients.length > 0) {
+                    clients.forEach(function (socket_id) {
+                        if(socket_id !== data.currentId) io.sockets.connected[socket_id].leave(data.username+"_CurrentPlayer");
+                    });
+                    io.sockets.sockets[data.currentId].join(data.username+"_CurrentPlayer");
+                }
+            });
+        }
     });
 
     client.on('play', function(data) {
@@ -143,6 +180,16 @@ io.on('connection', function(client) {
         }else{
             io.sockets.in(data.username).emit('newSetDevice',data.username);
         }
+    });
+
+    client.on('succ',function(data){
+       io.sockets.in(data.username+"_player").emit('successivo',data.username);
+    });
+    client.on('prec',function(data){
+        io.sockets.in(data.username+"_player").emit('precedente',data.username);
+    });
+    client.on('repeat',function (data) {
+        io.sockets.in(data.username+"_player").emit('repeatSong',data.loopCode);
     });
 
     client.on('pause', function(data) {
@@ -182,6 +229,7 @@ io.on('connection', function(client) {
             }
         }else{
             io.sockets.in(data.username).emit('newSetDevice',data.username);
+          //  io.sockets.in(data.username).emit('message', data.username);
         }
 
     });
