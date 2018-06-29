@@ -59,15 +59,15 @@
 <body>
 <div class="row2">
 
-    <h2 style="margin: auto;padding-bottom: 3%;">{{album.nome}}</h2>
     <div style="width: 100%;" align="center">
         <img style="border-radius: 40px; margin: auto;" ng-src={{album.immagine}}>
     </div>
+    <h2 style="margin: auto;padding-bottom: 3%;">{{album.titolo}}</h2>
     <div class="listAlbum">
 
         <ul class="">
             <li  ng-repeat="song in brani">
-                <p ng-click="loadBrano(song.codice)">{{song.titolo}}</p>
+                <p ng-click="loadBrano(song.codice,brani);setCurrentCoda($index)">{{song.titolo}}</p>
                 <i class="fa fa-plus dropbtn" aria-hidden="true" ng-click="showDrop(song.codice)"></i>
                 <div class="dropdown" ng-show="codice === song.codice ? true : false">
                     <div class="dropdown-content">
@@ -76,9 +76,7 @@
                         </div>
                     </div>
                 </div>
-
                 <i class="fa fa-bookmark" aria-hidden="true" ng-click="salvaBrano()"></i>
-
             </li>
         </ul>
     </div>

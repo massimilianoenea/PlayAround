@@ -282,7 +282,7 @@ router.get("/get_album/:codalbum",function(req,res){
             var json = "";
             if (a.status === 200) {
                 json = ({
-                    nome: a.data.TITOLO,
+                    titolo: a.data.TITOLO,
                     codice: a.data.CODALBUM,
                     anno: a.data.ANNO,
                     immagine: a.data.IMMAGINE
@@ -331,7 +331,7 @@ router.get("/get_altro_artista/:codartista",function(req,res){
                 json = [];
                 for (var album in a.data) {
                     json.push({
-                        nome: a.data[album].TITOLO,
+                        titolo: a.data[album].TITOLO,
                         codice: a.data[album].CODALBUM,
                         anno: a.data[album].ANNO,
                         immagine: a.data[album].IMMAGINE

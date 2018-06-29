@@ -129,41 +129,22 @@
             <img src="/image/dark-side-of-the-moon.jpg" style="width: 150px;height: 150px">
 
         </div>
-        <p class="titleAlbum">titolo Album</p>
+        <p class="titleAlbum">{{currentSongName()}}</p>
 
     </div>
 
     <div class="controllers" align="center">
         <progress id="PlayerProgressBar" min='0' max='100' value='0'></progress>
         <i class="fa fa-volume-off" aria-hidden="true"></i>
-        <i class="fa fa-fast-backward" aria-hidden="true"></i>
+        <i class="fa fa-fast-backward" aria-hidden="true" ng-click="prec()"></i>
         <i id = "playerPlayPause" ng-class="isPaused() ? 'fa fa-play' : 'fa fa-pause'" aria-hidden="true" ng-click="playPause()"></i>
-        <i class="fa fa-fast-forward" aria-hidden="true"></i>
+        <i class="fa fa-fast-forward" aria-hidden="true" ng-click="succ()"></i>
         <i class="fa fa-retweet" aria-hidden="true"></i>
     </div>
-    <div style="background-color:black;color: #FEC35E;width: 100%" align="center">
-    <p>Titolo Album</p>
-    </div>
 <div class="listAlbum" align="center">
-
-    <ul>
-        <li>
-            <a href="#">text</a>
-        </li>
-        <li>
-            <a href="#">text</a>
-        </li>
-        <li>
-            <a href="#">text</a>
-        </li>
-        <li>
-            <a href="#">text</a>
-        </li>
-        <li>
-            <a href="#">text</a>
-        </li>
-        <li>
-            <a href="#">text</a>
+    <ul class="">
+        <li  ng-repeat="song in getInCoda()">
+            <p ng-click="loadBrano(song.codice,getInCoda());setCurrentCoda($index)">{{song.titolo}}</p>
         </li>
     </ul>
 </div>

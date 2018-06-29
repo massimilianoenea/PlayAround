@@ -6,7 +6,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/public/image/Symbol playaround logo.png" type="image/png" />
-
     <meta name="description" content="Tutta la musica che cerchi, a portata di CLICK!">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular-route.min.js"></script>
@@ -408,6 +407,8 @@
         padding: 0 5% 0 5%;
         cursor: pointer;
     }
+
+
     i:hover{
         color:#FEC35E;
     }
@@ -658,26 +659,25 @@
                     <source src="" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
-                <button ng-click="loadBrano('1234')">SendMessage</button>
                 <a href="#!player" ng-click="disablePlayerino()">
                     <i class="fa fa-expand"></i>
                     <img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar"/>
-                    <p>titolo canzone</p>
+                    <p>{{currentSongName()}}</p>
                 </a>
                 <div class="controllerMusic">
                     <div class="time_slider">
                         <progress id="progressBar" min='0' max='100' value='0'></progress>
                         <span id = "musicTime" class="runing_time">00:00</span>
                     </div>
-                    <i class="fa fa-fast-backward" aria-hidden="true"></i>
+                    <i class="fa fa-fast-backward" aria-hidden="true" ng-click="prec()"></i>
                     <i id = "playPause" class="fa fa-play" aria-hidden="true" ng-click="playPause()"></i>
-                    <i class="fa fa-fast-forward" aria-hidden="true"></i>
-                    <i class="fa fa-retweet" aria-hidden="true"></i>
+                    <i class="fa fa-fast-forward" aria-hidden="true" ng-click="succ()"></i>
+                    <i class="fa fa-retweet icon-grey badge" aria-hidden="true"></i>
                 </div>
             </div>
       </div>
       <!-- sempre attiva, parte centrale-->
-        <div class="main">
+        <div class="main" id="main">
           <header>
             <!--  <input type="text" id="searchBar" placeholder="Search"> -->
               <div
@@ -699,9 +699,8 @@
 
         <!-- barra laterale destra in desktop-->
       <div class="sidedx">
-          <div class="controller" ng-controller="amiciOnCtrl" align="center">
+          <div  ng-if="(getUsers().length > 0) ? resizeHome50() : resizeHome70()" class="controller" ng-controller="amiciOnCtrl" align="center">
           <a class="h3" href="#!amiciOn" ng-click="enablePlayerino()">Amici Online</a>
-
               <div ng-repeat="user in getUsers() | limitTo: 5" class="container">
                   <a href="#!utente/{{user.username}}">
 
@@ -712,27 +711,6 @@
                   </a>
 
             </div>
-          </div>
-
-          <div class="controller">
-              <h3 style="border-bottom-style: solid;border-bottom-color: whitesmoke;border-bottom-width: 1px;color: gold;padding-bottom: 2px; text-align: center">Utenti Online</h3>
-              <div class="container">
-
-                  <img src="https://www.w3schools.com/w3images/bandmember.jpg" alt="Avatar" style="width:90px">
-                  <p>Massimiliano</p>
-                  <p>Canzone che ascolto</p>
-              </div>
-              <div class="container">
-                  <img src="https://www.w3schools.com/w3images/avatar_g2.jpg" alt="Avatar" style="width:90px">
-                  <p>Giuseppe</p>
-                  <p>Canzone che ascolto</p>
-              </div>
-              <div class="container">
-
-                  <img src="https://www.w3schools.com/w3images/bandmember.jpg" alt="Avatar" style="width:90px">
-                  <p>Massimiliano</p>
-                  <p>Canzone che ascolto</p>
-              </div>
           </div>
         </div>
     </div>

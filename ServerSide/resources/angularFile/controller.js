@@ -17,6 +17,7 @@ angular.module('PlayAround')
         }).then(function mySuccess(response) {
             $scope.Utente = response.data;
             $sessionStorage.UserLogged = response.data;
+            $sessionStorage.deviceSetted = false;
             socket.emit('getFriend', {username: $sessionStorage.UserLogged.username, email: $sessionStorage.UserLogged.email});
             socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
             progressBar.addEventListener("click", seek);
@@ -68,11 +69,19 @@ angular.module('PlayAround')
         socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
     });
 */
+
+    /**
+     *
+     * gestione della socket
+     * @type {socket|*}
+     */
+
     $sessionStorage.socket = socket;
 
     $scope.socketOn = function(){
         $sessionStorage.socket.isConnected();
     };
+
 
     /**
      *
@@ -81,6 +90,7 @@ angular.module('PlayAround')
      */
 
     socket.on('player_room_response',function (data) {
+
         if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted !== true)){
             modalDevice.style.display = "block";
             for (var dispositivo in data){
@@ -92,7 +102,9 @@ angular.module('PlayAround')
                 }
             }
         }
-        $sessionStorage.deviceSetted = false;
+
+        $sessionStorage.modalAppear = true;
+        $sessionStorage.deviceSetted = true;
     });
 
 
@@ -141,16 +153,44 @@ angular.module('PlayAround')
          $sessionStorage.socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
      };
 
-    $scope.loadBrano = function(codbrano){
+    $scope.loadBrano = function(codbrano,listOfSong){
+        if(audio.src) audio.pause();
+        console.log("DEvice SEtted "+ $sessionStorage.deviceSetted);
         if($sessionStorage.deviceSetted === true) {
             socket.emit('stream', {username: $sessionStorage.UserLogged.username});
+            genereteListOfSong(listOfSong,true);
         }else{
+            console.log("entro qui "+ $sessionStorage.deviceSetted);
             socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
-            loadBrano(codbrano);
         }
     };
 
-    socket.on('newSetDevice',function(){
+    function genereteListOfSong(list,reset){
+        var listOfSong = [];
+        if(list.length > 0){
+            for (brani in list){
+                listOfSong.push({codice:list[brani].codice,titolo:list[brani].titolo});
+            }
+            if($sessionStorage.listOfSong === undefined || $sessionStorage.listOfSong.length === 0 || reset === true){
+                $sessionStorage.listOfSong = {current:0,list:listOfSong};
+            }else{
+                $sessionStorage.listOfSong.list = $sessionStorage.listOfSong.list.concat(listOfSong.filter(function(item){
+                    return $sessionStorage.listOfSong.list.indexOf(item) < 0;
+                }));
+            }
+        }
+    }
+    $scope.getInCoda = function(){
+        if($sessionStorage.listOfSong.list) return $sessionStorage.listOfSong.list;
+        return [];
+    };
+
+    $scope.setCurrentCoda = function(position){
+        if($sessionStorage.listOfSong) $sessionStorage.listOfSong.current = position;
+    };
+
+    socket.on('newSetDevice',function(data){
+        console.log("newSetDevice");
         socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
     });
 
@@ -205,7 +245,6 @@ angular.module('PlayAround')
     });
 
     $scope.playPause = function(){
-        if(audio.src) {
             if (playPause.getAttribute('class') === 'fa fa-play' && audio.paused) {
                 socket.emit('play', {username: $sessionStorage.UserLogged.username});
                 playPause.className = 'fa fa-pause';
@@ -215,11 +254,58 @@ angular.module('PlayAround')
                 playPause.className = 'fa fa-play';
                 if (!this.getDisable()) playerPlayPause.className = 'fa fa-play';
             }
-        }
     };
 
     $scope.isPaused = function(){
       return audio.paused;
+    };
+
+    $scope.succ = function(){
+        if(audio.src) audio.pause();
+            if($sessionStorage.listOfSong) {
+            var succ = $sessionStorage.listOfSong.current + 1;
+
+            if ($sessionStorage.loop === 1 && $sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length) {
+                succ = 0;
+            } else if ($sessionStorage.loop === 2) {
+                succ = $sessionStorage.listOfSong.current;
+            } else if ($sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length) {
+                return 0;
+            }
+
+            var codbrano = $sessionStorage.listOfSong.list[succ].codice;
+            if ($sessionStorage.deviceSetted === true) {
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
+            } else {
+                socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
+            }
+
+            $sessionStorage.listOfSong.current = succ;
+        }
+    };
+
+    $scope.prec = function(){
+        if(audio.src) audio.pause();
+        if($sessionStorage.listOfSong) {
+            var prec = $sessionStorage.listOfSong.current - 1;
+
+            if ($sessionStorage.listOfSong.current - 1 < 0) {
+                prec = 0;
+            }
+            var codbrano = $sessionStorage.listOfSong.list[prec].codice;
+            if ($sessionStorage.deviceSetted === true) {
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
+            } else {
+                socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
+            }
+            $sessionStorage.listOfSong.current = prec;
+        }
+    };
+
+    $scope.currentSongName = function(){
+        if($sessionStorage.listOfSong) return $sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].titolo;
     };
 
     socket.on('play_music',function(data){
@@ -234,6 +320,17 @@ angular.module('PlayAround')
     socket.on('pause_button',function(data){
         playPause.className = 'fa fa-pause';
     });
+
+
+    $scope.resizeHome50 = function(){
+        main.setAttribute("style","flex:50%;");
+        return true;
+    };
+
+    $scope.resizeHome70 = function(){
+        main.setAttribute("style","flex:70%;");
+        return false;
+    };
 
 
 })
@@ -428,7 +525,7 @@ angular.module('PlayAround')
 
     .controller('artistaCtrl', function ($scope, $http,Artista, AlbumArtista){
         $scope.artista=Artista;
-        $scope.album=AlbumArtista;
+        $scope.Album=AlbumArtista;
         $scope.isFollowed=Artista.followed;
 
         $scope.addArtista = function () {

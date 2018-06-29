@@ -141,7 +141,7 @@ io.on('connection', function(client) {
             }
             io.sockets.in(data.username + "_player").emit('pause_button', data.username);
         }else{
-            io.sockets.in(data.username).emit('newSetDevice');
+            io.sockets.in(data.username).emit('newSetDevice',data.username);
         }
     });
 
@@ -159,7 +159,7 @@ io.on('connection', function(client) {
             }
             io.sockets.in(data.username+"_player").emit('play_button',data.username);
         }else{
-            io.sockets.in(data.username).emit('newSetDevice');
+            io.sockets.in(data.username).emit('newSetDevice',data.username);
         }
     });
 
@@ -181,7 +181,7 @@ io.on('connection', function(client) {
                // }
             }
         }else{
-            io.sockets.in(data.username).emit('newSetDevice');
+            io.sockets.in(data.username).emit('newSetDevice',data.username);
         }
 
     });
