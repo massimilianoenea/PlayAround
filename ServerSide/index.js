@@ -74,7 +74,6 @@ io.on('connection', function(client) {
 
     client.on('disconnect', function() {
         console.log("disconnected");
-        client.leaveAll();
     });
 
     client.on('getFriend',function(data){
@@ -127,31 +126,41 @@ io.on('connection', function(client) {
     });
 
     client.on('play', function(data) {
-        var currentClients = io.sockets.adapter.rooms[data.username+"_CurrentPlayer"].sockets;
-        var currentId;
-        for(var Id in currentClients){
-            currentId = io.sockets.connected[Id].id;
-        }
-        if(currentId === client.id){
-            io.sockets.in(data.username+"_CurrentPlayer").emit('play_music',data.username);
+        if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]) {
+            var currentClients = io.sockets.adapter.rooms[data.username + "_CurrentPlayer"].sockets;
+
+            var currentId;
+            for (var Id in currentClients) {
+                currentId = io.sockets.connected[Id].id;
+            }
+
+            if (currentId === client.id) {
+                io.sockets.in(data.username + "_CurrentPlayer").emit('play_music', data.username);
+            } else {
+                client.in(data.username + "_CurrentPlayer").emit('play_music', data.username);
+            }
+            io.sockets.in(data.username + "_player").emit('pause_button', data.username);
         }else{
-            client.in(data.username+"_CurrentPlayer").emit('play_music',data.username);
+            io.sockets.in(data.username).emit('newSetDevice');
         }
-        io.sockets.in(data.username+"_player").emit('pause_button',data.username);
     });
 
     client.on('pause', function(data) {
-        var currentClients = io.sockets.adapter.rooms[data.username+"_CurrentPlayer"].sockets;
-        var currentId;
-        for(var Id in currentClients){
-            currentId = io.sockets.connected[Id].id;
-        }
-        if(currentId === client.id){
-            io.sockets.in(data.username+"_CurrentPlayer").emit('pause_music',data.username);
+        if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]) {
+            var currentClients = io.sockets.adapter.rooms[data.username+"_CurrentPlayer"].sockets;
+            var currentId;
+            for(var Id in currentClients){
+                currentId = io.sockets.connected[Id].id;
+            }
+            if(currentId === client.id){
+                io.sockets.in(data.username+"_CurrentPlayer").emit('pause_music',data.username);
+            }else{
+                client.in(data.username+"_CurrentPlayer").emit('pause_music',data.username);
+            }
+            io.sockets.in(data.username+"_player").emit('play_button',data.username);
         }else{
-            client.in(data.username+"_CurrentPlayer").emit('pause_music',data.username);
+            io.sockets.in(data.username).emit('newSetDevice');
         }
-        io.sockets.in(data.username+"_player").emit('play_button',data.username);
     });
 
     client.on('PercentageBar',function(data){
@@ -159,17 +168,22 @@ io.on('connection', function(client) {
     });
 
     client.on('stream', function(data) {
-        var clients = io.sockets.adapter.rooms[data.username+'_CurrentPlayer'].sockets;
-        for (var clientId in clients ) {
-            //this is the socket of each client in the room.
-            var SocketofClient = io.sockets.connected[clientId];
-            //if (SocketofClient.id !== client.id) {
-                var stream = ss.createStream();
-                var filename = __dirname + '/penningen.mp3';
-                ss(SocketofClient).emit('audio-stream', stream, {name: filename});
-                fs.createReadStream(filename).pipe(stream);
-           // }
+        if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]){
+            var clients = io.sockets.adapter.rooms[data.username+'_CurrentPlayer'].sockets;
+            for (var clientId in clients ) {
+                //this is the socket of each client in the room.
+                var SocketofClient = io.sockets.connected[clientId];
+                //if (SocketofClient.id !== client.id) {
+                    var stream = ss.createStream();
+                    var filename = __dirname + '/penningen.mp3';
+                    ss(SocketofClient).emit('audio-stream', stream, {name: filename});
+                    fs.createReadStream(filename).pipe(stream);
+               // }
+            }
+        }else{
+            io.sockets.in(data.username).emit('newSetDevice');
         }
+
     });
 
 });

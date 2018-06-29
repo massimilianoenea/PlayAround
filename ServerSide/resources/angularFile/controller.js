@@ -81,16 +81,18 @@ angular.module('PlayAround')
      */
 
     socket.on('player_room_response',function (data) {
-        if(data.length >= 1){
+        if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted !== true)){
             modalDevice.style.display = "block";
             for (var dispositivo in data){
                 if(data[dispositivo].Current_client) {
+                    deviceSetting.innerHTML = "<button id=\"DeviceSetting\" class=\"btn\">"+ deviceType(data[dispositivo].Current_client)+"<p>dispositivo Corrente</p></button>";
                     console.log("il dispositivo corrente è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
                 }else{
                     console.log("un dispositivo è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
                 }
             }
         }
+        $sessionStorage.deviceSetted = false;
     });
 
 
@@ -118,8 +120,8 @@ angular.module('PlayAround')
      */
 
     function deviceType(userAgent){
-        if(userAgent.match(/Macintosh/i)) return "MacOS";
-        if(userAgent.match(/Android/i)) return "Android";
+        if(userAgent.match(/Macintosh/i)) return "<i id=\"deviceType\" class=\"fa fa-laptop\"></i><i id=\"osType\" class=\"fa fa-apple\"></i>Mac";
+        if(userAgent.match(/Android/i)) return "<i id=\"deviceType\" class=\"fa fa-mobile\"></i><i id=\"osType\" class=\"fa fa-android\"></i>Android";
         if(userAgent.match(/BlackBerry/i)) return "BlackBerry";
         if(userAgent.match(/iPhone/i)) return "iPhone";
         if(userAgent.match(/iPod/i)) return "iPod";
@@ -140,8 +142,17 @@ angular.module('PlayAround')
      };
 
     $scope.loadBrano = function(codbrano){
-        socket.emit('stream', {username:$sessionStorage.UserLogged.username});
+        if($sessionStorage.deviceSetted === true) {
+            socket.emit('stream', {username: $sessionStorage.UserLogged.username});
+        }else{
+            socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+            loadBrano(codbrano);
+        }
     };
+
+    socket.on('newSetDevice',function(){
+        socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+    });
 
     ss(socket.getsocket()).on('audio-stream', function (stream, data) {
         var parts = [];
@@ -150,6 +161,7 @@ angular.module('PlayAround')
         });
         stream.on('end', function () {
             audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+            audio.play();
             playPause.className = 'fa fa-pause';
         });
     });
@@ -193,15 +205,17 @@ angular.module('PlayAround')
     });
 
     $scope.playPause = function(){
-       if(playPause.getAttribute('class') ==='fa fa-play' && audio.paused){
-           socket.emit('play', {username:$sessionStorage.UserLogged.username});
-           playPause.className = 'fa fa-pause';
-           if(!this.getDisable()) playerPlayPause.className = 'fa fa-pause';
-       }else{
-           socket.emit('pause', {username:$sessionStorage.UserLogged.username});
-           playPause.className = 'fa fa-play';
-           if(!this.getDisable()) playerPlayPause.className = 'fa fa-play';
-       }
+        if(audio.src) {
+            if (playPause.getAttribute('class') === 'fa fa-play' && audio.paused) {
+                socket.emit('play', {username: $sessionStorage.UserLogged.username});
+                playPause.className = 'fa fa-pause';
+                if (!this.getDisable()) playerPlayPause.className = 'fa fa-pause';
+            } else {
+                socket.emit('pause', {username: $sessionStorage.UserLogged.username});
+                playPause.className = 'fa fa-play';
+                if (!this.getDisable()) playerPlayPause.className = 'fa fa-play';
+            }
+        }
     };
 
     $scope.isPaused = function(){
