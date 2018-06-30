@@ -282,7 +282,7 @@ router.get("/get_album/:codalbum",function(req,res){
             var json = "";
             if (a.status === 200) {
                 json = ({
-                    nome: a.data.TITOLO,
+                    titolo: a.data.TITOLO,
                     codice: a.data.CODALBUM,
                     anno: a.data.ANNO,
                     immagine: a.data.IMMAGINE
@@ -331,7 +331,7 @@ router.get("/get_altro_artista/:codartista",function(req,res){
                 json = [];
                 for (var album in a.data) {
                     json.push({
-                        nome: a.data[album].TITOLO,
+                        titolo: a.data[album].TITOLO,
                         codice: a.data[album].CODALBUM,
                         anno: a.data[album].ANNO,
                         immagine: a.data[album].IMMAGINE
@@ -614,6 +614,18 @@ router.get("/piu_ascoltate",function(req,res){
 
 
 // FUNZIONI PER I BRANI //
+
+router.post("/setPreferito",function(req,res){
+    if(req.session.islog){
+        brani.set_canzoni_salvate(req.session.email,req.body.codbrano,function(a) {
+            res.status(a.status).end(a);
+        });
+    }else{
+        // POTREBBE REINDIRIZZARE AL LOGIN
+        res.status(500).end();
+    }
+});
+
 router.get("/brano/:codbrano",function(req,res){
    if(req.session.islog){
        brani.get_full_brano(req.params.codbrano,function(a){

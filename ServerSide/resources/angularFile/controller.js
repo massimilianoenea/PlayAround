@@ -1,6 +1,6 @@
 angular.module('PlayAround')
 
-.controller('PlayAround',function ($scope, $sessionStorage,$http,socket) {
+.controller('PlayAround',function ($scope, $sessionStorage,$http,socket,$compile) {
     delete $http.defaults.headers.common['X-Requested-With'];
     /**
      *
@@ -17,13 +17,53 @@ angular.module('PlayAround')
         }).then(function mySuccess(response) {
             $scope.Utente = response.data;
             $sessionStorage.UserLogged = response.data;
+            $sessionStorage.deviceSetted = false;
             socket.emit('getFriend', {username: $sessionStorage.UserLogged.username, email: $sessionStorage.UserLogged.email});
             socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
             progressBar.addEventListener("click", seek);
             audio.addEventListener('timeupdate', updateProgressBar, false);
+            audio.addEventListener('ended',audioEnd);
+            $scope.getRepeatStyle();
         }, function myError(response) {
             window.location.replace('/login');
         });
+    };
+
+    /**
+     *
+     * Funzione per formattare il return della search
+     *
+     */
+
+    $scope.searchResponseFormatter=function(response){
+        var data = [];
+        if(response.length>0){
+            angular.forEach(response,function(value,key){
+                angular.forEach(value,function(subValue,subKey){
+                    angular.forEach(subValue,function(val,chiave){
+                        switch (subKey) {
+                            case "brani":
+                                data.push({val:{type:"Brano: ",response:{nome:val.titolo + " "+ val.anno,codice:val.codice,immagine:val.immagine},original:val}});
+                                break;
+                            case "artisti":
+                                data.push({val:{type:"Artista: ",response:{nome:val.nome,codice:val.codice,immagine:val.immagine},original:val}});
+                                break;
+                            case "album":
+                                data.push({val:{type:"Album: ",response:{nome:val.titolo + " "+ val.anno,codice:val.codice,immagine:val.immagine},original:val}});
+                                break;
+                            case "utenti":
+                                data.push({val:{type:"Utente: ",response:{nome:val.username,codice:val.username,immagine:"/image/profile/"+val.username+".png"},original:val}});
+                                break;
+                            default:
+                                data.length = 0;
+                        }
+                    });
+                });
+            });
+            return data;
+        }else{
+            return data;
+        }
     };
 /*
     $scope.$on('$viewContentLoaded', function(event) {
@@ -31,11 +71,19 @@ angular.module('PlayAround')
         socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
     });
 */
+
+    /**
+     *
+     * gestione della socket
+     * @type {socket|*}
+     */
+
     $sessionStorage.socket = socket;
 
     $scope.socketOn = function(){
         $sessionStorage.socket.isConnected();
     };
+
 
     /**
      *
@@ -44,16 +92,28 @@ angular.module('PlayAround')
      */
 
     socket.on('player_room_response',function (data) {
-        if(data.length >= 1){
+
+        if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted !== true)){
             modalDevice.style.display = "block";
             for (var dispositivo in data){
                 if(data[dispositivo].Current_client) {
+                    var dev = "<button id=\"DeviceSetting\" class=\"btn\"  ng-click=\"setCurDev('"+data[dispositivo].clientId+"')\">"+ deviceType(data[dispositivo].Current_client)+"<p>dispositivo Corrente</p></button>";
+                    dev = $compile(dev)($scope);
+                    angular.element(deviceSetting).append(dev);
+
                     console.log("il dispositivo corrente è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
                 }else{
-                    console.log("un dispositivo è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
+                    var dev = "<button id=\"DeviceSetting\" class=\"btn\" ng-click=\"setCurDev('"+data[dispositivo].clientId+"')\">"+ deviceType(data[dispositivo].client)+"</button>";
+                    dev = $compile(dev)($scope);
+                    angular.element(deviceSetting).append(dev);
+
+                    console.log("un dispositivo è: " + deviceType(data[dispositivo].client) + "\ncon ID: " + data[dispositivo].clientId);
                 }
             }
         }
+
+        $sessionStorage.modalAppear = true;
+        $sessionStorage.deviceSetted = true;
     });
 
 
@@ -81,13 +141,14 @@ angular.module('PlayAround')
      */
 
     function deviceType(userAgent){
-        if(userAgent.match(/Macintosh/i)) return "MacOS";
-        if(userAgent.match(/Android/i)) return "Android";
+        if(userAgent.match(/Macintosh/i)) return "<i id=\"deviceType\" class=\"fa fa-laptop\"></i><i id=\"osType\" class=\"fa fa-apple\"></i>Mac";
+        if(userAgent.match(/Android/i)) return "<i id=\"deviceType\" class=\"fa fa-mobile\"></i><i id=\"osType\" class=\"fa fa-android\"></i>Android";
         if(userAgent.match(/BlackBerry/i)) return "BlackBerry";
         if(userAgent.match(/iPhone/i)) return "iPhone";
         if(userAgent.match(/iPod/i)) return "iPod";
         if(userAgent.match(/iPad/i)) return "iPad";
         if(userAgent.match(/Windows Phone/i)) return "windows Phone";
+        if(userAgent.match(/Windows/i)) return "windows";
         if(userAgent.match(/Ubuntu/i)) return "Linux";
     }
 
@@ -101,9 +162,53 @@ angular.module('PlayAround')
          $sessionStorage.socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
      };
 
-    $scope.loadBrano = function(codbrano){
-        socket.emit('stream', {username:$sessionStorage.UserLogged.username});
+    $scope.setCurDev = function(currentId){
+        console.log(currentId);
+        socket.emit("setCurrent",{username:$sessionStorage.UserLogged.username,currentId:currentId});
+        modalDevice.style.display = "none";
     };
+
+    $scope.loadBrano = function(codbrano,listOfSong,reset){
+       // if(audio.src) audio.pause();
+        console.log("DEvice SEtted "+ $sessionStorage.deviceSetted);
+        if($sessionStorage.deviceSetted === true) {
+            socket.emit('stream', {username: $sessionStorage.UserLogged.username});
+            if(reset !== true || reset !== false) reset = true;
+            genereteListOfSong(listOfSong,reset);
+        }else{
+            console.log("entro qui "+ $sessionStorage.deviceSetted);
+            socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+        }
+    };
+
+    function genereteListOfSong(list,reset){
+        var listOfSong = [];
+        if(list.length > 0){
+            for (brani in list){
+                listOfSong.push({codice:list[brani].codice,titolo:list[brani].titolo});
+            }
+            if($sessionStorage.listOfSong === undefined || $sessionStorage.listOfSong.length === 0 || reset === true){
+                $sessionStorage.listOfSong = {current:0,list:listOfSong};
+            }else{
+                $sessionStorage.listOfSong.list = $sessionStorage.listOfSong.list.concat(listOfSong.filter(function(item){
+                    return $sessionStorage.listOfSong.list.indexOf(item) < 0;
+                }));
+            }
+        }
+    }
+    $scope.getInCoda = function(){
+        if($sessionStorage.listOfSong.list) return $sessionStorage.listOfSong.list;
+        return [];
+    };
+
+    $scope.setCurrentCoda = function(position){
+        if($sessionStorage.listOfSong) $sessionStorage.listOfSong.current = position;
+    };
+
+    socket.on('newSetDevice',function(data){
+        console.log("newSetDevice");
+        socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+    });
 
     ss(socket.getsocket()).on('audio-stream', function (stream, data) {
         var parts = [];
@@ -112,6 +217,7 @@ angular.module('PlayAround')
         });
         stream.on('end', function () {
             audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+            audio.play();
             playPause.className = 'fa fa-pause';
         });
     });
@@ -149,25 +255,75 @@ angular.module('PlayAround')
         return minutes + ":" + seconds;
     }
 
+    function audioEnd(){
+        if(!$sessionStorage.loop) $sessionStorage.loop=0;
+
+            if($sessionStorage.loop === 0){
+                if($sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length){
+                    audioStop();
+                }else{
+                    $scope.succ();
+                }
+            }else if($sessionStorage.loop === 1){
+                if($sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length){
+                    $sessionStorage.listOfSong.current = 0;
+                    $scope.loadBrano($sessionStorage.listOfSong.list[0].codice,$sessionStorage.listOfSong.list,false);
+                }else{
+                    $scope.succ();
+                }
+            }else if($sessionStorage.loop === 2){
+                audio.currentTime = 0;
+                socket.emit('play', {username: $sessionStorage.UserLogged.username});
+               if(audio.src) audio.play();
+            }
+    }
+
+    function audioStop(){
+        socket.emit('pause', {username: $sessionStorage.UserLogged.username});
+        audio.currentTime = 0;
+    }
+
     socket.on('updateProgressBar',function(data){
         progressBar.value = data.progress;
         musicTime.innerText = formatTime(data.currentTime);
     });
 
     $scope.playPause = function(){
-       if(playPause.getAttribute('class') ==='fa fa-play' && audio.paused){
-           socket.emit('play', {username:$sessionStorage.UserLogged.username});
-           playPause.className = 'fa fa-pause';
-           if(!this.getDisable()) playerPlayPause.className = 'fa fa-pause';
-       }else{
-           socket.emit('pause', {username:$sessionStorage.UserLogged.username});
-           playPause.className = 'fa fa-play';
-           if(!this.getDisable()) playerPlayPause.className = 'fa fa-play';
-       }
+            if (playPause.getAttribute('class') === 'fa fa-play' && audio.paused) {
+                socket.emit('play', {username: $sessionStorage.UserLogged.username});
+                playPause.className = 'fa fa-pause';
+                if (!this.getDisable()) playerPlayPause.className = 'fa fa-pause';
+            } else {
+                socket.emit('pause', {username: $sessionStorage.UserLogged.username});
+                playPause.className = 'fa fa-play';
+                if (!this.getDisable()) playerPlayPause.className = 'fa fa-play';
+            }
     };
 
     $scope.isPaused = function(){
       return audio.paused;
+    };
+
+    $scope.succ = function(){
+        socket.emit('succ',{username: $sessionStorage.UserLogged.username});
+    };
+
+    $scope.prec = function(){
+        socket.emit('prec',{username: $sessionStorage.UserLogged.username});
+    };
+
+    $scope.repeatSong= function(){
+        if(!$sessionStorage.loop) $sessionStorage.loop = 0;
+        if($sessionStorage.loop + 1 > 2){
+            $sessionStorage.loop = 0;
+        }else{
+            $sessionStorage.loop++;
+        }
+        socket.emit('repeat',{username:$sessionStorage.UserLogged.username,loopCode:$sessionStorage.loop});
+    };
+
+    $scope.currentSongName = function(){
+        if($sessionStorage.listOfSong) return $sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].titolo;
     };
 
     socket.on('play_music',function(data){
@@ -182,6 +338,63 @@ angular.module('PlayAround')
     socket.on('pause_button',function(data){
         playPause.className = 'fa fa-pause';
     });
+
+    socket.on('successivo',function(data){
+        if($sessionStorage.listOfSong) {
+            var succ = $sessionStorage.listOfSong.current + 1;
+            if ($sessionStorage.loop === 1 && $sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length) {
+                succ = 0;
+            } else if ($sessionStorage.loop === 2) {
+                succ = $sessionStorage.listOfSong.current;
+            } else if ($sessionStorage.listOfSong.current + 1 >= $sessionStorage.listOfSong.list.length) {
+                return 0;
+            }
+            if(audio.src) {
+                var codbrano = $sessionStorage.listOfSong.list[succ].codice;
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codice: codbrano});
+            }
+            $sessionStorage.listOfSong.current = succ;
+        }
+    });
+
+    socket.on('precedente',function(data){
+        if($sessionStorage.listOfSong) {
+            var prec = $sessionStorage.listOfSong.current - 1;
+
+            if ($sessionStorage.listOfSong.current - 1 < 0) {
+                prec = 0;
+            }
+            if(audio.src) {
+                var codbrano = $sessionStorage.listOfSong.list[prec].codice;
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codice: codbrano});
+            }
+            $sessionStorage.listOfSong.current = prec;
+        }
+    });
+
+    $scope.getRepeatStyle = function(){
+        if(!$sessionStorage.loop) $sessionStorage.loop = 0;
+        socket.emit('repeat',{username:$sessionStorage.UserLogged.username,loopCode:$sessionStorage.loop});
+    };
+
+    socket.on('repeatSong',function(data){
+       $sessionStorage.loop = data;
+        if(data === 0) repeatLoop.style.color = "#6d6d6d";
+        if(data === 1) repeatLoop.style.color = "#ffffff";
+        if(data === 2) repeatLoop.style.color = "red";
+    });
+
+
+
+    $scope.resizeHome50 = function(){
+        main.setAttribute("style","flex:50%;");
+        return true;
+    };
+
+    $scope.resizeHome70 = function(){
+        main.setAttribute("style","flex:70%;");
+        return false;
+    };
 
 
 })
@@ -376,7 +589,7 @@ angular.module('PlayAround')
 
     .controller('artistaCtrl', function ($scope, $http,Artista, AlbumArtista){
         $scope.artista=Artista;
-        $scope.album=AlbumArtista;
+        $scope.Album=AlbumArtista;
         $scope.isFollowed=Artista.followed;
 
         $scope.addArtista = function () {

@@ -73,6 +73,23 @@ module.exports = {
         });
     },
 
+    set_canzoni_salvate : function(email,codbrano,callback){
+        brani_model.set_canzoni_salvate(email,codbrano,function(err,succ,code){
+            if (err !== null){
+                switch (code){
+                    case 1:
+                        return callback({code:1,text:"Errore connessione al database",errorCode:err.code,status:400});
+                    case 2:
+                        return callback({code:2,text:"Impossibile salvare il branio",errorCode:err.code,status:400});
+                    default:
+                        return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
+                }
+            }else{
+                return callback({code:0,data:succ,status:200});
+            }
+        });
+    },
+
     get_canzoni_salvate : function(email,callback){
         brani_model.get_canzoni_salvate(email,function(err,succ,code){
             if (err !== null){

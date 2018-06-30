@@ -27,7 +27,7 @@ module.exports = {
                           return callback(err, null, 2);
                       }
                       if(results.length > 0) json.push({album:results});
-                      sql =  "select codutente as codice, username as username from utenti where username like ? ORDER BY LEVENSHTEIN(username,?) LIMIT 5";
+                      sql =  "select username as username from utenti where username like ? ORDER BY LEVENSHTEIN(username,?) LIMIT 5";
                       connection.query(sql,[searched,searched],function (err,results) {
                           if (err) {
                               return callback(err, null, 2);
