@@ -416,8 +416,8 @@ angular.module('PlayAround')
     .controller('sceltiCtrl', function ($scope) {
 
     })
-    .controller('piuAscoltatiCtrl', function ($scope) {
-
+    .controller('piuAscoltatiCtrl', function ($scope,PiuAscoltate) {
+      $scope.top=PiuAscoltate;
 
     })
     .controller('homeCtrl', function ($scope, Giornaliera, Recently, AmiciSong) {
@@ -428,12 +428,13 @@ angular.module('PlayAround')
     .controller('playerCtrl', function($scope){
 
     })
-    .controller('albumCtrl', function($scope,Album, BraniAlbum){
+    .controller('albumCtrl', function($scope,$http,Album, BraniAlbum, ListaPlaylist){
         $scope.album=Album;
         $scope.brani=BraniAlbum;
+        $scope.lista=ListaPlaylist;
         //$scope.altri=AltriAlbum;
-        //gestisco la dropdown per le playlist
 
+        //gestisco la dropdown per le playlist
         $scope.showDrop=function (codice) {
             if($scope.codice!==codice){
                 $scope.codice=codice
@@ -444,5 +445,17 @@ angular.module('PlayAround')
         $scope.hideDrop=function () {
             $scope.visible=false;
         };
+
+        $scope.aggiungi=function (nome,codice) {
+            $scope.nome=nome;
+            var parameter={nome_playlist:$scope.nome,codbrano:$scope.codice};
+            $http({
+                method:"POST",
+                url : '/require/add_song',
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
 
     });

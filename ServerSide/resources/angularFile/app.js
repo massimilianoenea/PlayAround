@@ -217,6 +217,12 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
                             .then(function(response){
                                 return response.data;
                             })
+                    },
+                    ListaPlaylist: function ($http) {
+                        return $http.get('/require/le_tue_playlist')
+                            .then(function (response) {
+                                return response.data;
+                            });
                     }
 
                    /*AltriAlbum: function($http){

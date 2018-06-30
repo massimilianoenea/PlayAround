@@ -43,15 +43,19 @@
     .dropdown {
         position: relative;
         display: inline-block;
+        float: right;
     }
 
     /* Dropdown Content (Hidden by Default) */
     .dropdown-content {
-        /*display: none;*/
         position: absolute;
-        background-color: rgba(255,255,255,0.8);
+        background-color: bisque;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
+        color: cadetblue;
+        border-radius: 7px;
+        margin: -13px;
+        padding: 5px;
     }
 
 
@@ -71,8 +75,8 @@
                 <i class="fa fa-plus dropbtn" aria-hidden="true" ng-click="showDrop(song.codice)"></i>
                 <div class="dropdown" ng-show="codice === song.codice ? true : false">
                     <div class="dropdown-content">
-                        <div><!--qua devo mettere ng-repeat-->
-                            <p>Playlist</p>
+                        <div ng-repeat="list in lista"><!--qua devo mettere ng-repeat-->
+                            <p style="margin: 0px;" ng-click="aggiungi(list.nome,song.codice)">{{list.nome}}</p>
                         </div>
                     </div>
                 </div>
