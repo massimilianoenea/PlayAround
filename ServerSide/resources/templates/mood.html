@@ -4,7 +4,33 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+    h2{
+        color: #FEC35E;
+        text-align: center;
+    }
+</style>
 <body>
+<h2>MOOD</h2>
+<div>
+<ui-carousel
+        slides="moodCtrl.slides"
+        slides-to-show="3"
+        slides-to-scroll="1"
+        initial-slide="1"
+        autoplay="true"
+        autoplay-speed="2000"
+        dots="true">
 
+    <carousel-item>
+        <div class="column_img" ng-repeat="brani in mood">
+            <div class="container_img" ng-click="loadBrano(brani.codice,salvate)">
+                <img ng-src={{brani.immagine}} class="image">
+                <div class="overlay">{{brani.titolo}}</div>
+            </div>
+        </div>
+    </carousel-item>
+</ui-carousel>
+</div>
 </body>
 </html>

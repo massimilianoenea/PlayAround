@@ -1,6 +1,6 @@
-angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
+angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt','ui.carousel'])
 
-/* Routing  autoCompleteModule' ,'ngSanitize'*/
+/* Routing  */
 
 .config(function($routeProvider) {
     $routeProvider
@@ -206,7 +206,7 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
                 controller:"moodCtrl",
                 resolve: {
                     Mood: function ($http) {
-                        return $http.get('/require/')
+                        return $http.get('/require/canzoni_salvate')
                             .then(function (response) {
                                 return response.data;
                             });
