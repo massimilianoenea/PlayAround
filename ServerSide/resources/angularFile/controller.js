@@ -22,6 +22,7 @@ angular.module('PlayAround')
             audio.addEventListener('timeupdate', updateProgressBar, false);
             audio.addEventListener('ended',audioEnd);
             $scope.getRepeatStyle();
+            socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:$sessionStorage.UserLogged.username ,img:'/image/profile/' + $sessionStorage.UserLogged.username +'.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}});
         }, function myError(response) {
             window.location.replace('/login');
         });
@@ -165,7 +166,6 @@ angular.module('PlayAround')
     };
 
     socket.on('setCurrentDone',function (data) {
-        socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:$sessionStorage.UserLogged.username ,img:'/image/profile/' + $sessionStorage.UserLogged.username +'.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}});
         $sessionStorage.deviceSetted = true;
     });
 
@@ -318,7 +318,6 @@ angular.module('PlayAround')
 
     $scope.currentSongName = function(){
         if($sessionStorage.listOfSong) return $sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].titolo;
-console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].titolo);
     };
     $scope.currentSongImage = function(){
         if($sessionStorage.listOfSong) return $sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].immagine;
@@ -423,16 +422,14 @@ console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].
          }
          $sessionStorage.users.push(data);
      }
- });
 
-    socket.on('connect',function(data){
-        console.log("connected with angularJs");
-    });
+     $scope.apply();
+ });
 
     $scope.getUsers= function(){
         if($sessionStorage.users !== undefined) return $sessionStorage.users;
         return [];
-    }
+    };
 })
     .controller('utenteCtrl', function($scope,$http,User,Ascoltati,Seguiti) {
         $scope.utente=User;
@@ -525,7 +522,6 @@ console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].
            }).then(function mySucces(response){
                $scope.nomeBrano=selected.title;
            });
-
        };
     })
     /**
