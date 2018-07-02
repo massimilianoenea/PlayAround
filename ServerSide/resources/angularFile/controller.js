@@ -630,8 +630,9 @@ console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].
          * Sezione Generi e mood
          */
     })
-    .controller('moodCtrl', function ($scope, Mood) {
+    .controller('moodCtrl', function ($scope, Mood,Genere) {
       $scope.mood=Mood;
+      $scope.genere=Genere;
     })
 
     /**

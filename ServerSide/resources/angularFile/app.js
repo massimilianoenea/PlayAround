@@ -206,7 +206,13 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt','ui.carou
                 controller:"moodCtrl",
                 resolve: {
                     Mood: function ($http) {
-                        return $http.get('/require/canzoni_salvate')
+                        return $http.get('/require/playlist_mood')
+                            .then(function (response) {
+                                return response.data;
+                            });
+                    },
+                    Genere:function ($http) {
+                        return $http.get('/require/playlist_genere')
                             .then(function (response) {
                                 return response.data;
                             });
