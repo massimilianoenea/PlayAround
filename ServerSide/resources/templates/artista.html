@@ -138,7 +138,7 @@
 
     <div class="row_img">
         <div class="column_img" ng-repeat="song in brani">
-                <div class="container_img" ng-click="loadBrano(song.codice,brani)">
+                <div class="container_img" ng-click="loadBrano(song.codice,brani);setCurrentCoda($index)">
                     <img ng-src={{song.immagine}} class="image">
                     <div class="overlay">{{song.titolo}}</div>
                 </div>

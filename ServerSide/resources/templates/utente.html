@@ -13,16 +13,6 @@
             color: #FEC35E;
             text-align: center;
         }
-        .repetition{
-            padding: 8px;
-            float: left;
-            width: 20%;
-
-
-        }
-        .container{
-            width:100%;
-        }
         p{
             cursor: pointer;
         }
@@ -153,7 +143,7 @@
 
         <div class="row_img">
             <div class="column_img" ng-repeat="brani in ascoltati">
-                <div class="container_img" ng-click="loadBrano(brani.codice,ascoltati)">
+                <div class="container_img" ng-click="loadBrano(brani.codice,ascoltati);setCurrentCoda($index)">
                     <img ng-src={{brani.immagine}} class="image">
                     <div class="overlay">{{brani.titolo}}</div>
                 </div>

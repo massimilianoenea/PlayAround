@@ -153,7 +153,7 @@
 
 <div class="row_img">
     <div class="column_img" ng-repeat="brani in salvate">
-        <div class="container_img" ng-click="loadBrano(brani.codice,salvate)">
+        <div class="container_img" ng-click="loadBrano(brani.codice,salvate);setCurrentCoda($index)">
             <img ng-src={{brani.immagine}} class="image">
             <div class="overlay">{{brani.titolo}}</div>
         </div>

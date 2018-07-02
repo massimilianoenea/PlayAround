@@ -155,7 +155,7 @@
 
         <!-- barra laterale destra in desktop-->
       <div class="sidedx">
-          <div  ng-if="getUsers().length > 0" class="controller" ng-controller="amiciOnCtrl" align="center">
+          <div class="controller" ng-controller="amiciOnCtrl" align="center">
           <a class="h3" href="#!amiciOn" ng-click="enablePlayerino()">Amici Online</a>
               <div ng-repeat="user in getUsers() | limitTo: 5" class="container">
                   <a href="#!utente/{{user.username}}">
