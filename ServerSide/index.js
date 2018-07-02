@@ -85,6 +85,7 @@ io.on('connection', function(client) {
                     console.log(' Client joined the room ' + a.amici_on[room].USERNAME + ' and client id is ' + client.id);
                 }
             }
+            io.sockets.to(client.id).emit('getFriendDone',data);
             //client.join(data.username);
         });
     });
@@ -92,7 +93,8 @@ io.on('connection', function(client) {
 
     client.on('event', function(data) {
         console.log('event');
-        io.sockets.in(data.username).emit('message', data.data);
+        //io.sockets.in(data.username).emit('message', data.data);
+        client.emit('message', data.data);
        // client.in(data.username).emit('message', data.data);
     });
 
@@ -127,22 +129,6 @@ io.on('connection', function(client) {
     });
 
     client.on("setCurrent",function(data){
-        if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]) {
-            var currentClients = io.sockets.adapter.rooms[data.username+"_CurrentPlayer"].sockets;
-            var currentId;
-            for(var Id in currentClients){
-                currentId = io.sockets.connected[Id].id;
-            }
-            if(currentId === client.id){
-                io.sockets.in(data.username+"_CurrentPlayer").emit('pause_music',data.username);
-            }else{
-                client.in(data.username+"_CurrentPlayer").emit('pause_music',data.username);
-            }
-            io.sockets.in(data.username+"_player").emit('play_button',data.username);
-        }else{
-            io.sockets.in(data.username).emit('newSetDevice',data.username);
-        }
-
         var clients;
         var currentClients;
         if(io.sockets.adapter.rooms[data.username+"_player"]) clients = io.sockets.adapter.rooms[data.username+"_player"].sockets;
@@ -154,12 +140,13 @@ io.on('connection', function(client) {
             io.of('/').in(data.username+"_CurrentPlayer").clients(function(error, clients) {
                 if (clients.length > 0) {
                     clients.forEach(function (socket_id) {
-                        if(socket_id !== data.currentId) io.sockets.connected[socket_id].leave(data.username+"_CurrentPlayer");
+                        if(socket_id !== data.currentId) io.sockets.sockets[socket_id].leave(data.username+"_CurrentPlayer");
                     });
                     io.sockets.sockets[data.currentId].join(data.username+"_CurrentPlayer");
                 }
             });
         }
+        client.emit('setCurrentDone',data);
     });
 
     client.on('play', function(data) {
@@ -206,7 +193,7 @@ io.on('connection', function(client) {
             }
             io.sockets.in(data.username+"_player").emit('play_button',data.username);
         }else{
-            io.sockets.in(data.username).emit('newSetDevice',data.username);
+            client.emit('getFriendDone',data.username);
         }
     });
 
@@ -228,7 +215,7 @@ io.on('connection', function(client) {
                // }
             }
         }else{
-            io.sockets.in(data.username).emit('newSetDevice',data.username);
+            client.emit('getFriendDone',data.username);
           //  io.sockets.in(data.username).emit('message', data.username);
         }
 
