@@ -11,6 +11,7 @@
     <style>
         h2{
             color: #FEC35E;
+            text-align: center;
         }
         .repetition{
             padding: 8px;
@@ -34,6 +35,86 @@
             cursor: pointer;
             border: 1px solid #a00e6d;
         }
+        /* Image grid style */
+
+        /* Image grid style */
+
+        .column_img, .row_img {
+            box-sizing: border-box;
+        }
+
+        .column_img {
+            float: left;
+            width: 33.33%;
+            padding-left: 1px;
+            margin-top: 20px;
+        }
+
+        /* Clearfix (clear floats) */
+        .row_img::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        /* Image overlay */
+
+        .container_img, .image, .overlay{
+            box-sizing: border-box;
+        }
+
+        .container_img {
+            position: relative;
+            width: 70%;
+            max-width: 300px;
+        }
+
+        .image {
+            display: block;
+            border-radius: 20px;
+            width: 100%;
+            height: 150px;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            background: rgb(0, 0, 0);
+            background: rgba(0, 0, 0, 0.8); /* Black see-through */
+            color: #f1f1f1;
+            width: 100%;
+            transition: .5s ease;
+            opacity:0;
+            color: white;
+            font-size: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container_img:hover .overlay, .container_img:active .overlay {
+            opacity: 1;
+        }
+
+        @media screen and (min-width: 992px){
+            .overlay{
+                font-size: 20px;
+                padding: 15px;
+            }
+        }
+        @media screen and (max-width: 768px){
+            .overlay{
+                font-size: 15px;
+                padding: 5px;
+            }
+        }
+        @media screen and (max-width: 320px){
+            .overlay{
+                font-size: 13px;
+                padding: 5px;
+            }
+        }
 
         @media screen and (max-width: 900px){
             .repetition{
@@ -55,61 +136,31 @@
     <button  ng-click="isFriend ? deleteFriend() : addFriend()" >
         <span ng-hide="isFriend">Follow</span><span ng-show="isFriend">Unfollow</span>
     </button>
-    <div class="container" style="border-radius: 10px;margin-top: 4%">
+<div style="width: 100%">
+    <h2 align="center">Artisti seguiti di recente</h2>
+    <div class="row_img">
+        <div class="column_img" ng-repeat="follow in seguiti">
+            <a href="#!artista/{{follow.codice}}">
+                <div class="container_img">
+                    <img ng-src={{follow.immagine}} class="image">
+                    <div class="overlay">{{follow.nome}}</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
         <h2 align="center">Ascoltati di Recente</h2>
 
-        <div style="width: 100%">
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
+        <div class="row_img">
+            <div class="column_img" ng-repeat="brani in ascoltati">
+                <div class="container_img" ng-click="loadBrano(brani.codice,ascoltati)">
+                    <img ng-src={{brani.immagine}} class="image">
+                    <div class="overlay">{{brani.titolo}}</div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container" style="border-radius: 10px">
-        <h2 align="center">Artisti seguiti di recente</h2>
-        <div style="width: 100%">
-            <a href="#!artista/id">
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
-            </a>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
-            <div class="repetition" style="float: left">
-                <img src="https://www.w3schools.com/images/w3schools_green.jpg">
-                <p style="color: #2a4463">Brano</p>
-            </div>
 
-        </div>
-    </div>
-
+</div>
 
 </div>
 </body>

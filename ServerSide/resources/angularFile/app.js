@@ -42,7 +42,21 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
                         .then(function(response){
                             return response.data;
                         })
+                },
+                Ascoltati:function($http, $route){
+                    return $http.get('require/ascoltati_recente_utente/'+ $route.current.params.username)
+                        .then(function(response){
+                            return response.data;
+                        })
+                },
+                Seguiti:function($http, $route){
+                    return $http.get('require/artisti_seguiti/'+ $route.current.params.username)
+                        .then(function(response){
+                            return response.data;
+                        })
                 }
+
+
             }
 
         })
@@ -130,8 +144,7 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
 
         .when("/player",{
                 templateUrl:"/public/templates/player.html",
-                controller: "playerCtrl"
-
+            controller:"playerCtrl"
         })
 
 

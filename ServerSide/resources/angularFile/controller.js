@@ -24,6 +24,7 @@ angular.module('PlayAround')
             audio.addEventListener('timeupdate', updateProgressBar, false);
             audio.addEventListener('ended',audioEnd);
             $scope.getRepeatStyle();
+            socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:$sessionStorage.UserLogged.username ,img:'/image/profile/' + $sessionStorage.UserLogged.username +'.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
         }, function myError(response) {
             window.location.replace('/login');
         });
@@ -158,9 +159,9 @@ angular.module('PlayAround')
      *
      */
 
-    $scope.sendMessage = function(){
+    /*$scope.sendMessage = function(){
          $sessionStorage.socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
-     };
+     };*/
 
     $scope.setCurDev = function(currentId){
         console.log(currentId);
@@ -185,7 +186,7 @@ angular.module('PlayAround')
         var listOfSong = [];
         if(list.length > 0){
             for (brani in list){
-                listOfSong.push({codice:list[brani].codice,titolo:list[brani].titolo});
+                listOfSong.push({codice:list[brani].codice,titolo:list[brani].titolo,immagine:list[brani].immagine});
             }
             if($sessionStorage.listOfSong === undefined || $sessionStorage.listOfSong.length === 0 || reset === true){
                 $sessionStorage.listOfSong = {current:0,list:listOfSong};
@@ -324,6 +325,12 @@ angular.module('PlayAround')
 
     $scope.currentSongName = function(){
         if($sessionStorage.listOfSong) return $sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].titolo;
+console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].titolo);
+    };
+    $scope.currentSongImage = function(){
+        console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].immagine);
+        if($sessionStorage.listOfSong) return $sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].immagine;
+
     };
 
     socket.on('play_music',function(data){
@@ -396,7 +403,18 @@ angular.module('PlayAround')
         return false;
     };
 
+    $scope.reindirizza=function(selected){
+        console.log(selected);
+        if(selected.val.type===0) {
 
+            loadBrano(selected.originalObject.codice)
+        }else if (selected.val.type===1) {
+            window.location="#!artista/" + selected.originalObject.codice;
+        }
+        else{
+            window.location="#!album/"+ selected.originalObject.codice;
+        }
+    };
 })
 
 
@@ -437,8 +455,10 @@ angular.module('PlayAround')
         return [];
     }
 })
-    .controller('utenteCtrl', function($scope,$http,User) {
+    .controller('utenteCtrl', function($scope,$http,User,Ascoltati,Seguiti) {
         $scope.utente=User;
+        $scope.ascoltati=Ascoltati;
+        $scope.seguiti=Seguiti;
         $scope.isFriend = User.amici;
 
         var recently = [];
@@ -478,14 +498,23 @@ angular.module('PlayAround')
 
 
     })
-
+    /**
+     * Sezione Libreria
+     */
 
     .controller('playlistCtrl', function($scope, PersonalPlaylist, $http){
         var nomePlaylist = "";
         $scope.playlist=PersonalPlaylist;
         $scope.visible=false;
         $scope.create=true;
-
+// gestisco la copertina della playlist utente in maniera random
+        $scope.imgRand=function() {
+            $scope.item = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"];
+            $scope.val = $scope.item.length;
+            $scope.rand = Math.floor(Math.random() * $scope.val);
+            var img=$scope.item[$scope.rand];
+            return img
+        };
         $scope.showBox=function () {
             $scope.visible=true;
         };
@@ -521,14 +550,19 @@ angular.module('PlayAround')
                data: parameter,
                withCredentials: true,
                headers: { 'Content-Type': 'application/json' }
+           }).then(function mySucces(response){
+               $scope.nomeBrano=selected.title;
            });
-           $scope.nomeBrano=selected.title;
+
        };
        $scope.salva=function(){
            $scope.visible=false;
        };
 
         })
+    /**
+     * vista playlist personale
+     */
     .controller('playlistUtCtrl', function ($scope, Playlist, $http,NomePlaylist) {
         $scope.playlistUt=Playlist;
         $scope.nomePlay=NomePlaylist.nome;
@@ -565,7 +599,7 @@ angular.module('PlayAround')
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
             }).then(function mySuccess(response){
-                $scope.nomeBrano=selected.title;
+                $scope.nomeBrano=selected.title;//mostro a video la selezione dell'utente
                 $scope.playlistUt.push(selected.originalObject);
                 $scope.apply();
             },function myError(response){
@@ -582,10 +616,16 @@ angular.module('PlayAround')
         $scope.recenti=Recenti;
     })
 
+    /**
+     * sezione Amici
+     */
     .controller('amiciCtrl', function ($scope, Amici) {
         $scope.amici=Amici;
     })
 
+    /**
+     * pagina Artista
+     */
 
     .controller('artistaCtrl', function ($scope, $http,Artista, AlbumArtista){
         $scope.artista=Artista;
@@ -618,29 +658,78 @@ angular.module('PlayAround')
                 })
         };
 
-
+        /**
+         * Sezione Generi e mood
+         */
     })
     .controller('moodCtrl', function ($scope, Mood) {
       $scope.mood=Mood;
     })
+
+    /**
+     * sezione Preferiti
+     */
     .controller('artistiPrefCtrl', function ($scope, ArtistiPreferiti){
       $scope.preferiti=ArtistiPreferiti;
     })
+
     .controller('sceltiCtrl', function ($scope) {
 
     })
     .controller('piuAscoltatiCtrl', function ($scope,PiuAscoltate) {
-      $scope.top=PiuAscoltate;
+      $scope.topBrani=PiuAscoltate;
 
     })
+    /**
+     * homepage
+     */
     .controller('homeCtrl', function ($scope, Giornaliera, Recently, AmiciSong) {
        $scope.playlistG=Giornaliera;
        $scope.recently=Recently;
        $scope.musicFriends=AmiciSong;
     })
-    .controller('playerCtrl', function($scope){
+    /**
+     * Search bar
+     */
+    .controller('searchCtrl', function($scope){
+ //console.log(selected);
+        $scope.reindirizza=function(selected){
+            console.log(selected.originalObject.val.type);
 
+            if(selected.originalObject.val.type==='Brano: ') {
+
+                loadBrano(selected.originalObject.val.original.codice)
+            }else if (selected.originalObject.val.type==='Artista: ') {
+                window.location="#!artista/" + selected.originalObject.val.original.codice;
+                }
+                else if(selected.originalObject.val.type==='Album: '){
+                window.location="#!album/"+ selected.originalObject.val.original.codice;
+            }
+            else{
+                window.location="#!utente/"+selected.originalObject.val.original.username;
+            }
+        };
+
+        /**
+         * Player musicale
+         */
     })
+    .controller('playerCtrl', function($scope,$http){
+        $scope.salvaBrano=function (codice) {
+            $scope.codice=codice;
+            var parameter={codbrano:$scope.codice};
+            $http({
+                method:"POST",
+                url : '/require/setPreferito',
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+    })
+    /**
+     * Sezione album
+     */
     .controller('albumCtrl', function($scope,$http,Album, BraniAlbum, ListaPlaylist){
         $scope.album=Album;
         $scope.brani=BraniAlbum;
@@ -669,6 +758,18 @@ angular.module('PlayAround')
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
             });
+        };
+        $scope.salvaBrano=function (codice) {
+            $scope.codice=codice;
+            var parameter={codbrano:$scope.codice};
+            $http({
+                method:"POST",
+                url : '/require/setPreferito',
+                data: parameter,
+                withCredentials: true,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
+
 
     });

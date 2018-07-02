@@ -72,7 +72,7 @@
         <ul class="">
             <li  ng-repeat="song in brani">
                 <p ng-click="loadBrano(song.codice,brani);setCurrentCoda($index)">{{song.titolo}}</p>
-                <i class="fa fa-plus dropbtn" aria-hidden="true" ng-click="showDrop(song.codice)"></i>
+                <i title="Aggiungi a Playlist" class="fa fa-plus dropbtn" aria-hidden="true" ng-click="showDrop(song.codice)"></i>
                 <div class="dropdown" ng-show="codice === song.codice ? true : false">
                     <div class="dropdown-content">
                         <div ng-repeat="list in lista"><!--qua devo mettere ng-repeat-->
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                 </div>
-                <i class="fa fa-bookmark" aria-hidden="true" ng-click="salvaBrano()"></i>
+                <i title="Aggiungi ai Preferiti" class="fa fa-bookmark" aria-hidden="true" ng-click="salvaBrano(song.codice)"></i>
             </li>
         </ul>
     </div>

@@ -411,7 +411,7 @@ margin: 10%;
     <div class="column_img" ng-repeat="list in playlist">
         <a href="#!libreria/playlist/{{list.codice}}">
             <div class="container_img">
-                <img ng-src="{{list.immagine}}" class="image">
+                <img id="image" src="/image/playlist/" ng class="image">
                 <div class="overlay">{{list.nome}}</div>
             </div>
         </a>

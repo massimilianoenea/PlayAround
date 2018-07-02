@@ -69,23 +69,24 @@
 
     }
     .listAlbum{
-        background-color: #878787;
+        background: linear-gradient(black, #068477);
         width: 100%;
         overflow: auto;
         max-height: 300px;
+        cursor: pointer;
     }
-    .listAlbum ul > li:nth-child(2n+2)  {
-        background-color: #cccccc;
-    }
-    .listAlbum ul > li{
 
-        padding: ;
+    .listAlbum ul > li{
         width: 100%;
         height: 35px;
     }
     .listAlbum ul > li > a {
         color: #2a4463;
         padding: 5%;
+    }
+    .fa.fa-bookmark{
+        float: right;
+        top: -35px;
     }
     /*progress Bar*/
     progress {
@@ -126,7 +127,7 @@
     <div class="bg-player">
         <img src="/image/sbarreColoro.jpeg" class="imgA">
         <div class="image-album">
-            <img src="/image/dark-side-of-the-moon.jpg" style="width: 150px;height: 150px">
+            <img ng-src="{{currentSongImage()}}" style="width: 150px;height: 150px">
 
         </div>
         <p class="titleAlbum">{{currentSongName()}}</p>
@@ -143,8 +144,9 @@
     </div>
 <div class="listAlbum" align="center">
     <ul class="">
-        <li  ng-repeat="song in getInCoda()">
-            <p ng-click="loadBrano(song.codice,getInCoda());setCurrentCoda($index)">{{song.titolo}}</p>
+        <li  ng-repeat="song in getInCoda()" >
+            <p style="background: rgba(0,0,0,0.3)" ng-click="loadBrano(song.codice,getInCoda());setCurrentCoda($index)">{{song.titolo}}</p>
+            <i class="fa fa-bookmark" aria-hidden="true" ng-click="salvaBrano(song.codice)"></i>
         </li>
     </ul>
 </div>

@@ -11,6 +11,7 @@
     <style>
         h2{
             color: #FEC35E;
+            text-align: center;
         }
 
         p{
@@ -119,18 +120,7 @@
     <button  ng-click="isFollowed ? deleteArtista() : addArtista()" >
         <span ng-hide="isFollowed">Follow</span><span ng-show="isFollowed">Unfollow</span>
     </button>
-
-    <h2 align="center" style="color: #FEC35E">Le canzoni più ascoltate</h2>
-
-    <div class="row_img">
-        <div class="column_img" ng-repeat="song in brani">
-                <div class="container_img" ng-click="loadBrano(song.codice,brani)">
-                    <img ng-src={{song.immagine}} class="image">
-                    <div class="overlay">{{song.titolo}}</div>
-                </div>
-        </div>
-    </div>
-
+<div style="width: 100%">
     <h2 align="center" style="color: #FEC35E">Gli ultimi album</h2>
 
     <div class="row_img">
@@ -144,6 +134,19 @@
         </div>
     </div>
 
+    <h2 align="center" style="color: #FEC35E">Le canzoni più ascoltate</h2>
+
+    <div class="row_img">
+        <div class="column_img" ng-repeat="song in brani">
+                <div class="container_img" ng-click="loadBrano(song.codice,brani)">
+                    <img ng-src={{song.immagine}} class="image">
+                    <div class="overlay">{{song.titolo}}</div>
+                </div>
+        </div>
+    </div>
+
+
+</div>
 </div>
 </body>
 </html>

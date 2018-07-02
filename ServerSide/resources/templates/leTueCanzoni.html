@@ -115,6 +115,8 @@
             font-size: larger;
         }
 
+
+
         @media screen and (min-width: 992px){
             .overlay{
                 font-size: 20px;
@@ -148,12 +150,15 @@
 </div>
 <h2>BRANI SALVATI</h2>
 
-<!-- redirect to playlist -->
-<a href="#!libreria/playlist">
-<div align="center" style="margin-bottom: 2%;margin-top: -2%;">
-    <i class="fa fa-plus-square" aria-hidden="true" ng-click="showBox()"> Crea Playlist</i>
+
+<div class="row_img">
+    <div class="column_img" ng-repeat="brani in salvate">
+        <div class="container_img" ng-click="loadBrano(brani.codice,salvate)">
+            <img ng-src={{brani.immagine}} class="image">
+            <div class="overlay">{{brani.titolo}}</div>
+        </div>
+    </div>
 </div>
-</a>
 
 
 
