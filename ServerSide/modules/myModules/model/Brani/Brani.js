@@ -90,6 +90,22 @@ module.exports = {
         });
     },
 
+    remove_canzoni_salvate: function(email,codbrano,callback){
+        connection.getConnection(function (err,connection) {
+            if(err) {
+                return callback(err,null,1);
+            }
+            var sql = "DELETE FROM BRANI_SALVATI WHERE CODUTENTE = ? AND CODBRANO = ?";
+            connection.query(sql,[GetHash.GetCodUtente(email),codbrano], function(err, results) {
+                if (err) {
+                    return callback(err, null, 2);
+                }
+                connection.release();
+                return callback(null,results,0);
+            });
+        });
+    },
+
     get_canzoni_salvate: function(email,callback){
       connection.getConnection(function (err,connection) {
           if(err) {

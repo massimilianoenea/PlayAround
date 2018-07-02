@@ -8,7 +8,7 @@ module.exports ={
              if(err)  {
                  return callback(err,null,1);
              }
-             var sql = "SELECT CODPLAYLIST,NOME FROM PLAYLIST_DEF WHERE MOOD = '1'";
+             var sql = "SELECT CODPLAYLIST,NOME FROM PLAYLIST_DEF";
               connection.query(sql, function(err, results) {
                   if (err) {
                       return callback(err, null, 2);
