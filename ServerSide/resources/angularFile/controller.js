@@ -17,14 +17,11 @@ angular.module('PlayAround')
         }).then(function mySuccess(response) {
             $scope.Utente = response.data;
             $sessionStorage.UserLogged = response.data;
-            $sessionStorage.deviceSetted = false;
             socket.emit('getFriend', {username: $sessionStorage.UserLogged.username, email: $sessionStorage.UserLogged.email});
-            socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
             progressBar.addEventListener("click", seek);
             audio.addEventListener('timeupdate', updateProgressBar, false);
             audio.addEventListener('ended',audioEnd);
             $scope.getRepeatStyle();
-            socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:$sessionStorage.UserLogged.username ,img:'/image/profile/' + $sessionStorage.UserLogged.username +'.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
         }, function myError(response) {
             window.location.replace('/login');
         });
@@ -92,6 +89,11 @@ angular.module('PlayAround')
      *
      */
 
+    socket.on('getFriendDone',function(data){
+        socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+        $sessionStorage.isGetFriend = 1;
+    });
+
     socket.on('player_room_response',function (data) {
 
         if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted !== true)){
@@ -112,9 +114,7 @@ angular.module('PlayAround')
                 }
             }
         }
-
         $sessionStorage.modalAppear = true;
-        $sessionStorage.deviceSetted = true;
     });
 
 
@@ -159,25 +159,23 @@ angular.module('PlayAround')
      *
      */
 
-    /*$scope.sendMessage = function(){
-         $sessionStorage.socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:'peppe' ,img:'/image/profile/utente.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}, date: new Date()});
-     };*/
-
     $scope.setCurDev = function(currentId){
-        console.log(currentId);
         socket.emit("setCurrent",{username:$sessionStorage.UserLogged.username,currentId:currentId});
         modalDevice.style.display = "none";
     };
 
+    socket.on('setCurrentDone',function (data) {
+        socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:$sessionStorage.UserLogged.username ,img:'/image/profile/' + $sessionStorage.UserLogged.username +'.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}});
+        $sessionStorage.deviceSetted = true;
+    });
+
     $scope.loadBrano = function(codbrano,listOfSong,reset){
        // if(audio.src) audio.pause();
-        console.log("DEvice SEtted "+ $sessionStorage.deviceSetted);
         if($sessionStorage.deviceSetted === true) {
             socket.emit('stream', {username: $sessionStorage.UserLogged.username});
             if(reset !== true || reset !== false) reset = true;
             genereteListOfSong(listOfSong,reset);
         }else{
-            console.log("entro qui "+ $sessionStorage.deviceSetted);
             socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
         }
     };
@@ -205,11 +203,6 @@ angular.module('PlayAround')
     $scope.setCurrentCoda = function(position){
         if($sessionStorage.listOfSong) $sessionStorage.listOfSong.current = position;
     };
-
-    socket.on('newSetDevice',function(data){
-        console.log("newSetDevice");
-        socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
-    });
 
     ss(socket.getsocket()).on('audio-stream', function (stream, data) {
         var parts = [];
@@ -328,7 +321,6 @@ angular.module('PlayAround')
 console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].titolo);
     };
     $scope.currentSongImage = function(){
-        console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].immagine);
         if($sessionStorage.listOfSong) return $sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].immagine;
 
     };
@@ -401,19 +393,6 @@ console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].
     $scope.resizeHome70 = function(){
         main.setAttribute("style","flex:70%;");
         return false;
-    };
-
-    $scope.reindirizza=function(selected){
-        console.log(selected);
-        if(selected.val.type===0) {
-
-            loadBrano(selected.originalObject.codice)
-        }else if (selected.val.type===1) {
-            window.location="#!artista/" + selected.originalObject.codice;
-        }
-        else{
-            window.location="#!album/"+ selected.originalObject.codice;
-        }
     };
 })
 
@@ -507,14 +486,7 @@ console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].
         $scope.playlist=PersonalPlaylist;
         $scope.visible=false;
         $scope.create=true;
-// gestisco la copertina della playlist utente in maniera random
-        $scope.imgRand=function() {
-            $scope.item = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"];
-            $scope.val = $scope.item.length;
-            $scope.rand = Math.floor(Math.random() * $scope.val);
-            var img=$scope.item[$scope.rand];
-            return img
-        };
+
         $scope.showBox=function () {
             $scope.visible=true;
         };
@@ -535,11 +507,11 @@ console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].
                nomePlaylist = $scope.namePlaylist;//questo la passo sotto per aggiungere i brani
                $scope.playlist.push({codice:response.data.codice, immagine: "/image/playlist"+response.data.codice+".png", nome: response.data.nome});
                $scope.create=false;
+               $scope.message=false;
                $scope.apply();
            },function myError(response){
                $scope.message=true;
                $scope.error = response.data;
-               console.log(response);
            });
        };
        $scope.addSong=function (selected) {
@@ -555,11 +527,7 @@ console.log($sessionStorage.listOfSong.list[$sessionStorage.listOfSong.current].
            });
 
        };
-       $scope.salva=function(){
-           $scope.visible=false;
-       };
-
-        })
+    })
     /**
      * vista playlist personale
      */

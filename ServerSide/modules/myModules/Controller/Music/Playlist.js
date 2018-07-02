@@ -19,6 +19,40 @@ module.exports = {
       });
   },
 
+    playlist_mood : function(callback){
+        playlist_model.playlist_mood(function(err, succ, code) {
+            if (err !== null){
+                switch (code){
+                    case 1:
+                        return callback({code:1,text:"Errore connessione al database",errorCode:err.code,status:400});
+                    case 2:
+                        return callback({code:2,text:"Impossibile trovare la playlist",errorCode:err.code,status:400});
+                    default:
+                        return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
+                }
+            }else{
+                return callback({code:0,data:succ,status:200});
+            }
+        });
+    },
+
+    playlist_genere : function(callback){
+        playlist_model.playlist_genere(function(err, succ, code) {
+            if (err !== null){
+                switch (code){
+                    case 1:
+                        return callback({code:1,text:"Errore connessione al database",errorCode:err.code,status:400});
+                    case 2:
+                        return callback({code:2,text:"Impossibile trovare la playlist",errorCode:err.code,status:400});
+                    default:
+                        return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
+                }
+            }else{
+                return callback({code:0,data:succ,status:200});
+            }
+        });
+    },
+
     get_nome_playlist : function(codPlaylist,callback){
         playlist_model.get_nome_playlist(codPlaylist, function (err, succ, code) {
             if (err !== null) {

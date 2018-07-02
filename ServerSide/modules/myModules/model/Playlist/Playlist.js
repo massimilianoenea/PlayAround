@@ -19,6 +19,38 @@ module.exports ={
           });
     },
 
+    playlist_mood: function (callback){
+        connection.getConnection(function (err,connection){
+            if(err)  {
+                return callback(err,null,1);
+            }
+            var sql = "SELECT CODPLAYLIST,NOME FROM PLAYLIST_DEF";
+            connection.query(sql, function(err, results) {
+                if (err) {
+                    return callback(err, null, 2);
+                }
+                connection.release();
+                return callback(null,results,0);
+            });
+        });
+    },
+
+    playlist_genere: function (callback){
+        connection.getConnection(function (err,connection){
+            if(err)  {
+                return callback(err,null,1);
+            }
+            var sql = "SELECT CODPLAYLIST,NOME FROM PLAYLIST_GENERE";
+            connection.query(sql, function(err, results) {
+                if (err) {
+                    return callback(err, null, 2);
+                }
+                connection.release();
+                return callback(null,results,0);
+            });
+        });
+    },
+
     get_nome_playlist: function(codPlaylist,callback){
         connection.getConnection(function (err,connection){
             if(err)  {

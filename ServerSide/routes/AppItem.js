@@ -581,6 +581,52 @@ router.get("/get_amici",function(req,res){
 
 // GENERE E MOOD DA FARE //
 
+router.get("/playlist_genere",function(req,res){
+    if(req.session.islog === 1) {
+        playlist.playlist_genere(function (a) {
+            var json;
+            if (a.status === 200) {
+                json = [];
+                for (var playlist in a.data) {
+                    json.push({
+                        nome: a.data[playlist].NOME,
+                        codice: a.data[playlist].CODPLAYLIST,
+                        immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST + ".jpeg"
+                    });
+                }
+            } else {
+                json = a;
+            }
+            res.status(a.status).end(JSON.stringify(json));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
+
+router.get("/playlist_mood",function(req,res){
+    if(req.session.islog === 1) {
+        playlist.playlist_mood(function (a) {
+            var json;
+            if (a.status === 200) {
+                json = [];
+                for (var playlist in a.data) {
+                    json.push({
+                        nome: a.data[playlist].NOME,
+                        codice: a.data[playlist].CODPLAYLIST,
+                        immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST + ".jpeg"
+                    });
+                }
+            } else {
+                json = a;
+            }
+            res.status(a.status).end(JSON.stringify(json));
+        });
+    }else{
+        res.status(500).end();
+    }
+});
+
 // I PIU ASCOLTATI "DAL MONDO"//
 
 router.get("/piu_ascoltate",function(req,res){
