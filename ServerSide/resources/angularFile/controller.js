@@ -97,7 +97,7 @@ angular.module('PlayAround')
 
     socket.on('player_room_response',function (data) {
 
-        if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted !== true)){
+        if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted === true)){
             modalDevice.style.display = "block";
             for (var dispositivo in data){
                 if(data[dispositivo].Current_client) {
@@ -172,7 +172,7 @@ angular.module('PlayAround')
     $scope.loadBrano = function(codbrano,listOfSong,reset){
        // if(audio.src) audio.pause();
         if($sessionStorage.deviceSetted === true) {
-            socket.emit('stream', {username: $sessionStorage.UserLogged.username});
+            socket.emit('stream', {username: $sessionStorage.UserLogged.username,codbrano:codbrano});
             if(reset !== true || reset !== false) reset = true;
             genereteListOfSong(listOfSong,reset);
         }else{
@@ -211,7 +211,6 @@ angular.module('PlayAround')
         });
         stream.on('end', function () {
             audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
-            audio.play();
             playPause.className = 'fa fa-pause';
         });
     });

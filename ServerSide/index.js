@@ -9,10 +9,13 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ss = require('socket.io-stream');
+var youtubeStream = require('youtube-audio-stream');
 var fs = require('fs');
 
 
 var socketFunction = require('./SocketFunction/Friend.js');
+var linkBrano = require('./SocketFunction/LinkBrano');
+
 app.set('port', ( process.env.PORT || 1337 ));
 app.use('/public',express.static(__dirname+'/resources'));
 app.use('/image',express.static(__dirname+'/resources/image'));
@@ -209,9 +212,23 @@ io.on('connection', function(client) {
                 var SocketofClient = io.sockets.connected[clientId];
                 //if (SocketofClient.id !== client.id) {
                     var stream = ss.createStream();
+                    var requestUrl = "";
                     var filename = __dirname + '/penningen.mp3';
-                    ss(SocketofClient).emit('audio-stream', stream, {name: filename});
-                    fs.createReadStream(filename).pipe(stream);
+                    linkBrano.GetLinkBrano(data.codbrano,function(a){
+                       if(a.code === 0 || a.link !== 'undefined'){
+                           requestUrl = 'http://youtube.com/watch?v=' + a.link;
+                       }else{
+                           requestUrl = __dirname + '/penningen.mp3';
+                       }
+
+                        ss(SocketofClient).emit('audio-stream', stream, {name: filename});
+                        try {
+                            youtubeStream(requestUrl).pipe(stream);
+                        } catch (exception) {
+                            fs.createReadStream(filename).pipe(stream);
+                        }
+                    });
+                    //fs.createReadStream(filename).pipe(stream);
                // }
             }
         }else{
