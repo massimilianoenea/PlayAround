@@ -57,6 +57,20 @@
         margin: -13px;
         padding: 5px;
     }
+    #snackbar {
+
+        min-width: 250px; /* Set a default minimum width */
+        margin-left: -125px; /* Divide value of min-width by 2 */
+        background-color: #fb8200; /* Black background color */
+        color: #fff; /* White text color */
+        text-align: center; /* Centered text */
+        border-radius: 2px; /* Rounded borders */
+        padding: 16px; /* Padding */
+        position: fixed; /* Sit on top of the screen */
+        z-index: 1; /* Add a z-index if needed */
+        left: 50%; /* Center the snackbar */
+        bottom: 30px; /* 30px from the bottom */
+    }
     @media screen and (max-width: 900px){
         .listAlbum{
             width: 100%;
@@ -76,7 +90,7 @@
 
         <ul class="">
             <li  ng-repeat="song in brani">
-                <p ng-click="loadBrano(song.codice,brani);setCurrentCoda($index)">{{song.titolo}}</p>
+                <p style="width: 70%" ng-click="loadBrano(song.codice,brani);setCurrentCoda($index)">{{song.titolo}}</p>
                 <i title="Aggiungi a Playlist" class="fa fa-plus dropbtn" aria-hidden="true" ng-click="showDrop(song.codice)"></i>
                 <div class="dropdown" ng-show="codice === song.codice ? true : false">
                     <div class="dropdown-content">
@@ -89,7 +103,7 @@
             </li>
         </ul>
     </div>
-
+    <div id="snackbar" ng-show="notifica">Aggiunto alle tue Canzoni</div>
 </div>
 
 

@@ -423,7 +423,6 @@ angular.module('PlayAround')
          $sessionStorage.users.push(data);
      }
 
-     $scope.apply();
  });
 
     $scope.getUsers= function(){
@@ -629,6 +628,10 @@ angular.module('PlayAround')
     .controller('moodCtrl', function ($scope, Mood,Genere) {
       $scope.mood=Mood;
       $scope.genere=Genere;
+
+
+      this.slides=$scope.mood;
+      console.log(this.slides);
     })
 
     /**
@@ -699,8 +702,9 @@ angular.module('PlayAround')
         $scope.album=Album;
         $scope.brani=BraniAlbum;
         $scope.lista=ListaPlaylist;
-        //$scope.altri=AltriAlbum;
 
+        //$scope.altri=AltriAlbum;
+$scope.notifica=false;
         //gestisco la dropdown per le playlist
         $scope.showDrop=function (codice) {
             if($scope.codice!==codice){
@@ -733,7 +737,11 @@ angular.module('PlayAround')
                 data: parameter,
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
-            });
+            }).then(function mySuccess (response) {
+                $scope.notifica=true;
+
+
+            })
         }
 
 

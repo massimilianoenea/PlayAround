@@ -1,7 +1,25 @@
 angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt','ui.carousel'])
 
-/* Routing  */
 
+.run(['Carousel', (Carousel) => {
+    Carousel.setOptions({
+        arrows: true,
+        autoplay: false,
+        autoplaySpeed: 3000,
+        cssEase: 'ease',
+        dots: false,
+
+        easing: 'linear',
+        fade: false,
+        infinite: true,
+        initialSlide: 0,
+
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        speed: 500,
+    });
+}])
+/* Routing  */
 .config(function($routeProvider) {
     $routeProvider
         .when("/", {
