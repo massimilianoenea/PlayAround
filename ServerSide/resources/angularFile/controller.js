@@ -422,6 +422,8 @@ angular.module('PlayAround')
          }
          $sessionStorage.users.push(data);
      }
+
+     $scope.apply();
  });
 
     $scope.getUsers= function(){

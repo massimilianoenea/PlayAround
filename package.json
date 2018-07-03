@@ -4,6 +4,7 @@
   "description": "playaround musicApp",
   "main": "index.js",
   "dependencies": {
+    "angular-ui-carousel": "^0.1.10",
     "body-parser": "^1.18.3",
     "connect-multiparty": "^2.1.0",
     "cookie-parser": "^1.4.3",

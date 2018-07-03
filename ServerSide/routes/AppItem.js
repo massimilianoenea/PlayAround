@@ -612,9 +612,9 @@ router.get("/playlist_mood",function(req,res){
                 json = [];
                 for (var playlist in a.data) {
                     json.push({
-                        nome: a.data[playlist].NOME,
+                        titolo: a.data[playlist].NOME,
                         codice: a.data[playlist].CODPLAYLIST,
-                        immagine: "image/playlist/" + a.data[playlist].CODPLAYLIST + ".jpeg"
+                        immagine: "image/playlist/mood/" + a.data[playlist].CODPLAYLIST + ".jpg"
                     });
                 }
             } else {

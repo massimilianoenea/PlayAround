@@ -10,7 +10,7 @@ var con = mysql.createPool({
     var con = mysql.createPool({
         host: 'localhost',
         user: 'root',
-        password: 'JuventusStadium1996',
+        password: 'always',
         database: 'playaround'
     });    
 }

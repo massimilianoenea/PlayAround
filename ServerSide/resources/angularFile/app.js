@@ -1,7 +1,25 @@
-angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
+angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt','ui.carousel'])
 
-/* Routing  autoCompleteModule' ,'ngSanitize'*/
 
+.run(['Carousel', (Carousel) => {
+    Carousel.setOptions({
+        arrows: true,
+        autoplay: false,
+        autoplaySpeed: 3000,
+        cssEase: 'ease',
+        dots: false,
+
+        easing: 'linear',
+        fade: false,
+        infinite: true,
+        initialSlide: 0,
+
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        speed: 500,
+    });
+}])
+/* Routing  */
 .config(function($routeProvider) {
     $routeProvider
         .when("/", {
@@ -206,7 +224,13 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt'])
                 controller:"moodCtrl",
                 resolve: {
                     Mood: function ($http) {
-                        return $http.get('/require/')
+                        return $http.get('/require/playlist_mood')
+                            .then(function (response) {
+                                return response.data;
+                            });
+                    },
+                    Genere:function ($http) {
+                        return $http.get('/require/playlist_genere')
                             .then(function (response) {
                                 return response.data;
                             });
