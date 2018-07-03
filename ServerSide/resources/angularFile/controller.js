@@ -422,8 +422,6 @@ angular.module('PlayAround')
          }
          $sessionStorage.users.push(data);
      }
-
-     $scope.apply();
  });
 
     $scope.getUsers= function(){
@@ -617,17 +615,24 @@ angular.module('PlayAround')
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
             })
-                .then(function mySuccess(response) {
-                    $scope.isFollowed = false;
-                })
+            .then(function mySuccess(response) {
+                $scope.isFollowed = false;
+            })
         };
 
         /**
          * Sezione Generi e mood
          */
     })
-    .controller('moodCtrl', function ($scope, Mood) {
-      $scope.mood=Mood;
+    .controller('moodCtrl', function ($scope, Mood,Genere) {
+      //$scope.mood=Mood;
+      //$scope.genere = Genere;
+        var slides = [];
+        for (playlist in Mood){
+            slides.push({nome:Mood[playlist].nome,immagine:Mood[playlist].immagine,codice:Mood[playlist].codice});
+            console.log("Il nome è: "+Mood[playlist]);
+        }
+      $scope.slides = slides;
     })
 
     /**

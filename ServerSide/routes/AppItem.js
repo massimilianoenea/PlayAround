@@ -612,7 +612,7 @@ router.get("/playlist_mood",function(req,res){
                 json = [];
                 for (var playlist in a.data) {
                     json.push({
-                        titolo: a.data[playlist].NOME,
+                        nome: a.data[playlist].NOME,
                         codice: a.data[playlist].CODPLAYLIST,
                         immagine: "image/playlist/mood/" + a.data[playlist].CODPLAYLIST + ".jpg"
                     });
