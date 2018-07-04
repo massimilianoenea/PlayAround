@@ -10,6 +10,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ss = require('socket.io-stream');
 var youtubeStream = require('youtube-audio-stream');
+const ytdl = require('ytdl-core');
 var fs = require('fs');
 
 
@@ -213,6 +214,7 @@ io.on('connection', function(client) {
                 //if (SocketofClient.id !== client.id) {
                     var stream = ss.createStream();
                     var requestUrl = "";
+                    var duration = 1;
                     var filename = __dirname + '/penningen.mp3';
                     linkBrano.GetLinkBrano(data.codbrano,function(a){
                        if(a.code === 0 || a.link !== 'undefined'){
@@ -221,7 +223,12 @@ io.on('connection', function(client) {
                            requestUrl = __dirname + '/penningen.mp3';
                        }
 
-                        ss(SocketofClient).emit('audio-stream', stream, {name: filename});
+                         ytdl.getInfo(requestUrl,{downloadURL: false},function(err, info) {
+                            if (err) duration = 1 ;
+                            duration = info.length_seconds;
+                            ss(SocketofClient).emit('audio-stream', stream, {duration: duration});
+                        });
+
                         try {
                             youtubeStream(requestUrl).pipe(stream);
                         } catch (exception) {

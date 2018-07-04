@@ -205,13 +205,35 @@ angular.module('PlayAround')
     };
 
     ss(socket.getsocket()).on('audio-stream', function (stream, data) {
-        var parts = [];
+        //var parts = [];
+        var buffer;
+        var mime = 'audio/mpeg';
+        var mediaSource = new MediaSource();
+        audio.src = (window.URL || window.webkitURL).createObjectURL(mediaSource);
+        console.log(data.duration);
+        audio.duration = data.duration;
+        mediaSource.addEventListener('sourceopen', function(e) {
+            buffer = mediaSource.addSourceBuffer(mime);
+            buffer.mode = 'sequence';
+            buffer.addEventListener('updateend', function (e) {
+                //hack to get safari on mac to start playing, video.currentTime gets stuck on 0
+                if (mediaSource.duration !== Number.POSITIVE_INFINITY && audio.currentTime === 0 && mediaSource.duration > 0) {
+                    audio.currentTime = mediaSource.duration - 1;
+                    mediaSource.duration = Number.POSITIVE_INFINITY;
+                }
+                //audio.play();
+            });
+            playPause.className = 'fa fa-pause';
+        });
+
         stream.on('data', (chunk) => {
-            parts.push(chunk);
+            //parts.push(chunk);
+            var data = new Uint8Array(chunk);
+            buffer.appendBuffer(data);
         });
         stream.on('end', function () {
-            audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
-            playPause.className = 'fa fa-pause';
+           // audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+           // playPause.className = 'fa fa-pause';
         });
     });
 
@@ -223,10 +245,12 @@ angular.module('PlayAround')
         }
     }
 
+
     function updateProgressBar() {
         // Work out how much of the media has played via the duration and currentTime parameters
        if(audio !== undefined) {
-           var percentage = Math.floor((100 / audio.duration) * audio.currentTime);
+
+           var percentage = Math.floor((100 / 278) * audio.currentTime);
            //LOCAL VERSION
            // Update the progress bar's value
            //progressBar.value = percentage;
