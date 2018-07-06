@@ -11,6 +11,8 @@ var io = require('socket.io')(http);
 var ss = require('socket.io-stream');
 var youtubeStream = require('youtube-audio-stream');
 const ytdl = require('ytdl-core');
+var UAParser = require('ua-parser-js');
+var parser = new UAParser();
 var fs = require('fs');
 
 
@@ -212,6 +214,12 @@ io.on('connection', function(client) {
                 //this is the socket of each client in the room.
                 var SocketofClient = io.sockets.connected[clientId];
                 //if (SocketofClient.id !== client.id) {
+                    var mimeType="";
+                    if(parser.setUA(SocketofClient.request.headers['user-agent']).getBrowser().name === 'Chrome'){
+                        mimeType="mpeg";
+                    }else{
+                        mimeType="webm";
+                    }
                     var stream = ss.createStream();
                     var requestUrl = "";
                     var duration = 1;
@@ -226,11 +234,11 @@ io.on('connection', function(client) {
                          ytdl.getInfo(requestUrl,{downloadURL: false},function(err, info) {
                             if (err) duration = 1 ;
                             duration = info.length_seconds;
-                            ss(SocketofClient).emit('audio-stream', stream, {duration: duration});
+                            ss(SocketofClient).emit('audio-stream', stream, {duration: duration,mime:mimeType});
                         });
 
                         try {
-                            youtubeStream(requestUrl).pipe(stream);
+                            youtubeStream(requestUrl,mimeType).pipe(stream);
                         } catch (exception) {
                             fs.createReadStream(filename).pipe(stream);
                         }

@@ -207,12 +207,21 @@ angular.module('PlayAround')
     ss(socket.getsocket()).on('audio-stream', function (stream, data) {
         //var parts = [];
         var buffer;
-        var mime = 'audio/mpeg';
+        var mime = 'audio/'+data.mime;
         var mediaSource = new MediaSource();
+
+        if(MediaSource.isTypeSupported(mime)){
+            console.log("Supported");
+        }else{
+            console.log("NotSupported");
+            return;
+        }
+
         audio.src = (window.URL || window.webkitURL).createObjectURL(mediaSource);
         console.log(data.duration);
         audio.duration = data.duration;
-        mediaSource.addEventListener('sourceopen', function(e) {
+
+        mediaSource.addEventListener('sourceopen', function (e) {
             buffer = mediaSource.addSourceBuffer(mime);
             buffer.mode = 'sequence';
             buffer.addEventListener('updateend', function (e) {
@@ -232,8 +241,8 @@ angular.module('PlayAround')
             buffer.appendBuffer(data);
         });
         stream.on('end', function () {
-           // audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
-           // playPause.className = 'fa fa-pause';
+            // audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
+            // playPause.className = 'fa fa-pause';
         });
     });
 
