@@ -124,6 +124,23 @@ module.exports = {
         });
     },
 
+    set_brano_ascoltato : function(email,codbrano,callback){
+        brani_model.set_brano_ascoltato(email,codbrano,function(err,succ,code){
+            if (err !== null){
+                switch (code){
+                    case 1:
+                        return callback({code:1,text:"Errore connessione al database",errorCode:err.code,status:400});
+                    case 2:
+                        return callback({code:2,text:"Impossibile inserire il brano tra quelli ascoltati",errorCode:err.code,status:400});
+                    default:
+                        return callback({code:3,text:"Errore indefinito",errorCode:err.code,status:400});
+                }
+            }else{
+                return callback({code:0,data:succ,status:200});
+            }
+        });
+    },
+
     get_piu_ascoltate : function(codartista,callback){
         brani_model.get_piu_ascoltate(codartista,function(err,succ,code){
             if (err !== null){

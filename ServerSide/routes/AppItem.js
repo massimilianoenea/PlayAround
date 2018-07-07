@@ -1,6 +1,13 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
+
+/**
+ *
+ * Moduli miei Controller
+ *
+ */
+
 var playlist = require('../modules/myModules/Controller/Music/Playlist');
 var brani = require('../modules/myModules/Controller/Music/Brani');
 var artisti = require('../modules/myModules/Controller/Music/Artisti');
@@ -734,6 +741,16 @@ router.get("/brano_titolo/:titolo",function(req,res){
     }else{
         // POTREBBE REINDIRIZZARE AL LOGIN
         res.status(500).end();
+    }
+});
+
+router.post("/setBranoAscoltato",function(req,res){
+    if(req.session.islog === 1){
+        brani.set_brano_ascoltato(req.session.email,req.body.codbrano,function(a){
+            res.status(a.status).end(JSON.stringify(a));
+        });
+    }else{
+        req.status(500).end()
     }
 });
 

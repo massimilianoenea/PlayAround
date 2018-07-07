@@ -97,17 +97,17 @@ angular.module('PlayAround')
 
     socket.on('player_room_response',function (data) {
 
-        if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted === true)){
+        if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted !== true)) {
             modalDevice.style.display = "block";
-            for (var dispositivo in data){
-                if(data[dispositivo].Current_client) {
-                    var dev = "<button id=\"DeviceSetting\" class=\"btn\"  ng-click=\"setCurDev('"+data[dispositivo].clientId+"')\">"+ deviceType(data[dispositivo].Current_client)+"<p>dispositivo Corrente</p></button>";
+            for (var dispositivo in data) {
+                if (data[dispositivo].Current_client) {
+                    var dev = "<button id=\"DeviceSetting\" class=\"btn\"  ng-click=\"setCurDev('" + data[dispositivo].clientId + "')\">" + deviceType(data[dispositivo].Current_client) + "<p>dispositivo Corrente</p></button>";
                     dev = $compile(dev)($scope);
                     angular.element(deviceSetting).append(dev);
 
                     console.log("il dispositivo corrente è: " + deviceType(data[dispositivo].Current_client) + "\ncon ID: " + data[dispositivo].clientId);
-                }else{
-                    var dev = "<button id=\"DeviceSetting\" class=\"btn\" ng-click=\"setCurDev('"+data[dispositivo].clientId+"')\">"+ deviceType(data[dispositivo].client)+"</button>";
+                } else {
+                    var dev = "<button id=\"DeviceSetting\" class=\"btn\" ng-click=\"setCurDev('" + data[dispositivo].clientId + "')\">" + deviceType(data[dispositivo].client) + "</button>";
                     dev = $compile(dev)($scope);
                     angular.element(deviceSetting).append(dev);
 
@@ -115,7 +115,6 @@ angular.module('PlayAround')
                 }
             }
         }
-        $sessionStorage.modalAppear = true;
     });
 
 
@@ -145,13 +144,15 @@ angular.module('PlayAround')
     function deviceType(userAgent){
         if(userAgent.match(/Macintosh/i)) return "<i id=\"deviceType\" class=\"fa fa-laptop\"></i><i id=\"osType\" class=\"fa fa-apple\"></i>Mac";
         if(userAgent.match(/Android/i)) return "<i id=\"deviceType\" class=\"fa fa-mobile\"></i><i id=\"osType\" class=\"fa fa-android\"></i>Android";
-        if(userAgent.match(/BlackBerry/i)) return "BlackBerry";
-        if(userAgent.match(/iPhone/i)) return "iPhone";
-        if(userAgent.match(/iPod/i)) return "iPod";
-        if(userAgent.match(/iPad/i)) return "iPad";
-        if(userAgent.match(/Windows Phone/i)) return "windows Phone";
-        if(userAgent.match(/Windows/i)) return "windows";
-        if(userAgent.match(/Ubuntu/i)) return "Linux";
+        if(userAgent.match(/BlackBerry/i)) return "<i id=\"deviceType\" class=\"fa fa-mobile\"></i><i id=\"osType\" class=\"fab fa-blackberry\"></i> BlackBerry";
+        if(userAgent.match(/iPhone/i)) return "<i id=\"deviceType\" class=\"fa fa-mobile\"></i><i id=\"osType\" class=\"fa fa-apple\"></i> iPhone";
+        if(userAgent.match(/iPod/i)) return "<i id=\"deviceType\" class=\"fa fa-mobile\"></i><i id=\"osType\" class=\"fa fa-apple\"></i> iPod";
+        if(userAgent.match(/iPad/i)) return "<i id=\"deviceType\" class=\"fas fa-tablet\"></i><i id=\"osType\" class=\"fa fa-apple\"></i> iPad";
+        if(userAgent.match(/Windows Phone/i)) return "<i id=\"deviceType\" class=\"fa fa-mobile\"></i><i id=\"osType\" class=\"fab fa-windows\"></i> windows Phone";
+        if(userAgent.match(/Windows/i)) return "<i id=\"deviceType\" class=\"fa fa-laptop\"></i><i id=\"osType\" class=\"fab fa-windows\"></i> windows";
+        if(userAgent.match(/Linux/i)) return "<i id=\"deviceType\" class=\"fa fa-laptop\"></i><i id=\"osType\" class=\"fab fa-linux\"></i> Linux";
+        if(userAgent.match(/Ubuntu/i)) return "<i id=\"deviceType\" class=\"fa fa-laptop\"></i><i id=\"osType\" class=\"fab fa-linux\"></i> Ubuntu";
+        return "<i id=\"deviceType\" class=\"fas fa-question-circle\"></i> Ubuntu";
     }
 
     /**
@@ -163,6 +164,7 @@ angular.module('PlayAround')
     $scope.setCurDev = function(currentId){
         socket.emit("setCurrent",{username:$sessionStorage.UserLogged.username,currentId:currentId});
         modalDevice.style.display = "none";
+        $sessionStorage.modalAppear = true;
     };
 
     socket.on('setCurrentDone',function (data) {
@@ -175,6 +177,7 @@ angular.module('PlayAround')
             socket.emit('stream', {username: $sessionStorage.UserLogged.username,codbrano:codbrano});
             if(reset !== true || reset !== false) reset = true;
             genereteListOfSong(listOfSong,reset);
+            setBranoAscoltato(codbrano);
         }else{
             socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
         }
@@ -195,6 +198,18 @@ angular.module('PlayAround')
             }
         }
     }
+
+    function setBranoAscoltato(codbrano){
+        var parameter={codbrano:codbrano};
+        $http({
+            method:"POST",
+            url : '/require/setBranoAscoltato',
+            data: parameter,
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+
     $scope.getInCoda = function(){
         if($sessionStorage.listOfSong.list) return $sessionStorage.listOfSong.list;
         return [];
@@ -218,8 +233,7 @@ angular.module('PlayAround')
         }
 
         audio.src = (window.URL || window.webkitURL).createObjectURL(mediaSource);
-        console.log(data.duration);
-        audio.duration = data.duration;
+        $sessionStorage.inplay = data.duration;
 
         mediaSource.addEventListener('sourceopen', function (e) {
             buffer = mediaSource.addSourceBuffer('audio/'+data.mime);
@@ -240,7 +254,12 @@ angular.module('PlayAround')
         stream.on('data', (chunk) => {
             //parts.push(chunk);
             var data = new Uint8Array(chunk);
-            buffer.appendBuffer(data);
+            try {
+                buffer.appendBuffer(data);
+            }catch(err){
+
+            }
+
         });
         stream.on('end', function () {
             // audio.src = (window.URL || window.webkitURL).createObjectURL(new Blob(parts));
@@ -260,8 +279,7 @@ angular.module('PlayAround')
     function updateProgressBar() {
         // Work out how much of the media has played via the duration and currentTime parameters
        if(audio !== undefined) {
-
-           var percentage = Math.floor((100 / 278) * audio.currentTime);
+           var percentage = Math.floor((100 / $sessionStorage.inplay) * audio.currentTime);
            //LOCAL VERSION
            // Update the progress bar's value
            //progressBar.value = percentage;
@@ -312,6 +330,7 @@ angular.module('PlayAround')
     }
 
     socket.on('updateProgressBar',function(data){
+        if (!$scope.getDisable())PlayerProgressBar.value = data.progress;
         progressBar.value = data.progress;
         musicTime.innerText = formatTime(data.currentTime);
     });
@@ -383,7 +402,8 @@ angular.module('PlayAround')
             }
             if(audio.src) {
                 var codbrano = $sessionStorage.listOfSong.list[succ].codice;
-                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codice: codbrano});
+                audioStop();
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
             }
             $sessionStorage.listOfSong.current = succ;
         }
@@ -398,7 +418,8 @@ angular.module('PlayAround')
             }
             if(audio.src) {
                 var codbrano = $sessionStorage.listOfSong.list[prec].codice;
-                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codice: codbrano});
+                audioStop();
+                socket.emit('stream', {username: $sessionStorage.UserLogged.username, codbrano: codbrano});
             }
             $sessionStorage.listOfSong.current = prec;
         }

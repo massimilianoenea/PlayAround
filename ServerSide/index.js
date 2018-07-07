@@ -1,7 +1,21 @@
-var bodyParser = require('body-parser');
+/**
+ *
+ * Moduli e Routes create da me
+ *
+ */
+
 var user = require('./routes/user.js');
 var home = require('./routes/home.js');
 var item = require('./routes/AppItem');
+var socketFunction = require('./SocketFunction/Friend.js');
+var linkBrano = require('./SocketFunction/LinkBrano');
+
+/**
+ *
+ * Altre dipendenze
+ */
+
+var bodyParser = require('body-parser');
 var express = require('express');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -14,10 +28,6 @@ const ytdl = require('ytdl-core');
 var UAParser = require('ua-parser-js');
 var parser = new UAParser();
 var fs = require('fs');
-
-
-var socketFunction = require('./SocketFunction/Friend.js');
-var linkBrano = require('./SocketFunction/LinkBrano');
 
 app.set('port', ( process.env.PORT || 1337 ));
 app.use('/public',express.static(__dirname+'/resources'));
@@ -247,8 +257,9 @@ io.on('connection', function(client) {
                // }
             }
         }else{
-            client.emit('getFriendDone',data.username);
-          //  io.sockets.in(data.username).emit('message', data.username);
+           // client.emit('getFriendDone',data.username);
+            console.log("Si è disconnesso");
+              io.sockets.in(data.username+'_player').emit('getFriendDone', data.username);
         }
 
     });

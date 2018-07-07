@@ -122,6 +122,22 @@ module.exports = {
       });
     },
 
+    set_brano_ascoltato: function(email,codbrano,callback){
+        connection.getConnection(function (err,connection) {
+            if(err) {
+                return callback(err,null,1);
+            }
+            var sql = "INSERT INTO BRANI_ASCOLTATI (CODUTENTE,CODBRANO,COUNTER) VALUES (?,?,1) ON DUPLICATE KEY UPDATE COUNTER=COUNTER+1";
+            connection.query(sql,[GetHash.GetCodUtente(email),codbrano], function(err, results) {
+                if (err) {
+                    return callback(err, null, 2);
+                }
+                connection.release();
+                return callback(null,results,0);
+            });
+        });
+    },
+
     get_piu_ascoltate: function(codartista,callback){
       connection.getConnection(function (err,connection){
          if(err) {
