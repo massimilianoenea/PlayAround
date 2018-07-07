@@ -15,6 +15,10 @@
         width: 800px;
         margin: 0 auto;
     }
+    .row_img_mob {
+        width: 50%;
+        margin: 0 auto;
+    }
 
     /* Image overlay */
 
@@ -32,7 +36,13 @@
         display: block;
         border-radius: 20px;
         width: 100%;
-        height: 150px;
+        height:150px;
+    }
+    .image_mob {
+        display: block;
+        border-radius: 20px;
+        width: 100%;
+        height:100px;
     }
 
     .overlay {
@@ -51,11 +61,32 @@
         padding: 20px;
         text-align: center;
     }
+    .column_img, .row_img {
+        box-sizing: border-box;
+    }
+
+    .column_img {
+        float: left;
+        width: 33.3%;
+        padding-left: 1px;
+        margin-top: 20px;
+    }
+    .column_img_mob {
+        float: left;
+        width: 50%;
+        padding-left: 1px;
+        margin-top: 20px;
+    }
 
     .container_img:hover .overlay, .container_img:active .overlay {
         opacity: 1;
     }
+    @media screen and (max-width: 1900px){
 
+        .row_img_mob{
+            display: none;
+        }
+    }
     @media screen and (min-width: 992px){
         .overlay{
             font-size: 20px;
@@ -65,8 +96,16 @@
     @media screen and (max-width: 768px){
         .overlay{
             font-size: 15px;
-            padding: 5px;
+            padding: 10px;
         }
+
+        .row_img{
+            display: none;
+        }
+        .row_img_mob{
+            display: inline;
+        }
+
     }
     @media screen and (max-width: 320px){
         .overlay{
@@ -85,7 +124,7 @@
         initial-slide="1"
         autoplay="true"
         autoplay-speed="2000"
-        dots="false">
+        dots="true">
 
     <carousel-item>
         <div class="container_img">
@@ -95,5 +134,14 @@
     </carousel-item>
 </ui-carousel>
 </div>
+<div class="row_img_mob">
+    <div class="column_img_mob" ng-repeat="list in mood">
+        <div class="container_img" ng-click="loadBrano(brani.codice,mood);setCurrentCoda($index)">
+            <img ng-src={{list.immagine}} class="image_mob">
+            <div class="overlay">{{list.nome}}</div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
