@@ -224,6 +224,8 @@ angular.module('PlayAround')
         mediaSource.addEventListener('sourceopen', function (e) {
             buffer = mediaSource.addSourceBuffer('audio/'+data.mime);
             buffer.mode = 'sequence';
+            buffer.addEventListener('update',function(e){
+            });
             buffer.addEventListener('updateend', function (e) {
                 //hack to get safari on mac to start playing, video.currentTime gets stuck on 0
                 if (mediaSource.duration !== Number.POSITIVE_INFINITY && audio.currentTime === 0 && mediaSource.duration > 0) {
@@ -238,7 +240,6 @@ angular.module('PlayAround')
         stream.on('data', (chunk) => {
             //parts.push(chunk);
             var data = new Uint8Array(chunk);
-            console.log(data);
             buffer.appendBuffer(data);
         });
         stream.on('end', function () {
