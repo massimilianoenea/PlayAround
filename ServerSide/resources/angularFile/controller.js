@@ -222,7 +222,7 @@ angular.module('PlayAround')
         audio.duration = data.duration;
 
         mediaSource.addEventListener('sourceopen', function (e) {
-            buffer = mediaSource.addSourceBuffer(mime);
+            buffer = mediaSource.addSourceBuffer('audio/'+data.mime);
             buffer.mode = 'sequence';
             buffer.addEventListener('updateend', function (e) {
                 //hack to get safari on mac to start playing, video.currentTime gets stuck on 0
@@ -238,6 +238,7 @@ angular.module('PlayAround')
         stream.on('data', (chunk) => {
             //parts.push(chunk);
             var data = new Uint8Array(chunk);
+            console.log(data);
             buffer.appendBuffer(data);
         });
         stream.on('end', function () {
@@ -760,6 +761,7 @@ angular.module('PlayAround')
                 headers: { 'Content-Type': 'application/json' }
             });
         };
+
         $scope.salvaBrano=function (codice) {
             $scope.codice=codice;
             var parameter={codbrano:$scope.codice};
@@ -771,6 +773,5 @@ angular.module('PlayAround')
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-
 
     });
