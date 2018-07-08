@@ -22,7 +22,7 @@ angular.module('PlayAround')
             audio.addEventListener('timeupdate', updateProgressBar, false);
             audio.addEventListener('ended',audioEnd);
             $scope.getRepeatStyle();
-            socket.emit('event', {username: $sessionStorage.UserLogged.username, data:{username:$sessionStorage.UserLogged.username ,img:'/image/profile/' + $sessionStorage.UserLogged.username +'.png',canzone:{titolo:"titolo Caznone",id:"id canzone"}}});
+            socket.emit('event', {username: $sessionStorage.UserLogged.username});
         }, function myError(response) {
             window.location.replace('/login');
         });
@@ -685,7 +685,6 @@ angular.module('PlayAround')
         var slides = [];
         for (playlist in Mood){
             slides.push({nome:Mood[playlist].nome,immagine:Mood[playlist].immagine,codice:Mood[playlist].codice});
-            console.log("Il nome è: "+Mood[playlist]);
         }
       $scope.slides = slides;
     })
@@ -716,12 +715,8 @@ angular.module('PlayAround')
      * Search bar
      */
     .controller('searchCtrl', function($scope){
- //console.log(selected);
         $scope.reindirizza=function(selected){
-            console.log(selected.originalObject.val.type);
-
             if(selected.originalObject.val.type==='Brano: ') {
-
                 loadBrano(selected.originalObject.val.original.codice)
             }else if (selected.originalObject.val.type==='Artista: ') {
                 window.location="#!artista/" + selected.originalObject.val.original.codice;

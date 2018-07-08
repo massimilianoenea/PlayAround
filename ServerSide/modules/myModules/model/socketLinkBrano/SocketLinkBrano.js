@@ -5,7 +5,7 @@ module.exports = {
       connection.getConnection(function (err, connection) {
           if (err) return callback(err, null, 1);
 
-          var sql = "SELECT LINK FROM BRANI WHERE CODBRANO = ?";
+          var sql = "SELECT LINK,TITOLO FROM BRANI WHERE CODBRANO = ?";
 
           connection.query(sql, [codice], function (err, results) {
               if (err) return callback(err, null, 2);

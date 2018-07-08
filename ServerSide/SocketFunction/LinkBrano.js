@@ -13,7 +13,7 @@ module.exports = {
                         return callback({code:3,text:"Errore indefinito",errorCode:err.code});
                 }
             }else{
-                return callback({code:0,link:succ[0].LINK});
+                return callback({code:0,link:succ[0].LINK,titolo:succ[0].TITOLO});
             }
         });
     }  

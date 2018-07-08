@@ -108,9 +108,8 @@ io.on('connection', function(client) {
 
 
     client.on('event', function(data) {
-        console.log('event');
         //io.sockets.in(data.username).emit('message', data.data);
-        client.emit('message', data.data);
+        client.emit('message',{username:data.username ,img:'/image/profile/' + data.username +'.png',canzone:{titolo:"",id:""}});
        // client.in(data.username).emit('message', data.data);
     });
 
@@ -232,19 +231,22 @@ io.on('connection', function(client) {
                     }
                     var stream = ss.createStream();
                     var requestUrl = "";
+                    var titolo = "";
                     var duration = 1;
                     var filename = __dirname + '/penningen.mp3';
                     linkBrano.GetLinkBrano(data.codbrano,function(a){
                        if(a.code === 0 || a.link !== 'undefined'){
                            requestUrl = 'http://youtube.com/watch?v=' + a.link;
+                           titolo = a.titolo;
                        }else{
-                           requestUrl = __dirname + '/penningen.mp3';
+                           requestUrl = "";
                        }
 
                          ytdl.getInfo(requestUrl,{downloadURL: false},function(err, info) {
                             if (err) duration = 1 ;
                             duration = info.length_seconds;
                             ss(SocketofClient).emit('audio-stream', stream, {duration: duration,mime:mimeType});
+                             client.emit('message',{username:data.username ,img:'/image/profile/' + data.username +'.png',canzone:{titolo:titolo,id:data.codbrano}});
                         });
 
                         try {
