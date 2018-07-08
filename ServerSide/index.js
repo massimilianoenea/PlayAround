@@ -256,7 +256,7 @@ io.on('connection', function(client) {
                     var duration = 1;
                     var filename = __dirname + '/penningen.mp3';
                     linkBrano.GetLinkBrano(data.codbrano,function(a){
-                       if(a.code === 0 || a.link !== 'undefined'){
+                       if(a.code === 0 || a.link !== undefined || a.link !== 'undefined'){
                            requestUrl = 'http://youtube.com/watch?v=' + a.link;
                            titolo = a.titolo;
                        }else{
