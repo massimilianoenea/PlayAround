@@ -169,10 +169,11 @@ angular.module('PlayAround')
 
     socket.on('setCurrentDone',function (data) {
         $sessionStorage.deviceSetted = true;
+        if(audio.src) audioStop();
     });
 
     $scope.loadBrano = function(codbrano,listOfSong,reset){
-       // if(audio.src) audio.pause();
+        if(audio.src) audioStop();
         if($sessionStorage.deviceSetted === true) {
             socket.emit('stream', {username: $sessionStorage.UserLogged.username,codbrano:codbrano});
             if(reset !== true || reset !== false) reset = true;
