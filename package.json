@@ -14,8 +14,9 @@
     "nodemailer": "^4.6.5",
     "socket.io": "^2.1.1",
     "socket.io-stream": "^0.9.1",
+    "through2": "^2.0.3",
     "ua-parser-js": "^0.7.18",
-    "youtube-audio-stream": "^0.2.0",
+    "xtend": "^4.0.1",
     "ytdl-core": "^0.20.4"
   },
   "devDependencies": {},

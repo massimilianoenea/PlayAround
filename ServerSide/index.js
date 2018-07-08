@@ -9,6 +9,7 @@ var home = require('./routes/home.js');
 var item = require('./routes/AppItem');
 var socketFunction = require('./SocketFunction/Friend.js');
 var linkBrano = require('./SocketFunction/LinkBrano');
+var youtubeStream = require('./modules/myModules/youtube-stream/youtube-stream');
 
 /**
  *
@@ -23,7 +24,6 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ss = require('socket.io-stream');
-var youtubeStream = require('youtube-audio-stream');
 const ytdl = require('ytdl-core');
 var UAParser = require('ua-parser-js');
 var parser = new UAParser();
