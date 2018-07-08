@@ -167,7 +167,7 @@
               <div ng-repeat="user in getUsers() | limitTo: 5" class="container">
                   <a href="#!utente/{{user.username}}">
 
-                    <img src="https://www.w3schools.com/w3images/bandmember.jpg" alt="Avatar" style="width:90px">
+                    <img ng-src="{{user.img}}" alt="Avatar" style="width:90px">
                       <p>{{user.username}}</p>
                       <p>{{user.canzone.titolo}}</p>
                    
