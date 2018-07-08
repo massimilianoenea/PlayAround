@@ -826,8 +826,7 @@ angular.module('PlayAround')
         };
 
         $scope.salvaBrano=function (codice) {
-            $scope.codice=codice;
-            var parameter={codbrano:$scope.codice};
+            var parameter={codbrano:codice};
             $http({
                 method:"POST",
                 url : '/require/setPreferito',

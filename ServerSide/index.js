@@ -9,6 +9,7 @@ var home = require('./routes/home.js');
 var item = require('./routes/AppItem');
 var socketFunction = require('./SocketFunction/Friend.js');
 var linkBrano = require('./SocketFunction/LinkBrano');
+var youtubeStream = require('./modules/myModules/youtube-stream/youtube-stream');
 
 /**
  *
@@ -23,7 +24,6 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ss = require('socket.io-stream');
-var youtubeStream = require('youtube-audio-stream');
 const ytdl = require('ytdl-core');
 var UAParser = require('ua-parser-js');
 var parser = new UAParser();
@@ -256,7 +256,7 @@ io.on('connection', function(client) {
                     var duration = 1;
                     var filename = __dirname + '/penningen.mp3';
                     linkBrano.GetLinkBrano(data.codbrano,function(a){
-                       if(a.code === 0 || a.link !== 'undefined'){
+                       if(a.code === 0 || a.link !== undefined || a.link !== 'undefined'){
                            requestUrl = 'http://youtube.com/watch?v=' + a.link;
                            titolo = a.titolo;
                        }else{
