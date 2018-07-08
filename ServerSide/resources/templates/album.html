@@ -94,12 +94,14 @@
                 <i title="Aggiungi a Playlist" class="fa fa-plus dropbtn" aria-hidden="true" ng-click="showDrop(song.codice)"></i>
                 <div class="dropdown" ng-show="codice === song.codice ? true : false">
                     <div class="dropdown-content">
-                        <div ng-repeat="list in lista"><!--qua devo mettere ng-repeat-->
+                        <div ng-repeat="list in lista">
                             <p style="margin: 0px;" ng-click="aggiungi(list.nome,song.codice)">{{list.nome}}</p>
                         </div>
                     </div>
                 </div>
-                <i title="Aggiungi ai Preferiti" class="fa fa-bookmark" aria-hidden="true" ng-click="salvaBrano(song.codice)"></i>
+                <div>
+                    <i title="Aggiungi ai Preferiti" class="fa fa-bookmark" aria-hidden="true" ng-click="salvaBrano(song.codice)"></i>
+                </div>
             </li>
         </ul>
     </div>

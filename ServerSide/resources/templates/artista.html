@@ -137,7 +137,7 @@
     <h2 align="center" style="color: #FEC35E">Le canzoni più ascoltate</h2>
 
     <div class="row_img">
-        <div class="column_img" ng-repeat="song in brani">
+        <div class="column_img" ng-repeat="song in brani | limitTo: 6">
                 <div class="container_img" ng-click="loadBrano(song.codice,brani);setCurrentCoda($index)">
                     <img ng-src={{song.immagine}} class="image">
                     <div class="overlay">{{song.titolo}}</div>
