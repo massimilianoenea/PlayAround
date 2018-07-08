@@ -285,7 +285,7 @@ angular.module('PlayAround')
     function seek(e) {
         if (audio.src) {
             var percent = e.offsetX / this.offsetWidth;
-            audio.currentTime = percent * audio.duration;
+            audio.currentTime = percent * $sessionStorage.inplay;
             e.target.value = Math.floor(percent / 100);
         }
     }
