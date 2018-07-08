@@ -169,6 +169,7 @@ angular.module('PlayAround')
 
     socket.on('setCurrentDone',function (data) {
         $sessionStorage.deviceSetted = true;
+        socket.emit("getListOfSongs",{username:$sessionStorage.UserLogged.username});
         if(audio.src) audioStop();
     });
 
@@ -197,6 +198,7 @@ angular.module('PlayAround')
                     return $sessionStorage.listOfSong.list.indexOf(item) < 0;
                 }));
             }
+            socket.emit('listOfSongs',{username: $sessionStorage.UserLogged.username,listOfSong:$sessionStorage.listOfSong});
         }
     }
 
@@ -217,8 +219,12 @@ angular.module('PlayAround')
     };
 
     $scope.setCurrentCoda = function(position){
-        if($sessionStorage.listOfSong) $sessionStorage.listOfSong.current = position;
+        socket.emit('currentCoda',{username:$sessionStorage.UserLogged.username,position:position});
     };
+
+    socket.on('setCurrentCoda',function(data){
+        if($sessionStorage.listOfSong) $sessionStorage.listOfSong.current = data;
+    });
 
     ss(socket.getsocket()).on('audio-stream', function (stream, data) {
         //var parts = [];
@@ -334,6 +340,14 @@ angular.module('PlayAround')
         if (!$scope.getDisable())PlayerProgressBar.value = data.progress;
         progressBar.value = data.progress;
         musicTime.innerText = formatTime(data.currentTime);
+    });
+
+    socket.on('updateListOfSongs',function(data){
+        $sessionStorage.listOfSong = data;
+    });
+
+    socket.on('currentGetListOfSongs',function(){
+        if($sessionStorage.listOfSong) socket.emit('listOfSongs',{username: $sessionStorage.UserLogged.username,listOfSong:$sessionStorage.listOfSong});
     });
 
     $scope.playPause = function(){
@@ -681,8 +695,6 @@ angular.module('PlayAround')
          */
     })
     .controller('moodCtrl', function ($scope, Mood,Genere) {
-      //$scope.mood=Mood;
-      //$scope.genere = Genere;
         var slides = [];
         for (playlist in Mood){
             slides.push({nome:Mood[playlist].nome,immagine:Mood[playlist].immagine,codice:Mood[playlist].codice});
@@ -723,7 +735,10 @@ angular.module('PlayAround')
     .controller('searchCtrl', function($scope){
         $scope.reindirizza=function(selected){
             if(selected.originalObject.val.type==='Brano: ') {
-                loadBrano(selected.originalObject.val.original.codice)
+                var listOfSong = [];
+                listOfSong.push(selected.originalObject.val.original);
+                $scope.loadBrano(selected.originalObject.val.original.codice,listOfSong);
+                $scope.setCurrentCoda(0);
             }else if (selected.originalObject.val.type==='Artista: ') {
                 window.location="#!artista/" + selected.originalObject.val.original.codice;
                 }

@@ -164,6 +164,18 @@ io.on('connection', function(client) {
         client.emit('setCurrentDone',data);
     });
 
+    client.on('listOfSongs',function (data) {
+       client.in(data.username+"_player").emit('updateListOfSongs',data.listOfSong);
+    });
+
+    client.on('getListOfSongs',function(data){
+       client.in(data.username+"_CurrentPlayer").emit('currentGetListOfSongs');
+    });
+
+    client.on('currentCoda',function(data){
+        io.sockets.in(data.username+"_player").emit('setCurrentCoda',data.position);
+    });
+
     client.on('play', function(data) {
         if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]) {
             var currentClients = io.sockets.adapter.rooms[data.username + "_CurrentPlayer"].sockets;

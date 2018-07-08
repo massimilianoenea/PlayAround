@@ -31,14 +31,14 @@
             <div class="tab">Scegli immagine di Profilo
 
             <!-- CARICAMENTO IMMAGINE -->
-            <button type="file"  ngf-resize-if="$width > 300 || $height > 300" ngf-select="uploadFiles($file, $invalidFiles)" accept="image/jpeg,image/jpg,image/png" ngf-min-height="300" ngf-min-width="300" ngf-resize ="{width: 300, height: 300, centerCrop: true, type:'image/png'}">Seleziona File</button>
+            <button type="file"  ngf-fix-orientation='true' ngf-resize-if="$width > 300 || $height > 300" ngf-select="uploadFiles($file, $invalidFiles)" accept="image/jpeg,image/jpg,image/png" ngf-min-height="300" ngf-min-width="300" ngf-resize ="{width: 300, height: 300, centerCrop: true, type:'image/png'}">Seleziona File</button>
                 <div style="font:smaller" >
                     <div ng-if="errFile.name"> Impossibile caricare l'immagine: {{errFile.$error}}{{errFile.$errorParam}}</div>
                     {{errorMsg}}
                 </div>
                 <br>
                 <br>
-                <div ng-if="f">Anteprima: <img ngf-thumbnail="f" ngf-size="{width: 100, height: 100}"></div>
+                <div ng-if="f">Anteprima: <img ngf-thumbnail="f" ngf-size="{height: 100,width: 100}"></div>
             </div>
 
 

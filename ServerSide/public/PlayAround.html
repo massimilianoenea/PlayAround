@@ -61,13 +61,13 @@
         <!-- Quando sei in mobile view -->
        <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="#!">Home</a>
-           <a href="#!libreria/playlist" onclick="closeNav()">La tua Libreria</a>
-           <a href="#!preferiti" onclick="closeNav()">Preferiti</a>
-           <a href="#!amici" onclick="closeNav()">I tuoi Amici</a>
-            <a href="#!mood" onclick="closeNav()">Genere & Mood</a>
-            <a href="#!piuAscoltati" onclick="closeNav()">I più Ascoltati</a>
-            <a href="#!sceltiPerTe" onclick="closeNav()">Scelti per Te</a>
+            <a href="#!" ng-click="enablePlayerino()">Home</a>
+           <a href="#!libreria/playlist" ng-click="enablePlayerino()" onclick="closeNav()">La tua Libreria</a>
+           <a href="#!preferiti" ng-click="enablePlayerino()" onclick="closeNav()">Preferiti</a>
+           <a href="#!amici" ng-click="enablePlayerino()" onclick="closeNav()">I tuoi Amici</a>
+            <a href="#!mood" ng-click="enablePlayerino()" onclick="closeNav()">Genere & Mood</a>
+            <a href="#!piuAscoltati" ng-click="enablePlayerino()" onclick="closeNav()">I più Ascoltati</a>
+            <a href="#!sceltiPerTe" ng-click="enablePlayerino()" onclick="closeNav()">Scelti per Te</a>
         </div>
         <div  class="mobileHeader">
             <img src="/image/Symbol_playaround_complete.png" style="width: 60%;float: right;display: inline;margin-right: 15%;">
@@ -126,7 +126,6 @@
                     <div class="time_slider">
                         <progress id="progressBar" min='0' max='100' value='0'></progress>
                         <span id = "musicTime" class="runing_time">00:00</span>
-                        <progress id="progressBarBUF" min='0' max='100' value='0'></progress>
                     </div>
                     <i class="fa fa-fast-backward" aria-hidden="true" ng-click="prec()"></i>
                     <i id = "playPause" class="fa fa-play" aria-hidden="true" ng-click="playPause()"></i>
@@ -176,9 +175,9 @@
     </div>
     <!-- barra menu in basso in mobile-->
     <div class="navbar">
-        <a href="#home" class="active">Home</a>
-        <a href="#!amiciOn">Amici Online</a>
-        <a href="#!player">Music Player</a>
+        <a href="#home" ng-click="enablePlayerino()" class="active">Home</a>
+        <a href="#!amiciOn" ng-click="enablePlayerino()">Amici Online</a>
+        <a href="#!player" ng-click="disablePlayerino()">Music Player</a>
     </div>
     </body>
     </html>
