@@ -95,10 +95,16 @@ angular.module('PlayAround')
         $sessionStorage.isGetFriend = 1;
     });
 
+    $scope.deviceConnected = function(){
+        $sessionStorage.deviceSetted = false;
+        socket.emit('player_room',{username: $sessionStorage.UserLogged.username});
+    };
+
     socket.on('player_room_response',function (data) {
 
         if(data.length >= 1 && ($sessionStorage.deviceSetted === undefined || $sessionStorage.deviceSetted !== true)) {
             modalDevice.style.display = "block";
+            angular.element(deviceSetting).empty();
             for (var dispositivo in data) {
                 if (data[dispositivo].Current_client) {
                     var dev = "<button id=\"DeviceSetting\" class=\"btn\"  ng-click=\"setCurDev('" + data[dispositivo].clientId + "')\">" + deviceType(data[dispositivo].Current_client) + "<p>dispositivo Corrente</p></button>";
@@ -126,9 +132,11 @@ angular.module('PlayAround')
 
      $scope.disablePlayerino = function(){
        $sessionStorage.disable = false;
+       isPaused();
      };
      $scope.enablePlayerino = function () {
          $sessionStorage.disable=true;
+         isPaused();
      };
      $scope.getDisable=function () {
          if($sessionStorage.disable!==undefined) return $sessionStorage.disable;
@@ -333,8 +341,13 @@ angular.module('PlayAround')
 
     function audioStop(){
         socket.emit('pause', {username: $sessionStorage.UserLogged.username});
+        audio.src="";
         audio.currentTime = 0;
     }
+
+    socket.on('stopAudio',function(){
+        if(audio.src) audioStop();
+    });
 
     socket.on('updateProgressBar',function(data){
         if (!$scope.getDisable())PlayerProgressBar.value = data.progress;
@@ -362,9 +375,21 @@ angular.module('PlayAround')
             }
     };
 
-    $scope.isPaused = function(){
-      return audio.paused;
-    };
+    function isPaused(){
+        if(!audio.src) {
+            socket.emit('isPaused', {username: $sessionStorage.UserLogged.username});
+        }else{
+            $scope.AudioInPause = audio.paused;
+        }
+    }
+
+    socket.on('getInPause',function(){
+        socket.emit('setInPause',{username: $sessionStorage.UserLogged.username,pause:audio.paused});
+    });
+
+    socket.on('isInPause',function(data){
+       $scope.AudioInPause = data;
+    });
 
     $scope.succ = function(){
         socket.emit('succ',{username: $sessionStorage.UserLogged.username});

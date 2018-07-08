@@ -161,6 +161,7 @@ io.on('connection', function(client) {
                 }
             });
         }
+        io.sockets.in(data.username+"_CurrentPlayer").emit('stopAudio');
         client.emit('setCurrentDone',data);
     });
 
@@ -174,6 +175,14 @@ io.on('connection', function(client) {
 
     client.on('currentCoda',function(data){
         io.sockets.in(data.username+"_player").emit('setCurrentCoda',data.position);
+    });
+
+    client.on('isPaused',function(data){
+       client.in(data.username+"_CurrentPlayer").emit('getInPause');
+    });
+
+    client.on('setInPause',function(data){
+        io.sockets.in(data.username+"_player").emit('isInPause',data.pause);
     });
 
     client.on('play', function(data) {
