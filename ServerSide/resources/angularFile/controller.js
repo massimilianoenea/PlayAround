@@ -711,6 +711,11 @@ angular.module('PlayAround')
        $scope.playlistG=Giornaliera;
        $scope.recently=Recently;
        $scope.musicFriends=AmiciSong;
+        var slides = [];
+        for (playlist in Giornaliera){
+            slides.push({nome:Giornaliera[playlist].nome,immagine:Giornaliera[playlist].immagine,codice:Giornaliera[playlist].codice});
+        }
+        $scope.slides = slides;
     })
     /**
      * Search bar
