@@ -750,7 +750,7 @@ router.post("/setBranoAscoltato",function(req,res){
             res.status(a.status).end(JSON.stringify(a));
         });
     }else{
-        req.status(500).end()
+        res.status(500).end()
     }
 });
 
