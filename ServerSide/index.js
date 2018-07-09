@@ -211,7 +211,7 @@ io.on('connection', function(client) {
             }
             io.sockets.in(data.username + "_player").emit('pause_button', data.username);
         }else{
-            io.sockets.in(data.username).emit('newSetDevice',data.username);
+            io.sockets.in(data.username+"_player").emit('newSetDevice',data.username);
         }
     });
 
@@ -221,9 +221,21 @@ io.on('connection', function(client) {
     client.on('prec',function(data){
         io.sockets.in(data.username+"_player").emit('precedente',data.username);
     });
+
     client.on('repeat',function (data) {
-        io.sockets.in(data.username+"_player").emit('repeatSong',data.loopCode);
+        io.of('/').in(data.username+"_CurrentPlayer").clients(function(error, clients) {
+            if (clients.length > 0) {
+                clients.forEach(function (socket_id) {
+                    io.sockets.sockets[socket_id].emit('getRepeat',data);
+                });
+            }
+        });
     });
+
+    client.on('getRepeatSong',function (data) {
+       io.sockets.in(data.username+"_player").emit('repeatSong',data.loopCode)
+    });
+
 
     client.on('pause', function(data) {
         if(io.sockets.adapter.rooms[data.username+"_CurrentPlayer"]) {
@@ -239,12 +251,16 @@ io.on('connection', function(client) {
             }
             io.sockets.in(data.username+"_player").emit('play_button',data.username);
         }else{
-            client.emit('getFriendDone',data.username);
+            io.sockets.in(data.username+"_player").emit('newSetDevice',data.username);
         }
     });
 
     client.on('PercentageBar',function(data){
         io.sockets.in(data.username+"_player").emit('updateProgressBar',{progress:data.progress,currentTime:data.currentTime});
+    });
+
+    client.on('seek',function (data) {
+        client.in(data.username+"_CurrentPlayer").emit('setSeek',{percent:data.percent});
     });
 
     client.on('stream', function(data) {
@@ -290,9 +306,7 @@ io.on('connection', function(client) {
                // }
             }
         }else{
-           // client.emit('getFriendDone',data.username);
-            console.log("Si è disconnesso");
-              io.sockets.in(data.username+'_player').emit('getFriendDone', data.username);
+            io.sockets.in(data.username+"_player").emit('newSetDevice',data.username);
         }
 
     });

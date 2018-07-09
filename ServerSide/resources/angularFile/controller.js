@@ -97,6 +97,7 @@ angular.module('PlayAround')
 
     $scope.deviceConnected = function(){
         $sessionStorage.deviceSetted = false;
+        $sessionStorage.modalAppear = false;
         socket.emit('player_room',{username: $sessionStorage.UserLogged.username});
     };
 
@@ -179,6 +180,10 @@ angular.module('PlayAround')
         $sessionStorage.deviceSetted = true;
         socket.emit("getListOfSongs",{username:$sessionStorage.UserLogged.username});
         if(audio.src) audioStop();
+    });
+
+    socket.on('newSetDevice',function(data){
+        $scope.deviceConnected();
     });
 
     $scope.loadBrano = function(codbrano,listOfSong,reset){
@@ -283,12 +288,21 @@ angular.module('PlayAround')
     });
 
     function seek(e) {
+        var percent = e.offsetX / this.offsetWidth;
         if (audio.src) {
-            var percent = e.offsetX / this.offsetWidth;
             audio.currentTime = percent * $sessionStorage.inplay;
             e.target.value = Math.floor(percent / 100);
+        }else{
+            socket.emit('seek',{username:$sessionStorage.UserLogged.username,percent:percent});
         }
     }
+
+    socket.on('setSeek',function(data){
+        if (audio.src) {
+            audio.currentTime = data.percent * $sessionStorage.inplay;
+            progressBar.value = Math.floor(data.percent / 100);
+        }
+    });
 
 
     function updateProgressBar() {
@@ -406,7 +420,7 @@ angular.module('PlayAround')
         }else{
             $sessionStorage.loop++;
         }
-        socket.emit('repeat',{username:$sessionStorage.UserLogged.username,loopCode:$sessionStorage.loop});
+        socket.emit('getRepeatSong',{username:$sessionStorage.UserLogged.username,loopCode:$sessionStorage.loop});
     };
 
     $scope.currentSongName = function(){
@@ -466,9 +480,13 @@ angular.module('PlayAround')
     });
 
     $scope.getRepeatStyle = function(){
-        if(!$sessionStorage.loop) $sessionStorage.loop = 0;
-        socket.emit('repeat',{username:$sessionStorage.UserLogged.username,loopCode:$sessionStorage.loop});
+        socket.emit('repeat',{username:$sessionStorage.UserLogged.username});
     };
+
+    socket.on('getRepeat',function(data){
+        if(!$sessionStorage.loop) $sessionStorage.loop = 0;
+       socket.emit('getRepeatSong',{username:$sessionStorage.UserLogged.username,loopCode:$sessionStorage.loop});
+    });
 
     socket.on('repeatSong',function(data){
        $sessionStorage.loop = data;
