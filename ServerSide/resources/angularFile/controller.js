@@ -764,7 +764,15 @@ angular.module('PlayAround')
         for (playlist in Mood){
             slides.push({nome:Mood[playlist].nome,immagine:Mood[playlist].immagine,codice:Mood[playlist].codice});
         }
-      $scope.slides = slides;
+        $scope.slides=slides
+      $scope.mood = Mood;
+
+        var slidesG=[];
+        for(playlist in Genere){
+            slidesG.push({nome:Genere[playlist].nome,immagine:Genere[playlist].immagine,codice:Genere[playlist].codice})
+        }
+        $scope.slidesG=slidesG;
+        $scope.genere=Genere;
     })
 
     /**
