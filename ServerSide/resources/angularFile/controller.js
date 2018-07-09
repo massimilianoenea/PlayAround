@@ -135,10 +135,12 @@ angular.module('PlayAround')
        $sessionStorage.disable = false;
        isPaused();
      };
+
      $scope.enablePlayerino = function () {
          $sessionStorage.disable=true;
          isPaused();
      };
+
      $scope.getDisable=function () {
          if($sessionStorage.disable!==undefined) return $sessionStorage.disable;
          return true;
@@ -301,6 +303,7 @@ angular.module('PlayAround')
         if (audio.src) {
             audio.currentTime = data.percent * $sessionStorage.inplay;
             progressBar.value = Math.floor(data.percent / 100);
+            if (!$scope.getDisable())PlayerProgressBar.value = Math.floor(data.percent / 100);
         }
     });
 
@@ -365,8 +368,11 @@ angular.module('PlayAround')
 
     socket.on('updateProgressBar',function(data){
         if (!$scope.getDisable())PlayerProgressBar.value = data.progress;
+        if (!$scope.getDisable())PlayermsicTime.innerText = formatTime(data.currentTime);
         progressBar.value = data.progress;
         musicTime.innerText = formatTime(data.currentTime);
+
+
     });
 
     socket.on('updateListOfSongs',function(data){
@@ -576,9 +582,11 @@ angular.module('PlayAround')
                     $scope.isFriend = false;
                     $sessionStorage.socket.emit('leaveFriend', {username: $sessionStorage.UserLogged.username, friendUsername: User.username});
                     var i;
-                    for(i=0; i<$sessionStorage.users.length; i++) {
-                        if ($sessionStorage.users[i].username === User.username) {
-                            $sessionStorage.users.splice(i, 1);
+                    if($sessionStorage.users) {
+                        for (i = 0; i < $sessionStorage.users.length; i++) {
+                            if ($sessionStorage.users[i].username === User.username) {
+                                $sessionStorage.users.splice(i, 1);
+                            }
                         }
                     }
                 })
@@ -780,6 +788,7 @@ angular.module('PlayAround')
        $scope.playlistG=Giornaliera;
        $scope.recently=Recently;
        $scope.musicFriends=AmiciSong;
+
         var slides = [];
         for (playlist in Giornaliera){
             slides.push({nome:Giornaliera[playlist].nome,immagine:Giornaliera[playlist].immagine,codice:Giornaliera[playlist].codice});
@@ -811,7 +820,19 @@ angular.module('PlayAround')
          * Player musicale
          */
     })
-    .controller('playerCtrl', function($scope,$http){
+    .controller('playerCtrl', function($scope,$http,$sessionStorage){
+        PlayerProgressBar.addEventListener("click", seek);
+
+        function seek(e) {
+            var percent = e.offsetX / this.offsetWidth;
+            if (audio.src) {
+                audio.currentTime = percent * $sessionStorage.inplay;
+                e.target.value = Math.floor(percent / 100);
+            }else{
+                $sessionStorage.socket.emit('seek',{username:$sessionStorage.UserLogged.username,percent:percent});
+            }
+        }
+
         $scope.salvaBrano=function (codice) {
             $scope.codice=codice;
             var parameter={codbrano:$scope.codice};
