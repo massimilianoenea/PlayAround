@@ -699,7 +699,12 @@ angular.module('PlayAround')
     .controller('recentiCtrl', function ($scope, Recenti){
         $scope.recenti=Recenti;
     })
-
+    /**
+     * Playlist predefinita
+     */
+    .controller("playlistDefCtrl", function($scope, Playlist){
+        $scope.playlistDef=Playlist;
+    })
     /**
      * sezione Amici
      */

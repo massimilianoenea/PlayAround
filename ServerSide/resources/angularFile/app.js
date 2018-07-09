@@ -133,7 +133,20 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt','ui.carou
                 }
             }
         })
+        .when("/playlist_def/:codice",{
+            templateUrl: "public/templates/playlist_Def.html",
+            controller:"playlistDefCtrl",
+            resolve:{
+                Playlist: function ($http, $route) {
+                    return $http.get("/require/get_brani_playlist/" + $route.current.params.codice)
+                        .then(function (response) {
+                            //return JSON.stringify({nome:$scope.nomePlaylist,response:response.data});
+                            return response.data;
+                        })
 
+                }
+            }
+        })
 
         .when("/artista/:id",{
             templateUrl: "/public/templates/artista.html",
