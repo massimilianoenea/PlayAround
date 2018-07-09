@@ -24,8 +24,13 @@ router.post('/upload_profile',multipartyMiddleware,function(req,res){
 });
 
 router.post('/getUtenteLog',function(req,res){
-    if(req.session.islog === 1) res.status(200).end(JSON.stringify({email:req.session.email,username:req.session.username}));
-    res.status(400).end();
+    if(req.session.islog === 1){
+        var immagine = "/image/profile/default/def.png";
+        if(fs.existsSync(path+"/profile/"+req.session.username+".png")) immagine = "/image/profile/"+req.session.username+".png";
+        res.status(200).end(JSON.stringify({email:req.session.email,username:req.session.username,immagine:immagine}));
+    }else {
+        res.status(400).end();
+    }
 });
 
 router.post('/addAmico',function(req,res){

@@ -119,7 +119,9 @@ io.on('connection', function(client) {
 
     client.on('event', function(data) {
         //io.sockets.in(data.username).emit('message', data.data);
-        client.in(data.username).emit('message',{username:data.username ,img:'/image/profile/' + data.username +'.png',canzone:{titolo:"",id:""}});
+        var immagine = '/image/profile/default/def.png';
+        if(fs.existsSync(__dirname+'/resources/image/profile/' + data.username +'.png')) immagine = '/image/profile/' + data.username +'.png';
+        client.in(data.username).emit('message',{username:data.username ,img:immagine,canzone:{titolo:"",id:""}});
        // client.in(data.username).emit('message', data.data);
     });
 
@@ -226,7 +228,11 @@ io.on('connection', function(client) {
         io.of('/').in(data.username+"_CurrentPlayer").clients(function(error, clients) {
             if (clients.length > 0) {
                 clients.forEach(function (socket_id) {
-                    io.sockets.sockets[socket_id].emit('getRepeat',data);
+                   if(client.id !== socket_id) {
+                       io.sockets.sockets[socket_id].emit('getRepeat', data);
+                   }else{
+                       client.emit('getRepeat', data)
+                   }
                 });
             }
         });
