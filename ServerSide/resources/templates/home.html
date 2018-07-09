@@ -95,16 +95,45 @@
                 display: none;
             }
         }
-        @media screen and (min-width: 992px){
+        @media screen and (max-width: 1190px){
             .overlay{
                 font-size: 20px;
                 padding: 15px;
+                opacity: 0.5;
             }
+            .row_img {
+                width: 100%;
+                margin: 0 auto;
+            }
+            .column_img{
+                float: left;
+                width: 33.3%;
+                padding-left: 1px;
+                margin-top: 20px;
+            }
+            .column_img_mob{
+              /*  width: 33%;*/
+            }
+            .row_img_carousel{
+                display: none;
+            }
+            .row_img_mob{
+                display: inline;
+                width: 33%;
+            }
+            .image{
+                display: block;
+                border-radius: 20px;
+                width: 100%;
+                height:100px;
+            }
+
         }
         @media screen and (max-width: 768px){
             .overlay{
                 font-size: 15px;
                 padding: 10px;
+                opacity: 0.5;
             }
             .row_img {
                 width: 100%;
@@ -128,6 +157,7 @@
                 width: 100%;
                 height:100px;
             }
+
 
         }
         @media screen and (max-width: 320px){
@@ -178,10 +208,12 @@
         </div>
         <div class="row_img_mob">
             <div class="column_img_mob" ng-repeat="list in playlistG">
-                <div class="container_img" ng-click="loadBrano(brani.codice,playlistG);setCurrentCoda($index)">
+                <a href="#!playlist_def/{{list.codice}}">
+                <div class="container_img" >
                     <img ng-src={{list.immagine}} class="image_mob">
                     <div class="overlay">{{list.nome}}</div>
                 </div>
+                </a>
             </div>
         </div>
 <br>
