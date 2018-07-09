@@ -101,15 +101,25 @@ io.on('connection', function(client) {
                     console.log(' Client joined the room ' + a.amici_on[room].USERNAME + ' and client id is ' + client.id);
                 }
             }
-            io.sockets.to(client.id).emit('getFriendDone',data);
+            client.emit('getFriendDone',data);
             //client.join(data.username);
+        });
+    });
+
+    client.on('leaveFriend',function(data){
+        io.of('/').in(data.username+"_player").clients(function(error, clients) {
+            if (clients.length > 0) {
+                clients.forEach(function (socket_id) {
+                    io.sockets.sockets[socket_id].leave(data.friendUsername);
+                });
+            }
         });
     });
 
 
     client.on('event', function(data) {
         //io.sockets.in(data.username).emit('message', data.data);
-        client.emit('message',{username:data.username ,img:'/image/profile/' + data.username +'.png',canzone:{titolo:"",id:""}});
+        client.in(data.username).emit('message',{username:data.username ,img:'/image/profile/' + data.username +'.png',canzone:{titolo:"",id:""}});
        // client.in(data.username).emit('message', data.data);
     });
 
@@ -267,7 +277,7 @@ io.on('connection', function(client) {
                             if (err) duration = 1 ;
                             duration = info.length_seconds;
                             ss(SocketofClient).emit('audio-stream', stream, {duration: duration,mime:mimeType});
-                             client.emit('message',{username:data.username ,img:'/image/profile/' + data.username +'.png',canzone:{titolo:titolo,id:data.codbrano}});
+                             client.in(data.username).emit('message',{username:data.username ,img:'/image/profile/' + data.username +'.png',canzone:{titolo:titolo,id:data.codbrano}});
                         });
 
                         try {

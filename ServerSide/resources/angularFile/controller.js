@@ -24,7 +24,7 @@ angular.module('PlayAround')
             $scope.getRepeatStyle();
             socket.emit('event', {username: $sessionStorage.UserLogged.username});
         }, function myError(response) {
-            window.location.replace('/login');
+             window.location.replace('/login');
         });
     };
 
@@ -183,13 +183,13 @@ angular.module('PlayAround')
 
     $scope.loadBrano = function(codbrano,listOfSong,reset){
         if(audio.src) audioStop();
-        if($sessionStorage.deviceSetted === true) {
+        if($sessionStorage.modalAppear === true) {
             socket.emit('stream', {username: $sessionStorage.UserLogged.username,codbrano:codbrano});
             if(reset !== true || reset !== false) reset = true;
             genereteListOfSong(listOfSong,reset);
             setBranoAscoltato(codbrano);
         }else{
-            socket.emit('player_room', {username: $sessionStorage.UserLogged.username});
+            $scope.deviceConnected();
         }
     };
 
@@ -524,11 +524,12 @@ angular.module('PlayAround')
         return [];
     };
 })
-    .controller('utenteCtrl', function($scope,$http,User,Ascoltati,Seguiti) {
+    .controller('utenteCtrl', function($scope,$http,User,Ascoltati,Seguiti,$sessionStorage) {
         $scope.utente=User;
         $scope.ascoltati=Ascoltati;
         $scope.seguiti=Seguiti;
         $scope.isFriend = User.amici;
+
 
         var recently = [];
         $scope.addFriend = function () {
@@ -541,6 +542,7 @@ angular.module('PlayAround')
             })
                 .then(function mySuccess(response) {
                     $scope.isFriend = true;
+                    $sessionStorage.socket.emit('getFriend', {username: $sessionStorage.UserLogged.username, email: $sessionStorage.UserLogged.email});
                 })
         };
 
@@ -554,6 +556,13 @@ angular.module('PlayAround')
             })
                 .then(function mySuccess(response) {
                     $scope.isFriend = false;
+                    $sessionStorage.socket.emit('leaveFriend', {username: $sessionStorage.UserLogged.username, friendUsername: User.username});
+                    var i;
+                    for(i=0; i<$sessionStorage.users.length; i++) {
+                        if ($sessionStorage.users[i].username === User.username) {
+                            $sessionStorage.users.splice(i, 1);
+                        }
+                    }
                 })
         };
 
