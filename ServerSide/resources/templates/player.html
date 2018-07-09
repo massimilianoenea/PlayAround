@@ -88,6 +88,10 @@
         float: right;
         top: -35px;
     }
+    .time_slider{
+        background-color: black;
+        margin: 0px;
+    }
     /*progress Bar*/
     progress {
         display: block; /* default: inline-block */
@@ -137,7 +141,11 @@
     </div>
 
     <div class="controllers" align="center">
-        <progress id="PlayerProgressBar" min='0' max='100' value='0'></progress>
+       <!--<progress id="PlayerProgressBar" min='0' max='100' value='0'></progress>-->
+        <div class="time_slider">
+            <progress id="PlayerProgressBar" min='0' max='100' value='0'></progress>
+            <span id = "msicTime" class="runing_time">00:00</span>
+        </div>
         <i class="fa fa-volume-off" aria-hidden="true"></i>
         <i class="fa fa-fast-backward" aria-hidden="true" ng-click="prec()"></i>
         <i id = "playerPlayPause" ng-class="AudioInPause ? 'fa fa-play' : 'fa fa-pause'" aria-hidden="true" ng-click="playPause()"></i>
