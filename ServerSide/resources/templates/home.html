@@ -187,7 +187,7 @@
         <div class="row_img">
             <div class="column_img" ng-repeat="brani in recently | limitTo: 6">
                 <div class="container_img">
-                    <img ng-src={{brani.immagine}} class="image_mob" ng-click="loadBrano(brani.codice, recently);setCurrentCoda($index)">
+                    <img ng-src={{brani.immagine}} class="image" ng-click="loadBrano(brani.codice, recently);setCurrentCoda($index)">
                     <div class="overlay">{{brani.titolo}}</div>
                 </div>
             </div>

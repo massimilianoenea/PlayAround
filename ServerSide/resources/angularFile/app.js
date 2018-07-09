@@ -229,7 +229,7 @@ angular.module('PlayAround', ['ngRoute','ngStorage','angucomplete-alt','ui.carou
                                 return response.data;
                             });
                     },
-                    Genere:function ($http) {
+                    Genere: function ($http) {
                         return $http.get('/require/playlist_genere')
                             .then(function (response) {
                                 return response.data;

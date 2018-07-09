@@ -169,9 +169,14 @@
 
                     <img ng-src="{{user.img}}" alt="Avatar" style="width:90px">
                       <p>{{user.username}}</p>
-                      <p>{{user.canzone.titolo}}</p>
-                   
                   </a>
+                      <marquee direction="left" scrollAmount=4 height="100" width="100%">
+                          {{user.canzone.titolo}}
+
+                      </marquee>
+
+                   
+
 
             </div>
           </div>
