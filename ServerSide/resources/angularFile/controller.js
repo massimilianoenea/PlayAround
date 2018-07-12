@@ -701,11 +701,36 @@ angular.module('PlayAround')
         };
 
     })
-    .controller('tueCanzoniCtrl', function ($scope, Saved){
+    .controller('tueCanzoniCtrl', function ($scope, Saved, $http){
         $scope.salvate=Saved;
+        $scope.visible=false;
+
+
+        $scope.showBox=function () {
+            $scope.visible=true;
+        };
+        $scope.hideBox=function () {
+            $scope.visible=false;
+        };
+        $scope.deletePrefer=function (codice) {
+            $scope.codice=codice;
+            var parameter = {codbrano:$scope.codice};
+            $http({
+                method: "POST",
+                url: "/require/removePreferito",
+                data: parameter,
+                withCredentials: true,
+                headers: {'Content-Type': 'application/json'}
+            }).then(function mySuccess(response){
+                window.location = "#!libreria/leTueCanzoni"
+            },function myError(response){
+
+            });
+        };
     })
     .controller('recentiCtrl', function ($scope, Recenti){
         $scope.recenti=Recenti;
+
     })
     /**
      * Playlist predefinita
@@ -788,6 +813,7 @@ angular.module('PlayAround')
     .controller('piuAscoltatiCtrl', function ($scope,PiuAscoltate) {
       $scope.topBrani=PiuAscoltate;
 
+
     })
     /**
      * homepage
@@ -829,7 +855,10 @@ angular.module('PlayAround')
          */
     })
     .controller('playerCtrl', function($scope,$http,$sessionStorage){
+        $scope.notifica=false;
+
         PlayerProgressBar.addEventListener("click", seek);
+
 
         function seek(e) {
             var percent = e.offsetX / this.offsetWidth;
@@ -850,7 +879,9 @@ angular.module('PlayAround')
                 data: parameter,
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
-            });
+            }).then(function mySuccess(response){
+                $scope.notifica=true;/*attivo la snackbar di notifica*/
+            })
         }
     })
     /**
@@ -861,6 +892,9 @@ angular.module('PlayAround')
         $scope.brani=BraniAlbum;
         $scope.lista=ListaPlaylist;
         //$scope.altri=AltriAlbum;
+        $scope.notifica=false
+        $scope.notifica2=false;
+        $scope.nascondi=true;
 
         //gestisco la dropdown per le playlist
         $scope.showDrop=function (codice) {
@@ -875,6 +909,9 @@ angular.module('PlayAround')
         };
 
         $scope.aggiungi=function (nome,codice) {
+            //attivo la snackbar di notifica
+            $scope.notifica2=true;
+
             $scope.nome=nome;
             var parameter={nome_playlist:$scope.nome,codbrano:$scope.codice};
             $http({
@@ -883,10 +920,15 @@ angular.module('PlayAround')
                 data: parameter,
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
-            });
+            }).then(function mySuccess($scope) {
+                $scope.codice=-1;//disattivo dropdown
+                $scope.notifica2=true; /*attivo la snackbar di notifica*/
+
+            })
         };
 
         $scope.salvaBrano=function (codice) {
+
             var parameter={codbrano:codice};
             $http({
                 method:"POST",
@@ -894,7 +936,9 @@ angular.module('PlayAround')
                 data: parameter,
                 withCredentials: true,
                 headers: { 'Content-Type': 'application/json' }
-            });
+            }).then(function mySuccess(response) {
+                $scope.notifica=true;/*attivo la snackbar di notifica*/
+            })
         }
 
     });

@@ -152,7 +152,7 @@
 <body>
 <h2>Top Song</h2>
 <div class="row_img">
-    <div class="column_img" ng-repeat="brani in topBrani">
+    <div class="column_img" ng-repeat="brani in topBrani | limitTo: 30">
         <div class="container_img" ng-click="loadBrano(brani.codice,topBrani);setCurrentCoda($index)">
             <img ng-src={{brani.immagine}} class="image">
             <div class="overlay">{{brani.titolo}}</div>

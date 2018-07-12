@@ -702,7 +702,7 @@ router.get("/piu_ascoltate",function(req,res){
 // SCELTI PER TE DA FARE //
 
 
-// FUNZIONI PER I BRANI //
+// FUNZIONI PER I BRANI salvati //
 
 router.post("/setPreferito",function(req,res){
     if(req.session.islog){

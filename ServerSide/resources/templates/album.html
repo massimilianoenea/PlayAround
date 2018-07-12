@@ -57,7 +57,7 @@
         margin: -13px;
         padding: 5px;
     }
-    #snackbar {
+    .snackbar {
 
         min-width: 250px; /* Set a default minimum width */
         margin-left: -125px; /* Divide value of min-width by 2 */
@@ -70,6 +70,10 @@
         z-index: 1; /* Add a z-index if needed */
         left: 50%; /* Center the snackbar */
         bottom: 30px; /* 30px from the bottom */
+    }
+    .snackbar:hover{
+        color:blue;
+        font-size: larger;
     }
     @media screen and (max-width: 900px){
         .listAlbum{
@@ -105,7 +109,9 @@
             </li>
         </ul>
     </div>
-    <div id="snackbar" ng-show="notifica">Aggiunto alle tue Canzoni</div>
+    <div class="snackbar" ng-show="notifica"> <a href="#!libreria\leTueCanzoni"> Aggiunto alle tue Canzoni</a></div>
+    <div class="snackbar" ng-show="notifica2"> <a href="#!libreria\playlist"> Aggiunto alle tua Playlist</a></div>
+
 </div>
 
 
